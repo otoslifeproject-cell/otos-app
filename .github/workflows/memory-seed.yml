@@ -1,5 +1,5 @@
 # FILE: .github/workflows/memory-seed.yml
-# FULL REPLACEMENT — MANUAL, GUARDED WRITE
+# HARDENED: schema check before any write
 
 name: Memory Seeder (Manual)
 
@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      - run: npm run schema:check
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
       - run: npm run memory:seed
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
