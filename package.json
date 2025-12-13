@@ -1,13 +1,11 @@
 {
-  "name": "otos-app",
-  "version": "1.0.0",
+{
   "type": "module",
-  "private": true,
   "scripts": {
     "embeddings:run": "node scripts/embeddings/run.js"
   },
   "dependencies": {
-    "@notionhq/client": "^2.2.14",
-    "openai": "^4.28.0"
+    "@notionhq/client": "^2.2.15",
+    "openai": "^4.0.0"
   }
 }
