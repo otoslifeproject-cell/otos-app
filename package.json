@@ -1,18 +1,15 @@
-// FILE: package.json (FULL REPLACEMENT)
-
 {
   "name": "otos-app",
+  "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "feeder:run": "node server.js",
     "memory:seed": "node memory-seeder.js",
-    "embeddings:run": "node embeddings.js",
     "analysis:run": "node analysis-pipeline.js",
+    "embeddings:run": "node embeddings.js",
     "ui:sync": "node ui-memory-sync.js"
   },
   "dependencies": {
-    "@notionhq/client": "^2.2.15",
-    "express": "^4.19.2",
-    "body-parser": "^1.20.2"
+    "@notionhq/client": "^2.2.15"
   }
 }
