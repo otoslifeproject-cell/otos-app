@@ -1,9 +1,3 @@
-<nav style="margin-bottom:16px;">
-  <a href="./index.html">Home</a> |
-  <a href="./feeder.html">Feeder</a> |
-  <a href="./signals.html">Signals</a> |
-  <a href="./presence.html">Presence™</a>
-</nav>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,24 +10,34 @@
       padding: 24px;
       background: #0b0f14;
       color: #e5e7eb;
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    nav {
+      margin-bottom: 24px;
+    }
+    nav a {
+      color: #8ab4ff;
+      text-decoration: none;
+      margin-right: 12px;
+    }
+    nav a:hover {
+      text-decoration: underline;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
       margin-top: 24px;
     }
-    a.card {
-      display: block;
-      padding: 20px;
+    .card {
       background: #111827;
       border: 1px solid #1f2937;
       border-radius: 12px;
-      color: #e5e7eb;
+      padding: 20px;
       text-decoration: none;
+      color: #e5e7eb;
     }
-    a.card:hover {
+    .card:hover {
       border-color: #22c55e;
     }
     .muted {
@@ -44,16 +48,32 @@
 </head>
 <body>
 
-  <h1>OTOS</h1>
-  <p class="muted">Presence™ · Awareness™ · Consciousness™ · Congruence™</p>
+<nav>
+  <a href="./index.html">Home</a>
+  <a href="./feeder.html">Feeder</a>
+  <a href="./signals.html">Signals</a>
+  <a href="./presence.html">Presence™</a>
+</nav>
 
-  <div class="grid">
-    <a class="card" href="./feeder.html">Feeder</a>
-    <a class="card" href="./signals.html">Signals</a>
-    <a class="card" href="./presence.html">Presence</a>
-    <a class="card" href="./cockpit.html">Cockpit</a>
-  </div>
+<h1>OTOS</h1>
+<p class="muted">Connected Pathway · Whole Person · Velocity™</p>
+
+<div class="grid">
+  <a class="card" href="./feeder.html">
+    <h2>Feeder</h2>
+    <p class="muted">Capture signals fast</p>
+  </a>
+
+  <a class="card" href="./signals.html">
+    <h2>Signals</h2>
+    <p class="muted">View and reflect</p>
+  </a>
+
+  <a class="card" href="./presence.html">
+    <h2>Presence™</h2>
+    <p class="muted">Always-on layer</p>
+  </a>
+</div>
 
 </body>
 </html>
-
