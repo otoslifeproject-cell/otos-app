@@ -1,28 +1,7 @@
-diff --git a/presence.html b/presence.html
-index 1111111..2222222 100644
---- a/presence.html
-+++ b/presence.html
-@@ -45,6 +45,24 @@
-   <div class="card">
-     <h2>Presence™</h2>
-     <p class="muted">Always-on, non-invasive support.</p>
-+    <div id="pulse" class="pill">Quiet</div>
-   </div>
-+
-+  <script>
-+    const KEY="signals";
-+    let lastCount=0;
-+    function check(){
-+      try{
-+        const n = JSON.parse(localStorage.getItem(KEY)||"[]").length;
-+        if(n>lastCount){
-+          const p=document.getElementById("pulse");
-+          p.textContent="Noticed";
-+          p.style.borderColor="#00e676";
-+          setTimeout(()=>{p.textContent="Quiet"; p.style.borderColor="#242938";},1500);
-+        }
-+        lastCount=n;
-+      }catch(e){}
-+    }
-+    setInterval(check,1500);
-+  </script>
+diff --git a/feeder.html b/feeder.html
+index 4444444..5555555 100644
+--- a/feeder.html
++++ b/feeder.html
+@@ -120,6 +120,7 @@
+   <button onclick="save()">Add to Signals</button>
++  <button class="secondary" onclick="location.href='signals.html'">View Signals</button>
