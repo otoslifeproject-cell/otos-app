@@ -4,11 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "analysis:run": "node scripts/analysis/run.js",
-    "seed:memory": "node scripts/seed/run.js"
+    "analysis:run": "node scripts/analysis/run.js"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "node-fetch": "^3.3.2"
+    "dotenv": "^16.4.5"
   }
 }
