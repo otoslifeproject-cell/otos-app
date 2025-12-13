@@ -1,19 +1,18 @@
 // FILE: package.json (FULL REPLACEMENT)
 
 {
-  "name": "otos-notion-sync",
-  "private": true,
+  "name": "otos-app",
   "type": "module",
-  "dependencies": {
-    "@notionhq/client": "^2.3.0",
-    "openai": "^4.33.0"
-  },
   "scripts": {
-    "notion:read": "node notion-sync.js",
-    "schema:check": "node schema-check.js",
+    "feeder:run": "node server.js",
     "memory:seed": "node memory-seeder.js",
     "embeddings:run": "node embeddings.js",
     "analysis:run": "node analysis-pipeline.js",
     "ui:sync": "node ui-memory-sync.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "body-parser": "^1.20.2",
+    "@notionhq/client": "^2.2.15"
   }
 }
