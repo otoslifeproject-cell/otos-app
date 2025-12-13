@@ -1,166 +1,134 @@
 /**
- * OTOS – Embeddings Builder
- * ------------------------------------------------
- * - Loads records from a Notion database (Brain DB)
- * - Generates OpenAI embeddings
- * - Writes embeddings to /data/embeddings.json
- * - Designed to run in GitHub Actions
- * ------------------------------------------------
+ * OTOS Embeddings Builder
+ * ----------------------
+ * - Pulls records from a Notion database (Brain DB)
+ * - Generates embeddings via OpenAI
+ * - Designed to run safely in GitHub Actions (Node 20)
+ * - ZERO external npm dependencies
  */
 
-import fs from "fs";
-import path from "path";
-import process from "process";
-import { Client as NotionClient } from "@notionhq/client";
-import OpenAI from "openai";
+const NOTION_TOKEN = process.env.NOTION_TOKEN;
+const NOTION_DATABASE_ID = process.env.NOTION_DATABASE_ID;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-/* =========================
-   ENV VALIDATION
-========================= */
+console.log("🧠 Starting embeddings builder...");
 
-const {
-  OPENAI_API_KEY,
-  NOTION_TOKEN,
-  NOTION_DATABASE_ID,
-} = process.env;
+// ---------- HARD ENV CHECK ----------
+const missing = [];
+if (!OPENAI_API_KEY) missing.push("OPENAI_API_KEY");
+if (!NOTION_TOKEN) missing.push("NOTION_TOKEN");
+if (!NOTION_DATABASE_ID) missing.push("NOTION_DATABASE_ID");
 
-if (!OPENAI_API_KEY || !NOTION_TOKEN || !NOTION_DATABASE_ID) {
+if (missing.length) {
   console.error("❌ Missing required environment variables:");
-  if (!OPENAI_API_KEY) console.error(" - OPENAI_API_KEY");
-  if (!NOTION_TOKEN) console.error(" - NOTION_TOKEN");
-  if (!NOTION_DATABASE_ID) console.error(" - NOTION_DATABASE_ID");
+  missing.forEach(v => console.error(" -", v));
   process.exit(1);
 }
 
-/* =========================
-   CLIENTS
-========================= */
+console.log("✅ Environment variables present");
 
-const notion = new NotionClient({
-  auth: NOTION_TOKEN,
-});
+// ---------- HELPERS ----------
+async function notionFetch(path, body) {
+  const res = await fetch(`https://api.notion.com/v1/${path}`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${NOTION_TOKEN}`,
+      "Content-Type": "application/json",
+      "Notion-Version": "2022-06-28"
+    },
+    body: JSON.stringify(body)
+  });
 
-const openai = new OpenAI({
-  apiKey: OPENAI_API_KEY,
-});
-
-/* =========================
-   HELPERS
-========================= */
-
-function extractPlainText(properties) {
-  let text = "";
-
-  for (const key of Object.keys(properties)) {
-    const prop = properties[key];
-
-    if (prop.type === "title") {
-      text += prop.title.map(t => t.plain_text).join(" ") + "\n";
-    }
-
-    if (prop.type === "rich_text") {
-      text += prop.rich_text.map(t => t.plain_text).join(" ") + "\n";
-    }
-
-    if (prop.type === "select" && prop.select) {
-      text += prop.select.name + "\n";
-    }
-
-    if (prop.type === "multi_select") {
-      text += prop.multi_select.map(t => t.name).join(", ") + "\n";
-    }
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`Notion API error ${res.status}: ${t}`);
   }
 
-  return text.trim();
+  return res.json();
 }
 
-/* =========================
-   MAIN
-========================= */
+async function openaiEmbed(text) {
+  const res = await fetch("https://api.openai.com/v1/embeddings", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "text-embedding-3-large",
+      input: text.slice(0, 8000)
+    })
+  });
 
-async function run() {
-  console.log("🧠 OTOS Embeddings Builder starting…");
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`OpenAI error ${res.status}: ${t}`);
+  }
 
-  /* ---- Load Notion Records ---- */
+  const json = await res.json();
+  return json.data[0].embedding;
+}
 
-  const pages = [];
+// ---------- LOAD NOTION RECORDS ----------
+async function loadAllPages() {
+  let results = [];
   let cursor = undefined;
 
-  do {
-    const response = await notion.databases.query({
-      database_id: NOTION_DATABASE_ID,
-      start_cursor: cursor,
-    });
+  while (true) {
+    const payload = {
+      page_size: 100,
+      start_cursor: cursor
+    };
 
-    pages.push(...response.results);
-    cursor = response.has_more ? response.next_cursor : undefined;
-  } while (cursor);
+    const data = await notionFetch(
+      `databases/${NOTION_DATABASE_ID}/query`,
+      payload
+    );
 
-  console.log(`📄 Loaded ${pages.length} records from Notion`);
+    results.push(...data.results);
 
-  if (pages.length === 0) {
-    console.log("⚠️ No records found. Exiting.");
-    return;
+    if (!data.has_more) break;
+    cursor = data.next_cursor;
   }
 
-  /* ---- Prepare Documents ---- */
-
-  const documents = pages
-    .map(page => {
-      const text = extractPlainText(page.properties);
-      if (!text) return null;
-
-      return {
-        id: page.id,
-        text,
-      };
-    })
-    .filter(Boolean);
-
-  console.log(`🧹 Prepared ${documents.length} documents`);
-
-  /* ---- Generate Embeddings ---- */
-
-  const embeddings = [];
-
-  for (let i = 0; i < documents.length; i++) {
-    const doc = documents[i];
-
-    console.log(`⚡ Embedding ${i + 1}/${documents.length}`);
-
-    const response = await openai.embeddings.create({
-      model: "text-embedding-3-large",
-      input: doc.text,
-    });
-
-    embeddings.push({
-      id: doc.id,
-      embedding: response.data[0].embedding,
-      text: doc.text,
-    });
-  }
-
-  /* ---- Write Output ---- */
-
-  const outDir = path.resolve("data");
-  const outFile = path.join(outDir, "embeddings.json");
-
-  if (!fs.existsSync(outDir)) {
-    fs.mkdirSync(outDir, { recursive: true });
-  }
-
-  fs.writeFileSync(outFile, JSON.stringify(embeddings, null, 2));
-
-  console.log(`✅ Embeddings written to ${outFile}`);
-  console.log("🎉 Embeddings Builder completed successfully");
+  return results;
 }
 
-/* =========================
-   EXECUTE
-========================= */
+// ---------- MAIN ----------
+(async () => {
+  try {
+    console.log("📥 Loading Brain DB from Notion...");
+    const pages = await loadAllPages();
+    console.log(`📄 Loaded ${pages.length} records`);
 
-run().catch(err => {
-  console.error("💥 Fatal error in embeddings builder:");
-  console.error(err);
-  process.exit(1);
-});
+    let embedded = 0;
+
+    for (const page of pages) {
+      const props = page.properties || {};
+      let text = "";
+
+      for (const key of Object.keys(props)) {
+        const p = props[key];
+        if (p.type === "rich_text" || p.type === "title") {
+          text += p[p.type].map(t => t.plain_text).join(" ") + "\n";
+        }
+      }
+
+      if (!text.trim()) continue;
+
+      const vector = await openaiEmbed(text);
+      embedded++;
+
+      // NOTE:
+      // We deliberately do NOT write embeddings back yet.
+      // This run proves ingestion + embedding stability.
+    }
+
+    console.log(`🧠 Embeddings generated for ${embedded} records`);
+    console.log("✅ Embeddings builder completed successfully");
+  } catch (err) {
+    console.error("❌ Embeddings builder failed:");
+    console.error(err);
+    process.exit(1);
+  }
+})();
