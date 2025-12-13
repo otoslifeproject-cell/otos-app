@@ -1,14 +1,22 @@
-<!-- SCRIPT: nav-loader.html (FULL REPLACEMENT) -->
+<!-- FILE: nav-loader.js (FULL REPLACEMENT) -->
 <script>
 /*
-  OTOS NAV LOADER — single source of truth
-  Usage: add <div id="nav"></div> then include this script
+  Simple client-side nav loader.
+  Usage: place <div id="nav"></div> where nav should appear,
+  then include this script at the bottom of the page.
 */
-fetch('./nav.html')
-  .then(r => r.text())
-  .then(html => {
-    const mount = document.getElementById('nav');
-    if (mount) mount.innerHTML = html;
-  })
-  .catch(() => {});
+
+(function () {
+  const navTarget = document.getElementById("nav");
+  if (!navTarget) return;
+
+  fetch("nav.html")
+    .then(res => res.text())
+    .then(html => {
+      navTarget.innerHTML = html;
+    })
+    .catch(() => {
+      navTarget.innerHTML = "";
+    });
+})();
 </script>
