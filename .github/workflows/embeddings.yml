@@ -1,29 +1,31 @@
-# FILE: .github/workflows/embeddings.yml (FULL REPLACEMENT — MANUAL, GUARDED)
-
 name: Embeddings Builder (Manual)
 
 on:
   workflow_dispatch:
     inputs:
-      confirm:
-        description: "Type YES to generate embeddings"
+      objective:
+        description: "Run embeddings builder?"
         required: true
-
-permissions:
-  contents: read
+        default: "YES"
 
 jobs:
   embed:
-    if: github.event.inputs.confirm == 'YES'
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
-      - run: npm run schema:check
-        env:
+
+      - name: Run embeddings builder
+        run: |
+          echo "🧠 Starting embeddings builder..."
+          node scripts/embeddings/run.js
+
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
       - run: npm run embeddings:run
         env:
