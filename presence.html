@@ -1,4 +1,4 @@
-<!-- FILE: presence.html (FULL REPLACEMENT) -->
+<!-- FILE: presence.html (FULL REPLACEMENT – STABLE + PERSISTENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,42 +6,20 @@
   <title>OTOS Presence™</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      margin: 0;
-      padding: 32px;
-      background: #0b0f14;
-      color: #e5e7eb;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    h1 { margin-bottom: 6px; }
-    p { color: #9aa0a6; }
-    .block {
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 10px;
-      padding: 18px;
-      margin-top: 18px;
-      max-width: 520px;
-    }
-    input[type="range"] {
-      width: 100%;
-      margin-top: 12px;
-    }
-    .level {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #38bdf8;
-    }
-    .note {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #94a3b8;
-    }
+    body{margin:0;padding:32px;background:#0b0f14;color:#e5e7eb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+    .topnav{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    .topnav a{color:#e5e7eb;text-decoration:none;background:#111827;border:1px solid #1f2937;border-radius:999px;padding:8px 12px;font-size:13px}
+    h1{margin:0 0 6px}
+    p{margin:0 0 18px;color:#9aa0a6}
+    .panel{background:#111827;border:1px solid #1f2937;border-radius:14px;padding:18px;max-width:520px}
+    .row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    input[type=range]{width:100%}
+    .level{font-size:14px;color:#38bdf8;margin-top:8px}
+    .hint{font-size:12px;color:#9aa0a6;margin-top:10px}
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
   <nav class="topnav">
     <a href="./index.html">Cockpit</a>
     <a href="./feeder.html">Feeder</a>
@@ -49,35 +27,35 @@
     <a href="./focus.html">Focus</a>
     <a href="./state.html">State</a>
     <a href="./velocity.html">Velocity™</a>
-    <a href="./presence.html">Presence</a>
+    <a href="./presence.html">Presence™</a>
   </nav>
 
   <h1>Presence™</h1>
-  <p>Care, support, and attentional holding.</p>
+  <p>Support intensity & care proximity.</p>
 
-  <div class="block">
-    <label>Presence Intensity</label>
-    <input id="presenceRange" type="range" min="1" max="10" value="3" />
-    <div class="level">Level: <span id="level">3</span> / 10</div>
-    <div class="note">
-      Adjust how often the system checks in, reminds, or grounds you.
+  <div class="panel">
+    <label>Presence Level</label>
+    <input id="presence" type="range" min="0" max="10" value="3" />
+    <div class="level">Level: <span id="val">3</span> / 10</div>
+    <div class="hint">
+      Controls check-ins, reminders, grounding prompts, and gentle nudges.
     </div>
   </div>
 
 <script>
-  const KEY = "otos_presence_level";
-  const range = document.getElementById("presenceRange");
-  const level = document.getElementById("level");
+  const KEY = "otos_presence";
+  const r = document.getElementById("presence");
+  const v = document.getElementById("val");
 
   const saved = localStorage.getItem(KEY);
-  if (saved) {
-    range.value = saved;
-    level.textContent = saved;
+  if (saved !== null) {
+    r.value = saved;
+    v.textContent = saved;
   }
 
-  range.oninput = () => {
-    level.textContent = range.value;
-    localStorage.setItem(KEY, range.value);
+  r.oninput = () => {
+    v.textContent = r.value;
+    localStorage.setItem(KEY, r.value);
   };
 </script>
 
