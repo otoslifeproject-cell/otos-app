@@ -1,3 +1,4 @@
+<!-- FILE: index.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,14 +6,34 @@
   <title>OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body{margin:0;padding:24px;background:#0b0f14;color:#e5e7eb;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif}
-    .topnav{margin-bottom:24px}
-    .topnav a{color:#8ab4ff;text-decoration:none;margin-right:12px}
-    .topnav a:hover{text-decoration:underline}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}
-    .card{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:20px;text-decoration:none;color:#e5e7eb}
-    .card:hover{border-color:#22c55e}
-    .muted{color:#9aa0a6;font-size:14px}
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #0b0f14;
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 20px;
+      text-decoration: none;
+      color: #e5e7eb;
+    }
+    .card:hover {
+      border-color: #22c55e;
+    }
+    .muted {
+      color: #9aa0a6;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -27,23 +48,32 @@
     <h2>Feeder</h2>
     <p class="muted">Capture signals fast</p>
   </a>
-
   <a class="card" href="./signals.html">
     <h2>Signals</h2>
     <p class="muted">View and reflect</p>
   </a>
-
+  <a class="card" href="./focus.html">
+    <h2>Focus</h2>
+    <p class="muted">Set intent</p>
+  </a>
+  <a class="card" href="./state.html">
+    <h2>State</h2>
+    <p class="muted">System awareness</p>
+  </a>
+  <a class="card" href="./velocity.html">
+    <h2>Velocity™</h2>
+    <p class="muted">Momentum & flow</p>
+  </a>
   <a class="card" href="./presence.html">
-    <h2>Presence™</h2>
-    <p class="muted">Always-on layer</p>
+    <h2>Presence</h2>
+    <p class="muted">Grounding layer</p>
   </a>
 </div>
 
 <script>
-  fetch("./nav.html", { cache: "no-store" })
+  fetch("./nav.html")
     .then(r => r.text())
-    .then(html => { document.getElementById("nav").innerHTML = html; })
-    .catch(() => {});
+    .then(html => document.getElementById("nav").innerHTML = html);
 </script>
 
 </body>
