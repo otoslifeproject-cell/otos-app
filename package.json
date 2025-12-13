@@ -11,8 +11,8 @@
     "ui:sync": "node ui-memory-sync.js"
   },
   "dependencies": {
+    "@notionhq/client": "^2.2.15",
     "express": "^4.19.2",
-    "body-parser": "^1.20.2",
-    "@notionhq/client": "^2.2.15"
+    "body-parser": "^1.20.2"
   }
 }
