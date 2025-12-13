@@ -1,100 +1,16 @@
-<!-- FILE: velocity.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Velocity™ – OTOS</title>
+  <title>Velocity — OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body{
-      margin:0;
-      padding:32px;
-      background:#0b0f14;
-      color:#e5e7eb;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif
-    }
-    .topnav{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .topnav a{
-      color:#e5e7eb;
-      text-decoration:none;
-      background:#111827;
-      border:1px solid #1f2937;
-      border-radius:999px;
-      padding:8px 12px;
-      font-size:13px
-    }
-    h1{margin:0 0 6px}
-    p{margin:0 0 20px;color:#9aa0a6}
-    .panel{
-      max-width:720px;
-      background:#111827;
-      border:1px solid #1f2937;
-      border-radius:16px;
-      padding:22px
-    }
-    .row{display:flex;align-items:center;gap:14px;margin:14px 0}
-    input[type=range]{flex:1}
-    .value{
-      min-width:42px;
-      text-align:right;
-      font-weight:600
-    }
-    button{
-      background:#f97316;
-      border:none;
-      color:#0b0f14;
-      padding:10px 14px;
-      border-radius:10px;
-      font-weight:600;
-      cursor:pointer
-    }
-  </style>
 </head>
+
 <body>
+  <div id="nav"></div>
+  <script src="nav-loader.js" defer></script>
 
-  <nav class="topnav">
-    <a href="./index.html">Cockpit</a>
-    <a href="./signals.html">Signals</a>
-    <a href="./presence.html">Presence™</a>
-    <a href="./velocity.html">Velocity™</a>
-  </nav>
-
-  <h1>Velocity™</h1>
-  <p>Execution intensity control — momentum without overwhelm.</p>
-
-  <div class="panel">
-    <div class="row">
-      <strong>Execution Intensity</strong>
-    </div>
-    <div class="row">
-      <input id="vel" type="range" min="1" max="10" value="5" />
-      <div id="val" class="value">5</div>
-    </div>
-    <div class="row">
-      <button onclick="save()">Lock Velocity</button>
-    </div>
-    <p style="font-size:13px;color:#9aa0a6">
-      Controls cadence of prompts, nudges, actions, and reminders.
-    </p>
-  </div>
-
-<script>
-  const slider = document.getElementById('vel');
-  const out = document.getElementById('val');
-
-  slider.oninput = () => out.textContent = slider.value;
-
-  function save(){
-    localStorage.setItem('otos_velocity', slider.value);
-    alert('Velocity set to ' + slider.value);
-  }
-
-  const saved = localStorage.getItem('otos_velocity');
-  if(saved){
-    slider.value = saved;
-    out.textContent = saved;
-  }
-</script>
-
+  <h1>Velocity</h1>
+  <p>Gentle momentum. No pressure.</p>
 </body>
 </html>
