@@ -1,12 +1,6 @@
 {
-  "name": "otos-app",
-  "version": "1.0.0",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "analysis:run": "node scripts/analysis/run.js"
-  },
   "dependencies": {
-    "dotenv": "^16.4.5"
+    "@notionhq/client": "^2.2.14",
+    "openai": "^4.0.0"
   }
 }
