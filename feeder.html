@@ -1,108 +1,36 @@
-<!-- FILE: feeder.html (FULL REPLACEMENT – ADD WORKS + PERSISTS) -->
+<!-- FILE: feeder.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>OTOS Feeder</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body{margin:0;padding:32px;background:#0b0f14;color:#e5e7eb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-    .topnav{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .topnav a{color:#e5e7eb;text-decoration:none;background:#111827;border:1px solid #1f2937;border-radius:999px;padding:8px 12px;font-size:13px}
-    h1{margin:0 0 6px}
-    p{margin:0 0 18px;color:#9aa0a6}
-    .row{display:flex;gap:10px;flex-wrap:wrap;max-width:900px}
-    input{flex:1;min-width:240px;padding:12px;border-radius:10px;border:1px solid #1f2937;background:#020617;color:#e5e7eb}
-    button{padding:12px 14px;border-radius:10px;border:0;background:#f97316;color:#020617;font-weight:800;cursor:pointer}
-    .list{margin-top:16px;max-width:900px}
-    .item{background:#111827;border:1px solid #1f2937;border-radius:10px;padding:12px;margin-top:10px}
-    .meta{font-size:12px;color:#9aa0a6;margin-top:6px}
-    .smallbtn{background:#111827;border:1px solid #1f2937;color:#e5e7eb;font-weight:700;padding:10px 12px}
-  </style>
+  <link rel="stylesheet" href="app.css" />
 </head>
 <body>
+  <main>
+    <h1>OTOS Intake Feeder</h1>
+    <p>Paste content below. This is a safe, append-only intake.</p>
+    <textarea id="content" rows="12" placeholder="Paste content here..."></textarea>
+    <button onclick="submit()">Submit</button>
+    <pre id="status"></pre>
+  </main>
 
-  <nav class="topnav">
-    <a href="./index.html">Cockpit</a>
-    <a href="./feeder.html">Feeder</a>
-    <a href="./signals.html">Signals</a>
-    <a href="./focus.html">Focus</a>
-    <a href="./state.html">State</a>
-    <a href="./velocity.html">Velocity™</a>
-    <a href="./presence.html">Presence™</a>
-  </nav>
-
-  <h1>Feeder</h1>
-  <p>Drop a signal. It persists locally.</p>
-
-  <div class="row">
-    <input id="input" placeholder="e.g. ADHD + relapse risk in Cambridge" />
-    <button id="add">Add</button>
-    <button class="smallbtn" id="clear">Clear</button>
-  </div>
-
-  <div class="list" id="list"></div>
-
-<script>
-  const KEY = "otos_feeder";
-  const input = document.getElementById("input");
-  const list = document.getElementById("list");
-  const addBtn = document.getElementById("add");
-  const clearBtn = document.getElementById("clear");
-
-  function load() {
-    return JSON.parse(localStorage.getItem(KEY) || "[]");
-  }
-
-  function save(arr) {
-    localStorage.setItem(KEY, JSON.stringify(arr));
-  }
-
-  function render() {
-    const arr = load();
-    if (!arr.length) {
-      list.innerHTML = "<p style='color:#9aa0a6'>No items yet.</p>";
-      return;
+  <script>
+    async function submit() {
+      const content = document.getElementById("content").value;
+      document.getElementById("status").textContent = "Submitting...";
+      try {
+        const res = await fetch("/feeder", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content, source: "ui" })
+        });
+        const json = await res.json();
+        document.getElementById("status").textContent = JSON.stringify(json, null, 2);
+      } catch (e) {
+        document.getElementById("status").textContent = e.message;
+      }
     }
-    list.innerHTML = "";
-    arr.slice().reverse().forEach((obj) => {
-      const div = document.createElement("div");
-      div.className = "item";
-      div.innerHTML = `
-        <div>${escapeHtml(obj.text)}</div>
-        <div class="meta">${new Date(obj.ts).toLocaleString()}</div>
-      `;
-      list.appendChild(div);
-    });
-  }
-
-  function escapeHtml(s) {
-    return (s || "").replace(/[&<>"']/g, m => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-    }[m]));
-  }
-
-  addBtn.onclick = () => {
-    const text = (input.value || "").trim();
-    if (!text) return;
-    const arr = load();
-    arr.push({ text, ts: Date.now() });
-    save(arr);
-    input.value = "";
-    render();
-  };
-
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") addBtn.click();
-  });
-
-  clearBtn.onclick = () => {
-    save([]);
-    render();
-  };
-
-  render();
-</script>
-
+  </script>
 </body>
 </html>
