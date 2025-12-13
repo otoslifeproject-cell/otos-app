@@ -1,13 +1,55 @@
-<nav style="margin-bottom:16px;">
-  <a href="./index.html">Home</a> |
-  <a href="./feeder.html">Feeder</a> |
-  <a href="./signals.html">Signals</a> |
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OTOS · Presence™</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #0b0f14;
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    nav {
+      margin-bottom: 24px;
+    }
+    nav a {
+      color: #8ab4ff;
+      text-decoration: none;
+      margin-right: 12px;
+    }
+    .panel {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+    .muted {
+      color: #9aa0a6;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="./index.html">Home</a>
+  <a href="./feeder.html">Feeder</a>
+  <a href="./signals.html">Signals</a>
   <a href="./presence.html">Presence™</a>
 </nav>
-diff --git a/signals.html b/signals.html
-index 4444444..5555555 100644
---- a/signals.html
-+++ b/signals.html
-@@ -62,6 +62,7 @@
-   render();
-+  setInterval(render, 1000);
+
+<h1>Presence™</h1>
+
+<div class="panel">
+  <p><strong>Status:</strong> Active</p>
+  <p class="muted">
+    Layer 1 — Always-on support.<br>
+    Non-invasive · Adjustable · Trust-building.
+  </p>
+</div>
+
+</body>
+</html>
