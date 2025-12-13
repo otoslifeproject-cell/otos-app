@@ -1,0 +1,14 @@
+name: OTOS Patch (Disabled – Static Site)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: No-op
+        run: echo "Static site – patch workflow disabled"
