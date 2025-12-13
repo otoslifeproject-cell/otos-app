@@ -1,0 +1,38 @@
+name: OTOS Apply Patch
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: "Branch to apply to"
+        required: true
+        default: "main"
+      patch:
+        description: "Unified diff patch (git apply format)"
+        required: true
+
+jobs:
+  apply_patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_branch }}
+
+      - name: Apply patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf "%s" "${{ inputs.patch }}" > /tmp/otos.patch
+          git apply /tmp/otos.patch
+
+      - name: Commit + push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "OTOS AutoPatch"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "Apply OTOS patch"
+          git push
