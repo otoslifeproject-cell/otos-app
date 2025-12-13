@@ -33,35 +33,42 @@
       margin-bottom: 12px;
     }
 
-    .muted {
+    .empty {
       color: #9aa0a6;
-      font-size: 14px;
-      margin-bottom: 20px;
+      text-align: center;
+      margin-top: 80px;
     }
 
-    .signal {
+    .item {
+      padding: 14px;
+      border-bottom: 1px solid #1f2937;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+
+    .title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #9aa0a6;
+    }
+
+    .notes {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-top: 6px;
+    }
+
+    .panel {
       background: #111827;
       border: 1px solid #1f2937;
       border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 12px;
-    }
-
-    .signal-title {
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .signal-notes {
-      color: #9aa0a6;
-      font-size: 14px;
-    }
-
-    .empty {
-      color: #6b7280;
-      font-size: 14px;
-      margin-top: 40px;
-      text-align: center;
+      overflow: hidden;
     }
   </style>
 </head>
@@ -76,34 +83,36 @@
   </nav>
 
   <h1>Signals</h1>
-  <div class="muted">Captured moments, thoughts, and states</div>
 
-  <div id="signals"></div>
+  <div id="container" class="panel"></div>
 
   <script>
     const KEY = "otos_signals";
-    const container = document.getElementById("signals");
+    const container = document.getElementById("container");
 
     function render() {
+      const data = JSON.parse(localStorage.getItem(KEY) || "[]");
       container.innerHTML = "";
 
-      const data = JSON.parse(localStorage.getItem(KEY) || "[]");
-
       if (!data.length) {
-        container.innerHTML = '<div class="empty">No signals yet</div>';
+        container.innerHTML =
+          '<div class="empty">No signals yet</div>';
         return;
       }
 
       data
         .slice()
         .reverse()
-        .forEach(signal => {
+        .forEach(s => {
           const div = document.createElement("div");
-          div.className = "signal";
+          div.className = "item";
+
+          const time = new Date(s.ts).toLocaleString();
 
           div.innerHTML = `
-            <div class="signal-title">${signal.title || "Untitled"}</div>
-            ${signal.notes ? `<div class="signal-notes">${signal.notes}</div>` : ""}
+            <div class="title">${s.title}</div>
+            <div class="meta">${s.intensity} · ${time}</div>
+            ${s.notes ? `<div class="notes">${s.notes}</div>` : ""}
           `;
 
           container.appendChild(div);
