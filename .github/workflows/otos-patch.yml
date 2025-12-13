@@ -1,38 +1,68 @@
-name: OTOS Apply Patch
-
-on:
-  workflow_dispatch:
-    inputs:
-      target_branch:
-        description: "Branch to apply to"
-        required: true
-        default: "main"
-      patch:
-        description: "Unified diff patch (git apply format)"
-        required: true
-
-jobs:
-  apply_patch:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.target_branch }}
-
-      - name: Apply patch
-        shell: bash
-        run: |
-          set -euo pipefail
-          printf "%s" "${{ inputs.patch }}" > /tmp/otos.patch
-          git apply /tmp/otos.patch
-
-      - name: Commit + push
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name "OTOS AutoPatch"
-          git config user.email "actions@users.noreply.github.com"
-          git add -A
-          git commit -m "Apply OTOS patch"
-          git push
+diff --git a/presence.html b/presence.html
+index 0000000..1111111 100644
+--- a/presence.html
++++ b/presence.html
+@@ -1,5 +1,86 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
++  <meta charset="UTF-8" />
++  <title>OTOS Presence</title>
++  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++  <style>
++    body {
++      margin: 0;
++      padding: 20px;
++      background: #0f1115;
++      color: #e6e6e6;
++      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
++    }
++    .panel {
++      background: #171a21;
++      border-radius: 12px;
++      padding: 20px;
++    }
++    .muted { color: #9aa0a6; font-size: 13px; }
++    .state { font-size: 18px; margin-top: 10px; }
++  </style>
+ </head>
+ <body>
++  <div class="panel">
++    <h2>Presence™</h2>
++    <div class="muted">Baseline awareness — always on</div>
++
++    <div class="state" id="state">Loading…</div>
++    <div class="muted" id="meta"></div>
++  </div>
++
++  <script>
++    function readSignals() {
++      try {
++        return JSON.parse(localStorage.getItem("signals")) || [];
++      } catch {
++        return [];
++      }
++    }
++
++    function render() {
++      const signals = readSignals();
++      const stateEl = document.getElementById("state");
++      const metaEl = document.getElementById("meta");
++
++      if (!signals.length) {
++        stateEl.textContent = "Quiet";
++        metaEl.textContent = "No active signals";
++        return;
++      }
++
++      const latest = signals[0];
++      stateEl.textContent = "Active";
++      metaEl.textContent =
++        `${signals.length} signal(s) • Latest: "${latest.title}"`;
++    }
++
++    window.addEventListener("storage", render);
++    render();
++  </script>
+ </body>
+ </html>
