@@ -1,140 +1,92 @@
+<!-- FILE: state.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS — State</title>
+  <title>OTOS State</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     body {
       margin: 0;
-      padding: 24px;
+      padding: 32px;
       background: #0b0f14;
       color: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-
-    /* NAV */
-    .topnav {
-      margin-bottom: 24px;
-    }
-    .topnav a {
-      margin-right: 14px;
-      color: #9aa0a6;
-      text-decoration: none;
-      font-size: 14px;
-    }
-    .topnav a:hover {
-      color: #22c55e;
-    }
-
-    h1 {
-      margin-top: 0;
-      margin-bottom: 8px;
-    }
-
-    .sub {
-      color: #9aa0a6;
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
-
-    .panel {
+    h1 { margin-bottom: 6px; }
+    p { color: #9aa0a6; }
+    .block {
       background: #111827;
       border: 1px solid #1f2937;
-      border-radius: 14px;
-      padding: 20px;
-      max-width: 720px;
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 18px;
+      max-width: 520px;
     }
-
-    .row {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #1f2937;
+    select {
+      width: 100%;
+      margin-top: 12px;
+      padding: 10px;
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
       font-size: 14px;
     }
-
-    .row:last-child {
-      border-bottom: none;
-    }
-
-    .label {
-      color: #9aa0a6;
-    }
-
-    .value {
-      font-weight: 600;
+    .status {
+      margin-top: 12px;
+      font-size: 14px;
       color: #22c55e;
-    }
-
-    .note {
-      margin-top: 20px;
-      font-size: 13px;
-      color: #9aa0a6;
     }
   </style>
 </head>
-
 <body>
 
+  <!-- NAV -->
   <nav class="topnav">
     <a href="./index.html">Cockpit</a>
     <a href="./feeder.html">Feeder</a>
     <a href="./signals.html">Signals</a>
-    <a href="./presence.html">Presence™</a>
-    <a href="./velocity.html">Velocity™</a>
-    <a href="./focus.html">Focus™</a>
+    <a href="./focus.html">Focus</a>
     <a href="./state.html">State</a>
+    <a href="./velocity.html">Velocity™</a>
+    <a href="./presence.html">Presence</a>
   </nav>
 
-  <h1>System State</h1>
-  <div class="sub">Single source of truth · live snapshot</div>
+  <h1>State</h1>
+  <p>Self-reported internal state.</p>
 
-  <div class="panel">
-    <div class="row">
-      <span class="label">Signals stored</span>
-      <span class="value" id="signals">0</span>
-    </div>
-    <div class="row">
-      <span class="label">Focus level</span>
-      <span class="value" id="focus">—</span>
-    </div>
-    <div class="row">
-      <span class="label">Velocity state</span>
-      <span class="value" id="velocity">—</span>
-    </div>
-    <div class="row">
-      <span class="label">Last signal</span>
-      <span class="value" id="last">—</span>
-    </div>
+  <div class="block">
+    <label for="stateSelect">Current State</label>
+    <select id="stateSelect">
+      <option value="">Select…</option>
+      <option>Calm</option>
+      <option>Focused</option>
+      <option>Overloaded</option>
+      <option>Anxious</option>
+      <option>Low Energy</option>
+      <option>Motivated</option>
+    </select>
+    <div class="status" id="status"></div>
   </div>
 
-  <div class="note">
-    This page is diagnostic only. No actions are performed here.
-  </div>
+<script>
+  const KEY = "otos_state";
+  const select = document.getElementById("stateSelect");
+  const status = document.getElementById("status");
 
-  <script>
-    const signals = JSON.parse(localStorage.getItem("otos_signals") || "[]");
-    const focus = localStorage.getItem("otos_focus") || "50";
+  const saved = localStorage.getItem(KEY);
+  if (saved) {
+    select.value = saved;
+    status.textContent = "Saved: " + saved;
+  }
 
-    document.getElementById("signals").textContent = signals.length;
-    document.getElementById("focus").textContent = focus + "%";
-
-    if (!signals.length) {
-      document.getElementById("velocity").textContent = "Dormant";
-      document.getElementById("last").textContent = "—";
-    } else {
-      const last = signals[signals.length - 1];
-      const mins = Math.floor((Date.now() - last.ts) / 60000);
-
-      document.getElementById("velocity").textContent =
-        mins < 30 ? "Active" : "Cooling";
-
-      document.getElementById("last").textContent =
-        mins < 1 ? "Just now" : `${mins} min ago`;
-    }
-  </script>
+  select.onchange = () => {
+    if (!select.value) return;
+    localStorage.setItem(KEY, select.value);
+    status.textContent = "Saved: " + select.value;
+  };
+</script>
 
 </body>
 </html>
