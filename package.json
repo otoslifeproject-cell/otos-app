@@ -1,4 +1,5 @@
-// FILE: package.json (FULL REPLACEMENT — ADD ANALYSIS SCRIPT)
+// FILE: package.json (FULL REPLACEMENT)
+
 {
   "name": "otos-notion-sync",
   "private": true,
