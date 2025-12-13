@@ -1,0 +1,24 @@
+# FILE: feeder.yml (FULL REPLACEMENT)
+
+name: Feeder Intake (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      CONFIRM:
+        description: "Type YES to allow intake"
+        required: true
+
+jobs:
+  feeder:
+    if: ${{ github.event.inputs.CONFIRM == 'YES' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: node feeder.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
