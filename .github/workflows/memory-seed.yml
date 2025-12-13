@@ -1,0 +1,29 @@
+# FILE: .github/workflows/memory-seed.yml
+# FULL REPLACEMENT — MANUAL, GUARDED WRITE
+
+name: Memory Seeder (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type YES to allow write"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  seed:
+    if: github.event.inputs.confirm == 'YES'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run memory:seed
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          CONVERSATIONS_JSON_PATH: ./conversations.json
