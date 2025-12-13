@@ -3,8 +3,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS State</title>
+  <title>State — OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     body {
       margin: 0;
@@ -13,80 +14,114 @@
       color: #e5e7eb;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    h1 { margin-bottom: 6px; }
-    p { color: #9aa0a6; }
-    .block {
+
+    .topnav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .topnav a {
+      color: #e5e7eb;
+      text-decoration: none;
       background: #111827;
       border: 1px solid #1f2937;
-      border-radius: 10px;
-      padding: 18px;
-      margin-top: 18px;
-      max-width: 520px;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
     }
-    select {
-      width: 100%;
-      margin-top: 12px;
-      padding: 10px;
-      background: #020617;
-      color: #e5e7eb;
+
+    .topnav a.active {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: #111827;
       border: 1px solid #1f2937;
-      border-radius: 8px;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .state-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .state-pill {
+      background: #0b1220;
+      border: 1px solid #1f2937;
+      border-radius: 999px;
+      padding: 8px 14px;
       font-size: 14px;
     }
-    .status {
-      margin-top: 12px;
-      font-size: 14px;
-      color: #22c55e;
+
+    .hint {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 8px;
     }
   </style>
 </head>
+
 <body>
 
-  <!-- NAV -->
   <nav class="topnav">
-    <a href="./index.html">Cockpit</a>
-    <a href="./feeder.html">Feeder</a>
-    <a href="./signals.html">Signals</a>
-    <a href="./focus.html">Focus</a>
-    <a href="./state.html">State</a>
-    <a href="./velocity.html">Velocity™</a>
-    <a href="./presence.html">Presence</a>
+    <a href="index.html">Home</a>
+    <a href="cockpit.html">Cockpit</a>
+    <a href="presence.html">Presence</a>
+    <a href="focus.html">Focus</a>
+    <a href="velocity.html">Velocity</a>
+    <a href="signals.html">Signals</a>
+    <a href="state.html" class="active">State</a>
   </nav>
 
   <h1>State</h1>
-  <p>Self-reported internal state.</p>
-
-  <div class="block">
-    <label for="stateSelect">Current State</label>
-    <select id="stateSelect">
-      <option value="">Select…</option>
-      <option>Calm</option>
-      <option>Focused</option>
-      <option>Overloaded</option>
-      <option>Anxious</option>
-      <option>Low Energy</option>
-      <option>Motivated</option>
-    </select>
-    <div class="status" id="status"></div>
+  <div class="subtitle">
+    This is how things are right now — not who you are.
   </div>
 
-<script>
-  const KEY = "otos_state";
-  const select = document.getElementById("stateSelect");
-  const status = document.getElementById("status");
+  <div class="card">
+    <h2>📊 Current State Snapshot</h2>
 
-  const saved = localStorage.getItem(KEY);
-  if (saved) {
-    select.value = saved;
-    status.textContent = "Saved: " + saved;
-  }
+    <div class="state-row">
+      <div class="state-pill">Energy: Low</div>
+      <div class="state-pill">Focus: Fragmented</div>
+      <div class="state-pill">Mood: Flat</div>
+      <div class="state-pill">Stress: Elevated</div>
+    </div>
 
-  select.onchange = () => {
-    if (!select.value) return;
-    localStorage.setItem(KEY, select.value);
-    status.textContent = "Saved: " + select.value;
-  };
-</script>
+    <div class="hint">
+      States change. Noticing them is enough.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🧭 Orientation</h2>
+    <p class="hint">
+      When state is low, reduce demand — do not increase pressure.
+    </p>
+  </div>
 
 </body>
 </html>
