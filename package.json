@@ -1,1 +1,13 @@
-
+// FILE: package.json (FULL REPLACEMENT — ADD SEEDER)
+{
+  "name": "otos-notion-sync",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@notionhq/client": "^2.3.0"
+  },
+  "scripts": {
+    "notion:read": "node notion-sync.js",
+    "memory:seed": "node memory-seeder.js"
+  }
+}
