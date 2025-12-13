@@ -1,139 +1,16 @@
-<!-- FILE: cockpit.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Cockpit — OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    body {
-      margin: 0;
-      padding: 32px;
-      background: #0b0f14;
-      color: #e5e7eb;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    .topnav {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 28px;
-    }
-
-    .topnav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 14px;
-    }
-
-    .topnav a.active {
-      background: #7c3aed;
-      border-color: #7c3aed;
-    }
-
-    h1 {
-      font-size: 30px;
-      margin-bottom: 6px;
-    }
-
-    .subtitle {
-      color: #9ca3af;
-      margin-bottom: 28px;
-      max-width: 720px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-    }
-
-    .panel {
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 16px;
-      padding: 20px;
-    }
-
-    .panel h2 {
-      margin-top: 0;
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .metric {
-      font-size: 14px;
-      margin-bottom: 8px;
-      color: #d1d5db;
-    }
-
-    .hint {
-      font-size: 13px;
-      color: #9ca3af;
-      margin-top: 10px;
-    }
-  </style>
 </head>
 
 <body>
-
-  <nav class="topnav">
-    <a href="index.html">Home</a>
-    <a href="cockpit.html" class="active">Cockpit</a>
-    <a href="presence.html">Presence</a>
-    <a href="focus.html">Focus</a>
-    <a href="velocity.html">Velocity</a>
-    <a href="signals.html">Signals</a>
-    <a href="state.html">State</a>
-  </nav>
+  <div id="nav"></div>
+  <script src="nav-loader.js" defer></script>
 
   <h1>Cockpit</h1>
-  <div class="subtitle">
-    High-level orientation. No micromanagement. Just awareness.
-  </div>
-
-  <div class="grid">
-    <div class="panel">
-      <h2>🟢 Presence</h2>
-      <div class="metric">Stability: Holding</div>
-      <div class="metric">Breath: Slow</div>
-      <div class="hint">Base layer online.</div>
-    </div>
-
-    <div class="panel">
-      <h2>🎯 Focus</h2>
-      <div class="metric">Primary task: Set</div>
-      <div class="metric">Distractions: Parked</div>
-      <div class="hint">One thing at a time.</div>
-    </div>
-
-    <div class="panel">
-      <h2>⚡ Velocity</h2>
-      <div class="metric">Momentum: Gentle</div>
-      <div class="metric">Pressure: Low</div>
-      <div class="hint">Progress without force.</div>
-    </div>
-
-    <div class="panel">
-      <h2>📡 Signals</h2>
-      <div class="metric">Alerts: Minimal</div>
-      <div class="metric">Awareness: Active</div>
-      <div class="hint">Early noticing.</div>
-    </div>
-
-    <div class="panel">
-      <h2>📊 State</h2>
-      <div class="metric">Energy: Variable</div>
-      <div class="metric">Mood: Neutral</div>
-      <div class="hint">State ≠ identity.</div>
-    </div>
-  </div>
-
+  <p>High-level orientation. No micromanagement.</p>
 </body>
 </html>
