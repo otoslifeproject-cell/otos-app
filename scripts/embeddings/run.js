@@ -1,5 +1,4 @@
-console.log("DEBUG DB ID:", process.env.NOTION_DATABASE_ID, process.env.BRAIN_DB);
-process.exit(1);
+console.log("DEBUG DB ID:", process.env.NOTION_DATABASE_ID);
 /**
  * OTOS Embeddings Builder
  * ----------------------
