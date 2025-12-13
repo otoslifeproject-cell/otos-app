@@ -1,127 +1,77 @@
+<!-- FILE: focus.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS — Focus™</title>
+  <title>OTOS Focus</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     body {
       margin: 0;
       padding: 32px;
       background: #0b0f14;
       color: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-
-    /* NAV (minimal) */
-    .topnav {
-      margin-bottom: 24px;
-    }
-    .topnav a {
-      margin-right: 14px;
-      color: #9aa0a6;
-      text-decoration: none;
-      font-size: 14px;
-    }
-    .topnav a:hover {
-      color: #22c55e;
-    }
-
-    h1 {
-      margin: 0 0 6px 0;
-    }
-
-    .sub {
-      color: #9aa0a6;
-      font-size: 14px;
-      margin-bottom: 28px;
-    }
-
-    .panel {
+    h1 { margin-bottom: 6px; }
+    p { color: #9aa0a6; }
+    .block {
       background: #111827;
       border: 1px solid #1f2937;
-      border-radius: 16px;
-      padding: 28px;
-      max-width: 640px;
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 18px;
+      max-width: 520px;
     }
-
-    .toggle {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 24px;
-    }
-
-    .label {
-      font-size: 15px;
-    }
-
     input[type="range"] {
       width: 100%;
       margin-top: 12px;
     }
-
-    .value {
+    .level {
+      margin-top: 10px;
       font-size: 14px;
       color: #22c55e;
-      margin-top: 6px;
-    }
-
-    .hint {
-      font-size: 13px;
-      color: #9aa0a6;
-      margin-top: 20px;
     }
   </style>
 </head>
-
 <body>
 
+  <!-- NAV -->
   <nav class="topnav">
     <a href="./index.html">Cockpit</a>
     <a href="./feeder.html">Feeder</a>
     <a href="./signals.html">Signals</a>
-    <a href="./presence.html">Presence™</a>
+    <a href="./focus.html">Focus</a>
+    <a href="./state.html">State</a>
     <a href="./velocity.html">Velocity™</a>
-    <a href="./focus.html">Focus™</a>
+    <a href="./presence.html">Presence</a>
   </nav>
 
-  <h1>Focus™</h1>
-  <div class="sub">Attention shaping · distraction reduction · calm execution</div>
+  <h1>Focus</h1>
+  <p>Attention narrowing and execution clarity.</p>
 
-  <div class="panel">
-    <div class="toggle">
-      <div class="label">Focus mode intensity</div>
-      <div id="level" class="value">50%</div>
-    </div>
-
-    <input type="range" min="0" max="100" step="10" value="50" id="range" />
-
-    <div class="hint">
-      Higher focus reduces visual noise and narrows attention.<br>
-      You are always in control.
-    </div>
+  <div class="block">
+    <label>Focus Intensity</label>
+    <input id="focusRange" type="range" min="1" max="10" value="5" />
+    <div class="level">Level: <span id="level">5</span> / 10</div>
   </div>
 
-  <script>
-    const KEY = "otos_focus";
-    const range = document.getElementById("range");
-    const level = document.getElementById("level");
+<script>
+  const range = document.getElementById("focusRange");
+  const level = document.getElementById("level");
+  const KEY = "otos_focus_level";
 
-    function load() {
-      const v = localStorage.getItem(KEY);
-      if (v !== null) range.value = v;
-      level.textContent = range.value + "%";
-    }
+  const saved = localStorage.getItem(KEY);
+  if (saved) {
+    range.value = saved;
+    level.textContent = saved;
+  }
 
-    range.addEventListener("input", () => {
-      localStorage.setItem(KEY, range.value);
-      level.textContent = range.value + "%";
-    });
-
-    load();
-  </script>
+  range.oninput = () => {
+    level.textContent = range.value;
+    localStorage.setItem(KEY, range.value);
+  };
+</script>
 
 </body>
 </html>
