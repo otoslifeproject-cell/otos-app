@@ -1,12 +1,10 @@
-# FILE: .github/workflows/memory-seed.yml (FULL REPLACEMENT)
-
 name: Memory Seeder (Manual)
 
 on:
   workflow_dispatch:
     inputs:
       confirm:
-        description: "Type YES to run the memory seeder"
+        description: "Type YES to confirm seeding"
         required: true
         default: "NO"
 
@@ -16,22 +14,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 18
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      - name: Run Memory Seeder (Notion-only, no files)
+      - name: Run memory seeder
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           BRAIN_DB: ${{ secrets.BRAIN_DB }}
           CORE_DB: ${{ secrets.CORE_DB }}
-        run: |
-          echo "Running Memory Seeder in Notion-only mode"
-          node memory-seeder.js --skip-files
+        run: node memory-seeder.js
