@@ -1,23 +1,31 @@
-# FILE: .github/workflows/otos-patch.yml (FULL REPLACEMENT)
-name: OTOS Patch
+# FILE: .github/workflows/otos-patch.yml (FULL REPLACEMENT — SAFETY PATCH WORKFLOW)
+
+name: OTOS Safe Patch
 
 on:
-  push:
-    branches: [ "main" ]
   workflow_dispatch:
+    inputs:
+      reason:
+        description: "Reason for patch"
+        required: true
+        default: "UI / content update"
 
 jobs:
-  build:
+  patch:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate HTML files
+      - name: Verify HTML sanity
         run: |
-          echo "Validating HTML structure"
-          ls -la *.html || true
+          echo "Checking for inline nav JS..."
+          if grep -R "<script>(function" -n *.html; then
+            echo "❌ Inline JS detected in HTML"
+            exit 1
+          fi
+          echo "✅ HTML sanity check passed"
 
-      - name: No-op patch step (stable)
+      - name: Commit noop if clean
         run: |
-          echo "OTOS patch pipeline stable"
+          echo "Patch verified: ${{ github.event.inputs.reason }}"
