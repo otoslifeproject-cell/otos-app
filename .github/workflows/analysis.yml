@@ -1,0 +1,22 @@
+# FILE: .github/workflows/analysis.yml (FULL REPLACEMENT — MANUAL, READ-ONLY)
+
+name: Analysis Pipeline (Manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run analysis:run
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
