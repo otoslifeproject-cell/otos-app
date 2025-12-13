@@ -1,39 +1,35 @@
 /**
  * OTOS Embeddings Builder
  * ----------------------
- * Ingests a Notion database, generates embeddings via OpenAI,
- * and persists them to the local vector store (or downstream target).
- *
- * REQUIRED ENV VARS:
- * - OPENAI_API_KEY
- * - NOTION_TOKEN
- * - NOTION_DATABASE_ID
+ * - Uses Notion as the Brain DB
+ * - Generates OpenAI embeddings
+ * - Designed for GitHub Actions
+ * - Safe (no secret leakage)
  */
 
+import process from "process";
 import { Client as NotionClient } from "@notionhq/client";
 import OpenAI from "openai";
 
 // ─────────────────────────────────────────────────────────────
-// ENV VALIDATION (DO NOT REMOVE)
+// ENV VALIDATION (hard fail, explicit)
 // ─────────────────────────────────────────────────────────────
 
-const REQUIRED_ENV_VARS = [
+const REQUIRED_ENV = [
   "OPENAI_API_KEY",
   "NOTION_TOKEN",
   "NOTION_DATABASE_ID",
 ];
 
-const missing = REQUIRED_ENV_VARS.filter(
-  (key) => !process.env[key] || process.env[key].trim() === ""
-);
+const missing = REQUIRED_ENV.filter((k) => !process.env[k]);
 
 if (missing.length > 0) {
   console.error("❌ Missing required environment variables:");
-  missing.forEach((v) => console.error(` - ${v}`));
+  for (const key of missing) console.error(` - ${key}`);
   process.exit(1);
 }
 
-console.log("🧠 Starting embeddings builder...");
+console.log("✅ Environment variables present");
 
 // ─────────────────────────────────────────────────────────────
 // CLIENTS
@@ -51,26 +47,28 @@ const openai = new OpenAI({
 // HELPERS
 // ─────────────────────────────────────────────────────────────
 
-function extractPlainText(properties) {
-  let text = [];
+function extractPlainText(richText = []) {
+  return richText.map((t) => t.plain_text).join(" ").trim();
+}
 
-  for (const key of Object.keys(properties)) {
-    const prop = properties[key];
+async function fetchAllNotionPages(databaseId) {
+  const pages = [];
+  let cursor = undefined;
 
-    if (prop.type === "title") {
-      text.push(
-        prop.title.map((t) => t.plain_text).join(" ")
-      );
-    }
+  while (true) {
+    const res = await notion.databases.query({
+      database_id: databaseId,
+      start_cursor: cursor,
+      page_size: 100,
+    });
 
-    if (prop.type === "rich_text") {
-      text.push(
-        prop.rich_text.map((t) => t.plain_text).join(" ")
-      );
-    }
+    pages.push(...res.results);
+
+    if (!res.has_more) break;
+    cursor = res.next_cursor;
   }
 
-  return text.join("\n").trim();
+  return pages;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -78,64 +76,59 @@ function extractPlainText(properties) {
 // ─────────────────────────────────────────────────────────────
 
 async function run() {
-  console.log("📡 Fetching Notion pages...");
+  console.log("🧠 Loading Notion Brain DB…");
 
-  const pages = [];
-  let cursor = undefined;
+  const pages = await fetchAllNotionPages(
+    process.env.NOTION_DATABASE_ID
+  );
 
-  do {
-    const response = await notion.databases.query({
-      database_id: process.env.NOTION_DATABASE_ID,
-      start_cursor: cursor,
-      page_size: 100,
-    });
+  console.log(`📄 Loaded ${pages.length} records`);
 
-    pages.push(...response.results);
-    cursor = response.has_more ? response.next_cursor : undefined;
-  } while (cursor);
-
-  console.log(`📄 Pages fetched: ${pages.length}`);
-
-  if (pages.length === 0) {
-    console.log("⚠️ No pages found. Nothing to embed.");
-    return;
-  }
+  let embedded = 0;
 
   for (const page of pages) {
-    const text = extractPlainText(page.properties);
+    const props = page.properties;
 
-    if (!text) {
-      console.log(`⏭️ Skipping empty page ${page.id}`);
-      continue;
-    }
+    const titleProp =
+      props.Title ||
+      props.Name ||
+      Object.values(props).find((p) => p.type === "title");
 
-    console.log(`🔹 Embedding page ${page.id} (${text.length} chars)`);
+    if (!titleProp) continue;
 
-    const embeddingResponse = await openai.embeddings.create({
+    const text = extractPlainText(titleProp.title);
+    if (!text) continue;
+
+    const embedding = await openai.embeddings.create({
       model: "text-embedding-3-large",
       input: text,
     });
 
-    const vector = embeddingResponse.data[0].embedding;
+    const vector = embedding.data[0].embedding;
 
-    // 🔐 At this stage you would:
-    // - persist to a vector DB
-    // - write to disk
-    // - push to Pinecone / Supabase / local store
-    //
-    // For now, we log confirmation only.
-    console.log(`✅ Embedded ${page.id} → vector length ${vector.length}`);
+    // Store embedding back into Notion (as JSON text)
+    await notion.pages.update({
+      page_id: page.id,
+      properties: {
+        Embedding: {
+          rich_text: [
+            {
+              text: {
+                content: JSON.stringify(vector),
+              },
+            },
+          ],
+        },
+      },
+    });
+
+    embedded++;
   }
 
-  console.log("🎉 Embeddings build complete.");
+  console.log(`✅ Embeddings written: ${embedded}`);
 }
 
-// ─────────────────────────────────────────────────────────────
-// EXECUTE
-// ─────────────────────────────────────────────────────────────
-
 run().catch((err) => {
-  console.error("💥 Fatal error in embeddings builder:");
-  console.error(err);
+  console.error("🔥 Fatal error:", err);
   process.exit(1);
 });
