@@ -1,49 +1,59 @@
-diff --git a/feeder.html b/feeder.html
-index 1111111..2222222 100644
---- a/feeder.html
-+++ b/feeder.html
-@@ -1,6 +1,7 @@
- <!DOCTYPE html>
- <html lang="en">
- <head>
-+  <meta charset="UTF-8" />
-   <title>OTOS Feeder</title>
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <style>
-@@ -40,6 +41,14 @@
-     button { margin-top:16px; }
-     .hint { font-size:12px; color:var(--muted); margin-top:8px; }
+diff --git a/signals.html b/signals.html
+index 3333333..4444444 100644
+--- a/signals.html
++++ b/signals.html
+@@ -15,6 +15,28 @@
+     body { font-family: system-ui, sans-serif; background:#0f172a; color:#e5e7eb; }
+     .item { padding:12px; border-bottom:1px solid #1f2937; }
+     .muted { color:#9ca3af; font-size:13px; }
 +
-+    .presence {
-+      position: fixed;
-+      bottom: 24px;
-+      right: 24px;
-+      background: #1f2933;
-+      padding: 12px 16px;
-+      border-radius: 999px;
-+      opacity: 0;
-+      transition: opacity 0.3s ease;
-+      font-size: 13px;
++    .patterns {
++      margin-top:24px;
++      padding:16px;
++      background:#020617;
++      border-radius:12px;
 +    }
-+    .presence.show { opacity: 1; }
++    .pattern {
++      padding:10px 0;
++      border-bottom:1px solid #1f2937;
++    }
++    .pattern:last-child { border-bottom:none; }
    </style>
  </head>
  <body>
-@@ -72,6 +81,8 @@
-   <button onclick="save()">Add to Signals</button>
-   <div class="hint">Saved instantly · visible everywhere</div>
-+
-+  <div id="presence" class="presence">Noted</div>
- </body>
+@@ -22,6 +44,7 @@
+   <h1>Signals</h1>
+   <div id="list"></div>
++  <div id="patterns" class="patterns" style="display:none"></div>
 
  <script>
-@@ -86,6 +97,13 @@
-     localStorage.setItem(KEY, JSON.stringify(signals));
-     title.value = notes.value = "";
+   const KEY="signals";
+@@ -35,6 +58,29 @@
+     list.innerHTML="";
+     const grouped = {};
 +
-+    const p = document.getElementById("presence");
-+    p.classList.add("show");
-+    setTimeout(()=>p.classList.remove("show"), 1400);
+     data.forEach(s=>{
+       const d=document.createElement("div");
+       d.className="item";
+       d.innerHTML=`<strong>${s.title}</strong><div class="muted">${s.notes||""}</div>`;
+       list.appendChild(d);
++
++       grouped[s.title]=(grouped[s.title]||0)+1;
+     });
++
++    const pWrap=document.getElementById("patterns");
++    const repeats=Object.entries(grouped).filter(([_,c])=>c>1);
++    if(repeats.length){
++      pWrap.style.display="block";
++      pWrap.innerHTML="<strong>Patterns noticed</strong>";
++      repeats.forEach(([t,c])=>{
++        const p=document.createElement("div");
++        p.className="pattern muted";
++        p.textContent=`“${t}” has shown up ${c} times`;
++        pWrap.appendChild(p);
++      });
++    }
    }
- </script>
- </html>
+
+   render();
+
