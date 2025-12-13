@@ -1,3 +1,7 @@
+console.log("ENV CHECK:");
+console.log("OPENAI_API_KEY present:", !!process.env.OPENAI_API_KEY);
+console.log("NOTION_TOKEN present:", !!process.env.NOTION_TOKEN);
+console.log("NOTION_DATABASE_ID present:", !!process.env.NOTION_DATABASE_ID);
 /**
  * Embeddings Builder
  * CI-safe, no node_modules, no dotenv
