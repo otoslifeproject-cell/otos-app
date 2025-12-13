@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OTOS — Signals</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+    }
+
+    header {
+      padding: 16px 20px;
+      font-size: 20px;
+      font-weight: 600;
+      background: #141414;
+      border-bottom: 1px solid #222;
+    }
+
+    .container {
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .signal {
+      background: #1a1a1a;
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #ff7a00;
+    }
+
+    .signal-text {
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .signal-time {
+      font-size: 12px;
+      opacity: 0.6;
+      white-space: nowrap;
+      margin-left: 12px;
+    }
+
+    .empty {
+      opacity: 0.5;
+      text-align: center;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<header>Signals</header>
+
+<div class="container" id="signals"></div>
+
+<script>
+  const container = document.getElementById("signals");
+
+  function renderSignals() {
+    const raw = localStorage.getItem("otos_signals");
+    const signals = raw ? JSON.parse(raw) : [];
+
+    container.innerHTML = "";
+
+    if (signals.length === 0) {
+      container.innerHTML = `<div class="empty">No signals yet</div>`;
+      return;
+    }
+
+    signals
+      .slice()
+      .reverse()
+      .forEach(sig => {
+        const el = document.createElement("div");
+        el.className = "signal";
+
+        el.innerHTML = `
+          <div class="signal-text">${sig.text}</div>
+          <div class="signal-time">${new Date(sig.time).toLocaleTimeString()}</div>
+        `;
+
+        container.appendChild(el);
+      });
+  }
+
+  window.addEventListener("storage", renderSignals);
+  renderSignals();
+</script>
+
+</body>
+</html>
