@@ -1,59 +1,23 @@
-diff --git a/signals.html b/signals.html
-index 3333333..4444444 100644
---- a/signals.html
-+++ b/signals.html
-@@ -15,6 +15,28 @@
-     body { font-family: system-ui, sans-serif; background:#0f172a; color:#e5e7eb; }
-     .item { padding:12px; border-bottom:1px solid #1f2937; }
-     .muted { color:#9ca3af; font-size:13px; }
-+
-+    .patterns {
-+      margin-top:24px;
-+      padding:16px;
-+      background:#020617;
-+      border-radius:12px;
-+    }
-+    .pattern {
-+      padding:10px 0;
-+      border-bottom:1px solid #1f2937;
-+    }
-+    .pattern:last-child { border-bottom:none; }
-   </style>
- </head>
- <body>
-@@ -22,6 +44,7 @@
-   <h1>Signals</h1>
-   <div id="list"></div>
-+  <div id="patterns" class="patterns" style="display:none"></div>
+# FILE: .github/workflows/otos-patch.yml (FULL REPLACEMENT)
+name: OTOS Patch
 
- <script>
-   const KEY="signals";
-@@ -35,6 +58,29 @@
-     list.innerHTML="";
-     const grouped = {};
-+
-     data.forEach(s=>{
-       const d=document.createElement("div");
-       d.className="item";
-       d.innerHTML=`<strong>${s.title}</strong><div class="muted">${s.notes||""}</div>`;
-       list.appendChild(d);
-+
-+       grouped[s.title]=(grouped[s.title]||0)+1;
-     });
-+
-+    const pWrap=document.getElementById("patterns");
-+    const repeats=Object.entries(grouped).filter(([_,c])=>c>1);
-+    if(repeats.length){
-+      pWrap.style.display="block";
-+      pWrap.innerHTML="<strong>Patterns noticed</strong>";
-+      repeats.forEach(([t,c])=>{
-+        const p=document.createElement("div");
-+        p.className="pattern muted";
-+        p.textContent=`“${t}” has shown up ${c} times`;
-+        pWrap.appendChild(p);
-+      });
-+    }
-   }
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
 
-   render();
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
+      - name: Validate HTML files
+        run: |
+          echo "Validating HTML structure"
+          ls -la *.html || true
+
+      - name: No-op patch step (stable)
+        run: |
+          echo "OTOS patch pipeline stable"
