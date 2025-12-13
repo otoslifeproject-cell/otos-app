@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>OTOS Cockpit — Presence</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+:root{
+  --bg:#0f1115;
+  --panel:#171a21;
+  --accent:#ff8c1a;
+  --text:#e6e6e6;
+  --muted:#9aa0a6;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  padding:24px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+h1,h2{margin:0 0 12px}
+p{margin:0 0 16px;color:var(--muted)}
+
+.card{
+  background:var(--panel);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.slider-wrap{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+input[type=range]{
+  width:100%;
+}
+
+.badge{
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:13px;
+  background:#222;
+  color:var(--muted);
+}
+
+.state{
+  font-size:18px;
+  font-weight:600;
+  color:var(--accent);
+}
+</style>
+</head>
+
+<body>
+
+<h1>Presence™</h1>
+<p>Your adjustable digital support layer.</p>
+
+<div class="card">
+  <h2>Reality Radar</h2>
+  <p>Set how much support you want right now.</p>
+
+  <div class="slider-wrap">
+    <input id="presence" type="range" min="1" max="10" />
+    <span class="badge">Level <strong id="level">5</strong></span>
+  </div>
+
+  <p class="state" id="stateText">Stable presence</p>
+</div>
+
+<div class="card">
+  <h2>Quick Check-In</h2>
+  <p id="note">You’re supported. Nothing required.</p>
+</div>
+
+<script>
+const slider = document.getElementById("presence");
+const levelEl = document.getElementById("level");
+const stateText = document.getElementById("stateText");
+const note = document.getElementById("note");
+
+const STATES = [
+  "Quiet mode",
+  "Gentle presence",
+  "Light check-ins",
+  "Balanced support",
+  "Stable presence",
+  "Active awareness",
+  "Frequent grounding",
+  "High support",
+  "Intensive support",
+  "Maximum presence"
+];
+
+function apply(level){
+  levelEl.textContent = level;
+  stateText.textContent = STATES[level-1];
+  note.textContent =
+    level <= 3 ? "Minimal interruption. You’re trusted." :
+    level <= 6 ? "Steady digital presence. Stay connected." :
+    "High support mode. Pause, breathe, reset when needed.";
+  localStorage.setItem("presenceLevel", level);
+}
+
+slider.addEventListener("input", e => apply(+e.target.value));
+
+const saved = localStorage.getItem("presenceLevel") || 5;
+slider.value = saved;
+apply(+saved);
+</script>
+
+</body>
+</html>
