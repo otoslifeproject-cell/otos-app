@@ -1,10 +1,11 @@
-<!-- FILE: index.html (FULL REPLACEMENT – COCKPIT HOME) -->
+<!-- FILE: index.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit</title>
+  <title>OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     body {
       margin: 0;
@@ -13,73 +14,119 @@
       color: #e5e7eb;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
+
+    .topnav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .topnav a {
+      color: #e5e7eb;
+      text-decoration: none;
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+    }
+
     h1 {
-      font-size: 28px;
+      font-size: 32px;
       margin-bottom: 8px;
     }
-    p {
-      color: #9aa0a6;
+
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 36px;
+      max-width: 720px;
+      line-height: 1.5;
     }
-    .tiles {
+
+    .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 32px;
+      gap: 20px;
     }
+
     .tile {
       background: #111827;
       border: 1px solid #1f2937;
+      border-radius: 16px;
       padding: 20px;
-      border-radius: 10px;
+      text-decoration: none;
+      color: #e5e7eb;
+      transition: transform 0.15s ease, border-color 0.15s ease;
     }
+
+    .tile:hover {
+      transform: translateY(-2px);
+      border-color: #2563eb;
+    }
+
     .tile h2 {
       margin: 0 0 6px 0;
       font-size: 18px;
     }
-    .tile a {
-      color: #22c55e;
-      text-decoration: none;
+
+    .tile p {
+      margin: 0;
       font-size: 14px;
+      color: #9ca3af;
+      line-height: 1.4;
     }
   </style>
 </head>
+
 <body>
 
-  <!-- NAV -->
   <nav class="topnav">
-    <a href="./index.html">Cockpit</a>
-    <a href="./feeder.html">Feeder</a>
-    <a href="./signals.html">Signals</a>
-    <a href="./focus.html">Focus</a>
-    <a href="./state.html">State</a>
-    <a href="./velocity.html">Velocity™</a>
-    <a href="./presence.html">Presence</a>
+    <a href="index.html">Home</a>
+    <a href="cockpit.html">Cockpit</a>
+    <a href="presence.html">Presence</a>
+    <a href="focus.html">Focus</a>
+    <a href="velocity.html">Velocity</a>
+    <a href="signals.html">Signals</a>
+    <a href="state.html">State</a>
   </nav>
 
-  <h1>OTOS Cockpit</h1>
-  <p>Master control layer — single point of execution.</p>
+  <h1>OTOS</h1>
+  <div class="subtitle">
+    A quiet operating layer for focus, awareness, and continuity.
+    Nothing to prove. Nothing to optimise. Just support.
+  </div>
 
-  <div class="tiles">
-    <div class="tile">
-      <h2>Feeder</h2>
-      <p>Intake + capture</p>
-      <a href="./feeder.html">Open →</a>
-    </div>
-    <div class="tile">
-      <h2>Signals</h2>
-      <p>Pattern surfacing</p>
-      <a href="./signals.html">Open →</a>
-    </div>
-    <div class="tile">
-      <h2>Velocity™</h2>
-      <p>Execution pressure</p>
-      <a href="./velocity.html">Open →</a>
-    </div>
-    <div class="tile">
-      <h2>Presence</h2>
-      <p>Support intensity</p>
-      <a href="./presence.html">Open →</a>
-    </div>
+  <div class="grid">
+    <a class="tile" href="cockpit.html">
+      <h2>👁️ Cockpit</h2>
+      <p>Overview, orientation, and system awareness.</p>
+    </a>
+
+    <a class="tile" href="presence.html">
+      <h2>🟢 Presence</h2>
+      <p>Grounding and stabilisation.</p>
+    </a>
+
+    <a class="tile" href="focus.html">
+      <h2>🎯 Focus</h2>
+      <p>One thing at a time.</p>
+    </a>
+
+    <a class="tile" href="velocity.html">
+      <h2>⚡ Velocity</h2>
+      <p>Gentle momentum, not pressure.</p>
+    </a>
+
+    <a class="tile" href="signals.html">
+      <h2>📡 Signals</h2>
+      <p>Early signs without judgement.</p>
+    </a>
+
+    <a class="tile" href="state.html">
+      <h2>📊 State</h2>
+      <p>Current condition snapshot.</p>
+    </a>
   </div>
 
 </body>
