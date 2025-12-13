@@ -1,10 +1,9 @@
 /**
  * OTOS Embeddings Builder
- * -----------------------
- * - Uses Notion as Brain DB
- * - Generates OpenAI embeddings
- * - Runs safely in GitHub Actions
- * - Hard-fails if anything is missing
+ * ======================
+ * Source of truth: NOTION_DATABASE_ID
+ * Output: data/embeddings.json
+ * Runtime: GitHub Actions / Node 20+
  */
 
 import { Client as NotionClient } from "@notionhq/client";
@@ -13,25 +12,23 @@ import fs from "fs";
 import path from "path";
 
 // ==============================
-// ENV VALIDATION
+// ENV CHECK (HARD FAIL)
 // ==============================
-const REQUIRED_ENV_VARS = [
+const REQUIRED = [
   "OPENAI_API_KEY",
   "NOTION_TOKEN",
   "NOTION_DATABASE_ID",
 ];
 
-const missing = REQUIRED_ENV_VARS.filter(
-  (key) => !process.env[key]
-);
+const missing = REQUIRED.filter(k => !process.env[k]);
 
-if (missing.length > 0) {
-  console.error("❌ Missing required environment variables:");
-  missing.forEach((v) => console.error(` - ${v}`));
+if (missing.length) {
+  console.error("❌ Missing environment variables:");
+  missing.forEach(k => console.error(` - ${k}`));
   process.exit(1);
 }
 
-console.log("🧠 Starting embeddings builder…");
+console.log("🧠 OTOS Embeddings Builder starting…");
 
 // ==============================
 // CLIENTS
@@ -47,32 +44,32 @@ const openai = new OpenAI({
 // ==============================
 // HELPERS
 // ==============================
-function extractPlainText(properties) {
-  let text = [];
+function extractText(props) {
+  let out = [];
 
-  for (const key in properties) {
-    const prop = properties[key];
+  for (const key in props) {
+    const p = props[key];
 
-    if (prop.type === "title") {
-      text.push(...prop.title.map(t => t.plain_text));
+    if (p.type === "title") {
+      out.push(...p.title.map(t => t.plain_text));
     }
 
-    if (prop.type === "rich_text") {
-      text.push(...prop.rich_text.map(t => t.plain_text));
+    if (p.type === "rich_text") {
+      out.push(...p.rich_text.map(t => t.plain_text));
     }
   }
 
-  return text.join(" ").trim();
+  return out.join(" ").trim();
 }
 
 // ==============================
 // MAIN
 // ==============================
 async function run() {
-  // 1. Load Notion records
   const pages = [];
   let cursor = undefined;
 
+  // Pull entire Notion DB
   do {
     const res = await notion.databases.query({
       database_id: process.env.NOTION_DATABASE_ID,
@@ -83,62 +80,55 @@ async function run() {
     cursor = res.has_more ? res.next_cursor : undefined;
   } while (cursor);
 
-  console.log(`📄 Loaded ${pages.length} records from Notion`);
+  console.log(`📄 Loaded ${pages.length} Notion records`);
 
-  if (pages.length === 0) {
-    console.log("⚠️ No records found — exiting cleanly");
+  if (!pages.length) {
+    console.log("⚠️ No records found. Exiting cleanly.");
     return;
   }
 
-  // 2. Prepare text
-  const documents = pages
-    .map((page) => ({
-      id: page.id,
-      text: extractPlainText(page.properties),
+  const docs = pages
+    .map(p => ({
+      id: p.id,
+      text: extractText(p.properties),
     }))
-    .filter((d) => d.text.length > 0);
+    .filter(d => d.text.length > 0);
 
-  console.log(`🧹 Prepared ${documents.length} text documents`);
+  console.log(`🧹 Prepared ${docs.length} documents`);
 
-  // 3. Generate embeddings
-  const embeddings = [];
+  const vectors = [];
 
-  for (const doc of documents) {
-    const response = await openai.embeddings.create({
+  for (const doc of docs) {
+    const emb = await openai.embeddings.create({
       model: "text-embedding-3-large",
       input: doc.text,
     });
 
-    embeddings.push({
+    vectors.push({
       id: doc.id,
-      embedding: response.data[0].embedding,
+      embedding: emb.data[0].embedding,
     });
   }
 
   console.log("⚡ Embeddings generated");
 
-  // 4. Persist output
   const outDir = path.resolve("data");
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
   }
 
-  const outPath = path.join(outDir, "embeddings.json");
+  const outFile = path.join(outDir, "embeddings.json");
+  fs.writeFileSync(outFile, JSON.stringify(vectors, null, 2), "utf8");
 
-  fs.writeFileSync(
-    outPath,
-    JSON.stringify(embeddings, null, 2),
-    "utf8"
-  );
-
-  console.log(`✅ Embeddings written to ${outPath}`);
+  console.log(`✅ Written ${vectors.length} embeddings → ${outFile}`);
 }
 
 // ==============================
-// EXECUTE
+// EXEC
 // ==============================
-run().catch((err) => {
-  console.error("🔥 Embeddings builder failed:");
+run().catch(err => {
+  console.error("🔥 FATAL ERROR");
   console.error(err);
   process.exit(1);
 });
+
