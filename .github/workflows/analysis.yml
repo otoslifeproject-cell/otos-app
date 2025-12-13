@@ -1,4 +1,4 @@
-# FILE: .github/workflows/analysis.yml (FULL REPLACEMENT — MANUAL, READ-ONLY)
+# FILE: .github/workflows/analysis.yml (FULL REPLACEMENT)
 
 name: Analysis Pipeline (Manual)
 
