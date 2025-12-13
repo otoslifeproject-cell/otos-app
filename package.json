@@ -4,12 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "memory:seed": "node memory-seeder.js",
-    "analysis:run": "node analysis-pipeline.js",
-    "embeddings:run": "node embeddings.js",
-    "ui:sync": "node ui-memory-sync.js"
+    "analysis:run": "node scripts/analysis/run.js",
+    "seed:memory": "node scripts/seed/run.js"
   },
   "dependencies": {
-    "@notionhq/client": "^2.2.15"
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2"
   }
 }
