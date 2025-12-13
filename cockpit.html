@@ -1,128 +1,118 @@
-<nav style="margin-bottom:16px;">
-  <a href="./index.html">Home</a> |
-  <a href="./feeder.html">Feeder</a> |
-  <a href="./signals.html">Signals</a> |
-  <a href="./presence.html">Presence™</a>
-</nav>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>OTOS Cockpit — Presence</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <title>OTOS — Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root{
-  --bg:#0f1115;
-  --panel:#171a21;
-  --accent:#ff8c1a;
-  --text:#e6e6e6;
-  --muted:#9aa0a6;
-}
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #0b0f14;
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-*{box-sizing:border-box}
+    /* NAV */
+    .topnav {
+      margin-bottom: 28px;
+    }
+    .topnav a {
+      margin-right: 14px;
+      color: #9aa0a6;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    .topnav a:hover {
+      color: #22c55e;
+    }
 
-body{
-  margin:0;
-  padding:24px;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
+    h1 {
+      margin-top: 0;
+      margin-bottom: 6px;
+    }
 
-h1,h2{margin:0 0 12px}
-p{margin:0 0 16px;color:var(--muted)}
+    .sub {
+      color: #9aa0a6;
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
 
-.card{
-  background:var(--panel);
-  border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      max-width: 900px;
+    }
 
-.slider-wrap{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
+    .card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 22px;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
 
-input[type=range]{
-  width:100%;
-}
+    .card:hover {
+      border-color: #22c55e;
+    }
 
-.badge{
-  padding:6px 10px;
-  border-radius:8px;
-  font-size:13px;
-  background:#222;
-  color:var(--muted);
-}
+    .card h2 {
+      margin: 0 0 6px 0;
+      font-size: 18px;
+    }
 
-.state{
-  font-size:18px;
-  font-weight:600;
-  color:var(--accent);
-}
-</style>
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      color: #9aa0a6;
+      line-height: 1.4;
+    }
+
+    .footer {
+      margin-top: 48px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Presence™</h1>
-<p>Your adjustable digital support layer.</p>
+  <nav class="topnav">
+    <a href="./index.html">Home</a>
+    <a href="./feeder.html">Feeder</a>
+    <a href="./signals.html">Signals</a>
+    <a href="./presence.html">Presence™</a>
+  </nav>
 
-<div class="card">
-  <h2>Reality Radar</h2>
-  <p>Set how much support you want right now.</p>
-
-  <div class="slider-wrap">
-    <input id="presence" type="range" min="1" max="10" />
-    <span class="badge">Level <strong id="level">5</strong></span>
+  <h1>OTOS</h1>
+  <div class="sub">
+    Presence™ · Awareness™ · Consciousness™ · Congruence™
   </div>
 
-  <p class="state" id="stateText">Stable presence</p>
-</div>
+  <div class="grid">
+    <div class="card" onclick="location.href='feeder.html'">
+      <h2>Feeder</h2>
+      <p>Capture thoughts, signals, and states instantly without friction.</p>
+    </div>
 
-<div class="card">
-  <h2>Quick Check-In</h2>
-  <p id="note">You’re supported. Nothing required.</p>
-</div>
+    <div class="card" onclick="location.href='signals.html'">
+      <h2>Signals</h2>
+      <p>View patterns forming over time. Nothing lost. Nothing forced.</p>
+    </div>
 
-<script>
-const slider = document.getElementById("presence");
-const levelEl = document.getElementById("level");
-const stateText = document.getElementById("stateText");
-const note = document.getElementById("note");
+    <div class="card" onclick="location.href='presence.html'">
+      <h2>Presence™</h2>
+      <p>Always-on support layer providing continuity and calm.</p>
+    </div>
+  </div>
 
-const STATES = [
-  "Quiet mode",
-  "Gentle presence",
-  "Light check-ins",
-  "Balanced support",
-  "Stable presence",
-  "Active awareness",
-  "Frequent grounding",
-  "High support",
-  "Intensive support",
-  "Maximum presence"
-];
-
-function apply(level){
-  levelEl.textContent = level;
-  stateText.textContent = STATES[level-1];
-  note.textContent =
-    level <= 3 ? "Minimal interruption. You’re trusted." :
-    level <= 6 ? "Steady digital presence. Stay connected." :
-    "High support mode. Pause, breathe, reset when needed.";
-  localStorage.setItem("presenceLevel", level);
-}
-
-slider.addEventListener("input", e => apply(+e.target.value));
-
-const saved = localStorage.getItem("presenceLevel") || 5;
-slider.value = saved;
-apply(+saved);
-</script>
+  <div class="footer">
+    Velocity™ enabled · Local-first · No tracking · Private by default
+  </div>
 
 </body>
 </html>
