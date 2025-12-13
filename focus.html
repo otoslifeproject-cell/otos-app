@@ -3,8 +3,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Focus</title>
+  <title>Focus — OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
     body {
       margin: 0;
@@ -13,65 +14,121 @@
       color: #e5e7eb;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    h1 { margin-bottom: 6px; }
-    p { color: #9aa0a6; }
-    .block {
+
+    .topnav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .topnav a {
+      color: #e5e7eb;
+      text-decoration: none;
       background: #111827;
       border: 1px solid #1f2937;
-      border-radius: 10px;
-      padding: 18px;
-      margin-top: 18px;
-      max-width: 520px;
-    }
-    input[type="range"] {
-      width: 100%;
-      margin-top: 12px;
-    }
-    .level {
-      margin-top: 10px;
+      border-radius: 999px;
+      padding: 8px 14px;
       font-size: 14px;
-      color: #22c55e;
+    }
+
+    .topnav a.active {
+      background: #2563eb;
+      border-color: #2563eb;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 18px;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .task input {
+      transform: scale(1.2);
+    }
+
+    .task label {
+      cursor: pointer;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 8px;
     }
   </style>
 </head>
+
 <body>
 
-  <!-- NAV -->
   <nav class="topnav">
-    <a href="./index.html">Cockpit</a>
-    <a href="./feeder.html">Feeder</a>
-    <a href="./signals.html">Signals</a>
-    <a href="./focus.html">Focus</a>
-    <a href="./state.html">State</a>
-    <a href="./velocity.html">Velocity™</a>
-    <a href="./presence.html">Presence</a>
+    <a href="index.html">Home</a>
+    <a href="cockpit.html">Cockpit</a>
+    <a href="presence.html">Presence</a>
+    <a href="focus.html" class="active">Focus</a>
+    <a href="velocity.html">Velocity</a>
+    <a href="signals.html">Signals</a>
+    <a href="state.html">State</a>
   </nav>
 
   <h1>Focus</h1>
-  <p>Attention narrowing and execution clarity.</p>
-
-  <div class="block">
-    <label>Focus Intensity</label>
-    <input id="focusRange" type="range" min="1" max="10" value="5" />
-    <div class="level">Level: <span id="level">5</span> / 10</div>
+  <div class="subtitle">
+    One thing. Then the next. No noise.
   </div>
 
-<script>
-  const range = document.getElementById("focusRange");
-  const level = document.getElementById("level");
-  const KEY = "otos_focus_level";
+  <div class="card">
+    <h2>🎯 Today’s Primary Focus</h2>
 
-  const saved = localStorage.getItem(KEY);
-  if (saved) {
-    range.value = saved;
-    level.textContent = saved;
-  }
+    <div class="task">
+      <input type="checkbox" id="task1">
+      <label for="task1">Complete the single most important task</label>
+    </div>
 
-  range.oninput = () => {
-    level.textContent = range.value;
-    localStorage.setItem(KEY, range.value);
-  };
-</script>
+    <div class="task">
+      <input type="checkbox" id="task2">
+      <label for="task2">Do not open new tabs</label>
+    </div>
+
+    <div class="task">
+      <input type="checkbox" id="task3">
+      <label for="task3">Stop after progress, not perfection</label>
+    </div>
+
+    <div class="hint">
+      Focus is not productivity. It is protection.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Distractions Parked</h2>
+    <p class="hint">
+      If it matters, it goes here — not in your head.
+    </p>
+  </div>
 
 </body>
 </html>
