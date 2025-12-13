@@ -1,13 +1,16 @@
+// FILE: package.json (FULL REPLACEMENT — ADD EMBEDDINGS)
 {
   "name": "otos-notion-sync",
   "private": true,
   "type": "module",
   "dependencies": {
-    "@notionhq/client": "^2.3.0"
+    "@notionhq/client": "^2.3.0",
+    "openai": "^4.33.0"
   },
   "scripts": {
     "notion:read": "node notion-sync.js",
     "schema:check": "node schema-check.js",
-    "memory:seed": "node memory-seeder.js"
+    "memory:seed": "node memory-seeder.js",
+    "embeddings:run": "node embeddings.js"
   }
 }
