@@ -1,0 +1,32 @@
+# FILE: .github/workflows/notion-read.yml
+# PURPOSE: Read-only Notion sync (dry run)
+# SAFETY: No writes, SDK-only, env-token only
+
+name: Notion Read (Dry)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notion-read:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Notion read (dry)
+        run: npm run notion:read
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
