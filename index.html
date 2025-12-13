@@ -5,55 +5,19 @@
   <title>OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      margin: 0;
-      padding: 24px;
-      background: #0b0f14;
-      color: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-    nav {
-      margin-bottom: 24px;
-    }
-    nav a {
-      color: #8ab4ff;
-      text-decoration: none;
-      margin-right: 12px;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
-    .card {
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 12px;
-      padding: 20px;
-      text-decoration: none;
-      color: #e5e7eb;
-    }
-    .card:hover {
-      border-color: #22c55e;
-    }
-    .muted {
-      color: #9aa0a6;
-      font-size: 14px;
-    }
+    body{margin:0;padding:24px;background:#0b0f14;color:#e5e7eb;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif}
+    .topnav{margin-bottom:24px}
+    .topnav a{color:#8ab4ff;text-decoration:none;margin-right:12px}
+    .topnav a:hover{text-decoration:underline}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:24px}
+    .card{background:#111827;border:1px solid #1f2937;border-radius:12px;padding:20px;text-decoration:none;color:#e5e7eb}
+    .card:hover{border-color:#22c55e}
+    .muted{color:#9aa0a6;font-size:14px}
   </style>
 </head>
 <body>
 
-<nav>
-  <a href="./index.html">Home</a>
-  <a href="./feeder.html">Feeder</a>
-  <a href="./signals.html">Signals</a>
-  <a href="./presence.html">Presence™</a>
-</nav>
+<div id="nav"></div>
 
 <h1>OTOS</h1>
 <p class="muted">Connected Pathway · Whole Person · Velocity™</p>
@@ -74,6 +38,13 @@
     <p class="muted">Always-on layer</p>
   </a>
 </div>
+
+<script>
+  fetch("./nav.html", { cache: "no-store" })
+    .then(r => r.text())
+    .then(html => { document.getElementById("nav").innerHTML = html; })
+    .catch(() => {});
+</script>
 
 </body>
 </html>
