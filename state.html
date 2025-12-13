@@ -1,127 +1,16 @@
-<!-- FILE: state.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>State — OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    body {
-      margin: 0;
-      padding: 32px;
-      background: #0b0f14;
-      color: #e5e7eb;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    .topnav {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-
-    .topnav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 14px;
-    }
-
-    .topnav a.active {
-      background: #2563eb;
-      border-color: #2563eb;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: #9ca3af;
-      margin-bottom: 32px;
-    }
-
-    .card {
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-
-    .state-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-
-    .state-pill {
-      background: #0b1220;
-      border: 1px solid #1f2937;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 14px;
-    }
-
-    .hint {
-      font-size: 13px;
-      color: #9ca3af;
-      margin-top: 8px;
-    }
-  </style>
 </head>
 
 <body>
-
-  <nav class="topnav">
-    <a href="index.html">Home</a>
-    <a href="cockpit.html">Cockpit</a>
-    <a href="presence.html">Presence</a>
-    <a href="focus.html">Focus</a>
-    <a href="velocity.html">Velocity</a>
-    <a href="signals.html">Signals</a>
-    <a href="state.html" class="active">State</a>
-  </nav>
+  <div id="nav"></div>
+  <script src="nav-loader.js" defer></script>
 
   <h1>State</h1>
-  <div class="subtitle">
-    This is how things are right now — not who you are.
-  </div>
-
-  <div class="card">
-    <h2>📊 Current State Snapshot</h2>
-
-    <div class="state-row">
-      <div class="state-pill">Energy: Low</div>
-      <div class="state-pill">Focus: Fragmented</div>
-      <div class="state-pill">Mood: Flat</div>
-      <div class="state-pill">Stress: Elevated</div>
-    </div>
-
-    <div class="hint">
-      States change. Noticing them is enough.
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🧭 Orientation</h2>
-    <p class="hint">
-      When state is low, reduce demand — do not increase pressure.
-    </p>
-  </div>
-
+  <p>This is how things are — not who you are.</p>
 </body>
 </html>
