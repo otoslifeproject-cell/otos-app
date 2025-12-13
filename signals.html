@@ -1,105 +1,44 @@
-<nav style="margin-bottom:16px;">
-  <a href="./index.html">Home</a> |
-  <a href="./feeder.html">Feeder</a> |
-  <a href="./signals.html">Signals</a> |
-  <a href="./presence.html">Presence™</a>
-</nav>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS — Signals</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OTOS · Signals</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body {
       margin: 0;
+      padding: 24px;
+      background: #0b0f14;
+      color: #e5e7eb;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0f0f0f;
-      color: #fff;
     }
-
-    header {
-      padding: 16px 20px;
-      font-size: 20px;
-      font-weight: 600;
-      background: #141414;
-      border-bottom: 1px solid #222;
+    nav {
+      margin-bottom: 24px;
     }
-
-    .container {
-      padding: 20px;
-      display: grid;
-      gap: 12px;
+    nav a {
+      color: #8ab4ff;
+      text-decoration: none;
+      margin-right: 12px;
     }
-
-    .signal {
-      background: #1a1a1a;
-      border-radius: 10px;
-      padding: 14px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-left: 4px solid #ff7a00;
-    }
-
-    .signal-text {
-      font-size: 15px;
-      line-height: 1.4;
-    }
-
-    .signal-time {
-      font-size: 12px;
-      opacity: 0.6;
-      white-space: nowrap;
-      margin-left: 12px;
-    }
-
     .empty {
-      opacity: 0.5;
+      color: #9aa0a6;
       text-align: center;
-      margin-top: 40px;
+      margin-top: 80px;
     }
   </style>
 </head>
 <body>
 
-<header>Signals</header>
+<nav>
+  <a href="./index.html">Home</a>
+  <a href="./feeder.html">Feeder</a>
+  <a href="./signals.html">Signals</a>
+  <a href="./presence.html">Presence™</a>
+</nav>
 
-<div class="container" id="signals"></div>
+<h1>Signals</h1>
 
-<script>
-  const container = document.getElementById("signals");
-
-  function renderSignals() {
-    const raw = localStorage.getItem("otos_signals");
-    const signals = raw ? JSON.parse(raw) : [];
-
-    container.innerHTML = "";
-
-    if (signals.length === 0) {
-      container.innerHTML = `<div class="empty">No signals yet</div>`;
-      return;
-    }
-
-    signals
-      .slice()
-      .reverse()
-      .forEach(sig => {
-        const el = document.createElement("div");
-        el.className = "signal";
-
-        el.innerHTML = `
-          <div class="signal-text">${sig.text}</div>
-          <div class="signal-time">${new Date(sig.time).toLocaleTimeString()}</div>
-        `;
-
-        container.appendChild(el);
-      });
-  }
-
-  window.addEventListener("storage", renderSignals);
-  renderSignals();
-</script>
+<div class="empty">No signals yet</div>
 
 </body>
 </html>
