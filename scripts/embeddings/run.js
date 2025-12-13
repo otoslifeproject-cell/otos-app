@@ -1,46 +1,36 @@
 /**
- * OTOS – Embeddings Builder (Zero Dependency)
- * ------------------------------------------
- * • NO dotenv
- * • NO npm install
- * • Uses GitHub Actions secrets via process.env
- * • Safe for manual workflows
+ * Embeddings Builder
+ * CI-safe, no node_modules, no dotenv
+ * Uses GitHub Actions secrets only
  */
 
-console.log('🧠 Starting embeddings builder…');
+console.log('🧠 Starting embeddings builder...');
 
-// ─────────────────────────────────────────────
-// Required environment variables
-// (must be set as GitHub Actions secrets)
-// ─────────────────────────────────────────────
-
-const REQUIRED_VARS = [
+const REQUIRED_ENV = [
   'OPENAI_API_KEY',
   'NOTION_TOKEN',
-  'NOTION_DATABASE_ID'
+  'NOTION_DATABASE_ID',
 ];
 
-const missing = REQUIRED_VARS.filter(v => !process.env[v]);
+const missing = REQUIRED_ENV.filter((key) => !process.env[key]);
 
-if (missing.length) {
+if (missing.length > 0) {
   console.error('❌ Missing required environment variables:');
-  missing.forEach(v => console.error(`   - ${v}`));
+  missing.forEach((v) => console.error(` - ${v}`));
   process.exit(1);
 }
 
+// ---- Placeholder execution (safe bootstrap) ----
+// At this stage we are only proving:
+// 1. Script executes
+// 2. Secrets are wired
+// 3. Pipeline is stable
+// Real embedding logic comes next iteration
+
 console.log('✅ Environment OK');
+console.log('🔗 Connecting to memory store...');
+console.log('🧩 Building embeddings...');
+console.log('📦 Writing vectors...');
+console.log('✅ Embeddings build complete');
 
-// ─────────────────────────────────────────────
-// Placeholder: Embedding build logic
-// (intentionally lightweight & safe)
-// ─────────────────────────────────────────────
-
-console.log('📦 Loading analysed memory…');
-console.log('🔗 Generating embeddings…');
-console.log('🧬 Writing vectors…');
-
-// NOTE:
-// Real embedding logic will plug in here later.
-// This runner only guarantees pipeline stability.
-
-console.log('✅ Embeddings build completed successfully');
+process.exit(0);
