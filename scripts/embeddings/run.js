@@ -1,134 +1,166 @@
 /**
- * OTOS Embeddings Builder
- * ======================
- * Source of truth: NOTION_DATABASE_ID
- * Output: data/embeddings.json
- * Runtime: GitHub Actions / Node 20+
+ * OTOS – Embeddings Builder
+ * ------------------------------------------------
+ * - Loads records from a Notion database (Brain DB)
+ * - Generates OpenAI embeddings
+ * - Writes embeddings to /data/embeddings.json
+ * - Designed to run in GitHub Actions
+ * ------------------------------------------------
  */
 
-import { Client as NotionClient } from "@notionhq/client";
-import OpenAI from "openai";
 import fs from "fs";
 import path from "path";
+import process from "process";
+import { Client as NotionClient } from "@notionhq/client";
+import OpenAI from "openai";
 
-// ==============================
-// ENV CHECK (HARD FAIL)
-// ==============================
-const REQUIRED = [
-  "OPENAI_API_KEY",
-  "NOTION_TOKEN",
-  "NOTION_DATABASE_ID",
-];
+/* =========================
+   ENV VALIDATION
+========================= */
 
-const missing = REQUIRED.filter(k => !process.env[k]);
+const {
+  OPENAI_API_KEY,
+  NOTION_TOKEN,
+  NOTION_DATABASE_ID,
+} = process.env;
 
-if (missing.length) {
-  console.error("❌ Missing environment variables:");
-  missing.forEach(k => console.error(` - ${k}`));
+if (!OPENAI_API_KEY || !NOTION_TOKEN || !NOTION_DATABASE_ID) {
+  console.error("❌ Missing required environment variables:");
+  if (!OPENAI_API_KEY) console.error(" - OPENAI_API_KEY");
+  if (!NOTION_TOKEN) console.error(" - NOTION_TOKEN");
+  if (!NOTION_DATABASE_ID) console.error(" - NOTION_DATABASE_ID");
   process.exit(1);
 }
 
-console.log("🧠 OTOS Embeddings Builder starting…");
+/* =========================
+   CLIENTS
+========================= */
 
-// ==============================
-// CLIENTS
-// ==============================
 const notion = new NotionClient({
-  auth: process.env.NOTION_TOKEN,
+  auth: NOTION_TOKEN,
 });
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: OPENAI_API_KEY,
 });
 
-// ==============================
-// HELPERS
-// ==============================
-function extractText(props) {
-  let out = [];
+/* =========================
+   HELPERS
+========================= */
 
-  for (const key in props) {
-    const p = props[key];
+function extractPlainText(properties) {
+  let text = "";
 
-    if (p.type === "title") {
-      out.push(...p.title.map(t => t.plain_text));
+  for (const key of Object.keys(properties)) {
+    const prop = properties[key];
+
+    if (prop.type === "title") {
+      text += prop.title.map(t => t.plain_text).join(" ") + "\n";
     }
 
-    if (p.type === "rich_text") {
-      out.push(...p.rich_text.map(t => t.plain_text));
+    if (prop.type === "rich_text") {
+      text += prop.rich_text.map(t => t.plain_text).join(" ") + "\n";
+    }
+
+    if (prop.type === "select" && prop.select) {
+      text += prop.select.name + "\n";
+    }
+
+    if (prop.type === "multi_select") {
+      text += prop.multi_select.map(t => t.name).join(", ") + "\n";
     }
   }
 
-  return out.join(" ").trim();
+  return text.trim();
 }
 
-// ==============================
-// MAIN
-// ==============================
+/* =========================
+   MAIN
+========================= */
+
 async function run() {
+  console.log("🧠 OTOS Embeddings Builder starting…");
+
+  /* ---- Load Notion Records ---- */
+
   const pages = [];
   let cursor = undefined;
 
-  // Pull entire Notion DB
   do {
-    const res = await notion.databases.query({
-      database_id: process.env.NOTION_DATABASE_ID,
+    const response = await notion.databases.query({
+      database_id: NOTION_DATABASE_ID,
       start_cursor: cursor,
     });
 
-    pages.push(...res.results);
-    cursor = res.has_more ? res.next_cursor : undefined;
+    pages.push(...response.results);
+    cursor = response.has_more ? response.next_cursor : undefined;
   } while (cursor);
 
-  console.log(`📄 Loaded ${pages.length} Notion records`);
+  console.log(`📄 Loaded ${pages.length} records from Notion`);
 
-  if (!pages.length) {
-    console.log("⚠️ No records found. Exiting cleanly.");
+  if (pages.length === 0) {
+    console.log("⚠️ No records found. Exiting.");
     return;
   }
 
-  const docs = pages
-    .map(p => ({
-      id: p.id,
-      text: extractText(p.properties),
-    }))
-    .filter(d => d.text.length > 0);
+  /* ---- Prepare Documents ---- */
 
-  console.log(`🧹 Prepared ${docs.length} documents`);
+  const documents = pages
+    .map(page => {
+      const text = extractPlainText(page.properties);
+      if (!text) return null;
 
-  const vectors = [];
+      return {
+        id: page.id,
+        text,
+      };
+    })
+    .filter(Boolean);
 
-  for (const doc of docs) {
-    const emb = await openai.embeddings.create({
+  console.log(`🧹 Prepared ${documents.length} documents`);
+
+  /* ---- Generate Embeddings ---- */
+
+  const embeddings = [];
+
+  for (let i = 0; i < documents.length; i++) {
+    const doc = documents[i];
+
+    console.log(`⚡ Embedding ${i + 1}/${documents.length}`);
+
+    const response = await openai.embeddings.create({
       model: "text-embedding-3-large",
       input: doc.text,
     });
 
-    vectors.push({
+    embeddings.push({
       id: doc.id,
-      embedding: emb.data[0].embedding,
+      embedding: response.data[0].embedding,
+      text: doc.text,
     });
   }
 
-  console.log("⚡ Embeddings generated");
+  /* ---- Write Output ---- */
 
   const outDir = path.resolve("data");
+  const outFile = path.join(outDir, "embeddings.json");
+
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
   }
 
-  const outFile = path.join(outDir, "embeddings.json");
-  fs.writeFileSync(outFile, JSON.stringify(vectors, null, 2), "utf8");
+  fs.writeFileSync(outFile, JSON.stringify(embeddings, null, 2));
 
-  console.log(`✅ Written ${vectors.length} embeddings → ${outFile}`);
+  console.log(`✅ Embeddings written to ${outFile}`);
+  console.log("🎉 Embeddings Builder completed successfully");
 }
 
-// ==============================
-// EXEC
-// ==============================
+/* =========================
+   EXECUTE
+========================= */
+
 run().catch(err => {
-  console.error("🔥 FATAL ERROR");
+  console.error("💥 Fatal error in embeddings builder:");
   console.error(err);
   process.exit(1);
 });
-
