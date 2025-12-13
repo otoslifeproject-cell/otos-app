@@ -1,7 +1,49 @@
 diff --git a/feeder.html b/feeder.html
-index 4444444..5555555 100644
+index 1111111..2222222 100644
 --- a/feeder.html
 +++ b/feeder.html
-@@ -120,6 +120,7 @@
+@@ -1,6 +1,7 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
++  <meta charset="UTF-8" />
+   <title>OTOS Feeder</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <style>
+@@ -40,6 +41,14 @@
+     button { margin-top:16px; }
+     .hint { font-size:12px; color:var(--muted); margin-top:8px; }
++
++    .presence {
++      position: fixed;
++      bottom: 24px;
++      right: 24px;
++      background: #1f2933;
++      padding: 12px 16px;
++      border-radius: 999px;
++      opacity: 0;
++      transition: opacity 0.3s ease;
++      font-size: 13px;
++    }
++    .presence.show { opacity: 1; }
+   </style>
+ </head>
+ <body>
+@@ -72,6 +81,8 @@
    <button onclick="save()">Add to Signals</button>
-+  <button class="secondary" onclick="location.href='signals.html'">View Signals</button>
+   <div class="hint">Saved instantly · visible everywhere</div>
++
++  <div id="presence" class="presence">Noted</div>
+ </body>
+
+ <script>
+@@ -86,6 +97,13 @@
+     localStorage.setItem(KEY, JSON.stringify(signals));
+     title.value = notes.value = "";
++
++    const p = document.getElementById("presence");
++    p.classList.add("show");
++    setTimeout(()=>p.classList.remove("show"), 1400);
+   }
+ </script>
+ </html>
