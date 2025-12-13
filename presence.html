@@ -1,114 +1,85 @@
+<!-- FILE: presence.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS — Presence™</title>
+  <title>OTOS Presence™</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <style>
     body {
       margin: 0;
-      padding: 24px;
+      padding: 32px;
       background: #0b0f14;
       color: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-
-    /* NAV */
-    .topnav {
-      margin-bottom: 24px;
-    }
-    .topnav a {
-      margin-right: 14px;
-      color: #9aa0a6;
-      text-decoration: none;
-      font-size: 14px;
-    }
-    .topnav a:hover {
-      color: #22c55e;
-    }
-
-    h1 {
-      margin-top: 0;
-      margin-bottom: 8px;
-    }
-
-    .sub {
-      color: #9aa0a6;
-      font-size: 14px;
-      margin-bottom: 24px;
-    }
-
-    .panel {
+    h1 { margin-bottom: 6px; }
+    p { color: #9aa0a6; }
+    .block {
       background: #111827;
       border: 1px solid #1f2937;
-      border-radius: 12px;
-      padding: 20px;
-      max-width: 720px;
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 18px;
+      max-width: 520px;
     }
-
-    .pulse {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 0 rgba(34,197,94, 0.7);
-      animation: pulse 2s infinite;
-      margin-bottom: 16px;
+    input[type="range"] {
+      width: 100%;
+      margin-top: 12px;
     }
-
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(34,197,94, 0.7);
-      }
-      70% {
-        box-shadow: 0 0 0 12px rgba(34,197,94, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(34,197,94, 0);
-      }
+    .level {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #38bdf8;
     }
-
-    .status {
-      font-size: 16px;
-      margin-bottom: 6px;
-    }
-
-    .meta {
+    .note {
+      margin-top: 12px;
       font-size: 13px;
-      color: #9aa0a6;
+      color: #94a3b8;
     }
   </style>
 </head>
-
 <body>
 
+  <!-- NAV -->
   <nav class="topnav">
-    <a href="./index.html">Home</a>
+    <a href="./index.html">Cockpit</a>
     <a href="./feeder.html">Feeder</a>
     <a href="./signals.html">Signals</a>
-    <a href="./presence.html">Presence™</a>
+    <a href="./focus.html">Focus</a>
+    <a href="./state.html">State</a>
+    <a href="./velocity.html">Velocity™</a>
+    <a href="./presence.html">Presence</a>
   </nav>
 
   <h1>Presence™</h1>
-  <div class="sub">Always-on. Non-invasive. Quiet continuity.</div>
+  <p>Care, support, and attentional holding.</p>
 
-  <div class="panel">
-    <div class="pulse"></div>
-    <div class="status">System present</div>
-    <div class="meta" id="time"></div>
+  <div class="block">
+    <label>Presence Intensity</label>
+    <input id="presenceRange" type="range" min="1" max="10" value="3" />
+    <div class="level">Level: <span id="level">3</span> / 10</div>
+    <div class="note">
+      Adjust how often the system checks in, reminds, or grounds you.
+    </div>
   </div>
 
-  <script>
-    const el = document.getElementById("time");
+<script>
+  const KEY = "otos_presence_level";
+  const range = document.getElementById("presenceRange");
+  const level = document.getElementById("level");
 
-    function tick() {
-      el.textContent = "Last checked: " + new Date().toLocaleTimeString();
-    }
+  const saved = localStorage.getItem(KEY);
+  if (saved) {
+    range.value = saved;
+    level.textContent = saved;
+  }
 
-    tick();
-    setInterval(tick, 1000);
-  </script>
+  range.oninput = () => {
+    level.textContent = range.value;
+    localStorage.setItem(KEY, range.value);
+  };
+</script>
 
 </body>
 </html>
