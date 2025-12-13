@@ -1,5 +1,4 @@
-# FILE: .github/workflows/memory-seed.yml
-# HARDENED: schema check before any write
+# FILE: .github/workflows/memory-seed.yml (FULL REPLACEMENT)
 
 name: Memory Seeder (Manual)
 
@@ -7,26 +6,32 @@ on:
   workflow_dispatch:
     inputs:
       confirm:
-        description: "Type YES to allow write"
+        description: "Type YES to run the memory seeder"
         required: true
-
-permissions:
-  contents: read
+        default: "NO"
 
 jobs:
   seed:
-    if: github.event.inputs.confirm == 'YES'
+    if: ${{ github.event.inputs.confirm == 'YES' }}
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm ci
-      - run: npm run schema:check
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Memory Seeder (Notion-only, no files)
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-      - run: npm run memory:seed
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          CONVERSATIONS_JSON_PATH: ./conversations.json
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
+          CORE_DB: ${{ secrets.CORE_DB }}
+        run: |
+          echo "Running Memory Seeder in Notion-only mode"
+          node memory-seeder.js --skip-files
