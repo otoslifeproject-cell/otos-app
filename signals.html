@@ -1,141 +1,16 @@
-<!-- FILE: signals.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Signals — OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    body {
-      margin: 0;
-      padding: 32px;
-      background: #0b0f14;
-      color: #e5e7eb;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    .topnav {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 24px;
-    }
-
-    .topnav a {
-      color: #e5e7eb;
-      text-decoration: none;
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 14px;
-    }
-
-    .topnav a.active {
-      background: #2563eb;
-      border-color: #2563eb;
-    }
-
-    h1 {
-      font-size: 28px;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: #9ca3af;
-      margin-bottom: 32px;
-    }
-
-    .card {
-      background: #111827;
-      border: 1px solid #1f2937;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .card h2 {
-      margin-top: 0;
-      font-size: 18px;
-      margin-bottom: 12px;
-    }
-
-    .signal {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .signal input {
-      transform: scale(1.2);
-    }
-
-    .hint {
-      font-size: 13px;
-      color: #9ca3af;
-      margin-top: 8px;
-    }
-  </style>
 </head>
 
 <body>
-
-  <nav class="topnav">
-    <a href="index.html">Home</a>
-    <a href="cockpit.html">Cockpit</a>
-    <a href="presence.html">Presence</a>
-    <a href="focus.html">Focus</a>
-    <a href="velocity.html">Velocity</a>
-    <a href="signals.html" class="active">Signals</a>
-    <a href="state.html">State</a>
-  </nav>
+  <div id="nav"></div>
+  <script src="nav-loader.js" defer></script>
 
   <h1>Signals</h1>
-  <div class="subtitle">
-    Early signs. No judgement. Just noticing.
-  </div>
-
-  <div class="card">
-    <h2>📡 Body & Mind Signals</h2>
-
-    <div class="signal">
-      <input type="checkbox" id="s1">
-      <label for="s1">Restlessness / agitation</label>
-    </div>
-
-    <div class="signal">
-      <input type="checkbox" id="s2">
-      <label for="s2">Difficulty starting tasks</label>
-    </div>
-
-    <div class="signal">
-      <input type="checkbox" id="s3">
-      <label for="s3">Over-fixation or tunnel vision</label>
-    </div>
-
-    <div class="signal">
-      <input type="checkbox" id="s4">
-      <label for="s4">Emotional spike or crash</label>
-    </div>
-
-    <div class="signal">
-      <input type="checkbox" id="s5">
-      <label for="s5">Urge to escape / numb</label>
-    </div>
-
-    <div class="hint">
-      Signals are information, not instructions.
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>🧠 Awareness Note</h2>
-    <p class="hint">
-      Catching signals early reduces the need for force later.
-    </p>
-  </div>
-
+  <p>Early signs. No judgement.</p>
 </body>
 </html>
