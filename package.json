@@ -1,17 +1,13 @@
 {
-  "name": "otos-embeddings-builder",
+  "name": "otos-app",
   "version": "1.0.0",
-  "private": true,
   "type": "module",
-  "description": "OTOS Notion → OpenAI embeddings builder (GitHub Actions compatible)",
-  "engines": {
-    "node": ">=20.0.0"
-  },
+  "private": true,
   "scripts": {
     "embeddings:run": "node scripts/embeddings/run.js"
   },
   "dependencies": {
-    "@notionhq/client": "^2.2.15",
+    "@notionhq/client": "^2.2.14",
     "openai": "^4.28.0"
   }
 }
