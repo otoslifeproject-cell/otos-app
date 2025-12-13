@@ -1,63 +1,120 @@
-<!-- FILE: presence.html (FULL REPLACEMENT – STABLE + PERSISTENT) -->
+<!-- FILE: presence.html (FULL REPLACEMENT) -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Presence™</title>
+  <title>Presence — OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    body{margin:0;padding:32px;background:#0b0f14;color:#e5e7eb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-    .topnav{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-    .topnav a{color:#e5e7eb;text-decoration:none;background:#111827;border:1px solid #1f2937;border-radius:999px;padding:8px 12px;font-size:13px}
-    h1{margin:0 0 6px}
-    p{margin:0 0 18px;color:#9aa0a6}
-    .panel{background:#111827;border:1px solid #1f2937;border-radius:14px;padding:18px;max-width:520px}
-    .row{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-    input[type=range]{width:100%}
-    .level{font-size:14px;color:#38bdf8;margin-top:8px}
-    .hint{font-size:12px;color:#9aa0a6;margin-top:10px}
+    body {
+      margin: 0;
+      padding: 32px;
+      background: #0b0f14;
+      color: #e5e7eb;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .topnav {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .topnav a {
+      color: #e5e7eb;
+      text-decoration: none;
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+    }
+
+    .topnav a.active {
+      background: #16a34a;
+      border-color: #16a34a;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .presence-box {
+      background: #0b1220;
+      border: 1px dashed #334155;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .hint {
+      font-size: 13px;
+      color: #9ca3af;
+      margin-top: 12px;
+    }
   </style>
 </head>
+
 <body>
 
   <nav class="topnav">
-    <a href="./index.html">Cockpit</a>
-    <a href="./feeder.html">Feeder</a>
-    <a href="./signals.html">Signals</a>
-    <a href="./focus.html">Focus</a>
-    <a href="./state.html">State</a>
-    <a href="./velocity.html">Velocity™</a>
-    <a href="./presence.html">Presence™</a>
+    <a href="index.html">Home</a>
+    <a href="cockpit.html">Cockpit</a>
+    <a href="presence.html" class="active">Presence</a>
+    <a href="focus.html">Focus</a>
+    <a href="velocity.html">Velocity</a>
+    <a href="signals.html">Signals</a>
+    <a href="state.html">State</a>
   </nav>
 
-  <h1>Presence™</h1>
-  <p>Support intensity & care proximity.</p>
+  <h1>Presence</h1>
+  <div class="subtitle">
+    Nothing to fix. Nothing to solve. Just here.
+  </div>
 
-  <div class="panel">
-    <label>Presence Level</label>
-    <input id="presence" type="range" min="0" max="10" value="3" />
-    <div class="level">Level: <span id="val">3</span> / 10</div>
+  <div class="card">
+    <h2>🟢 Grounding</h2>
+    <div class="presence-box">
+      Take one slow breath.<br />
+      Feel your feet.<br />
+      You are allowed to pause.
+    </div>
+
     <div class="hint">
-      Controls check-ins, reminders, grounding prompts, and gentle nudges.
+      Presence is the base layer. Everything else rests on this.
     </div>
   </div>
 
-<script>
-  const KEY = "otos_presence";
-  const r = document.getElementById("presence");
-  const v = document.getElementById("val");
-
-  const saved = localStorage.getItem(KEY);
-  if (saved !== null) {
-    r.value = saved;
-    v.textContent = saved;
-  }
-
-  r.oninput = () => {
-    v.textContent = r.value;
-    localStorage.setItem(KEY, r.value);
-  };
-</script>
+  <div class="card">
+    <h2>🧠 Reminder</h2>
+    <p class="hint">
+      When you stay present, the system stabilises itself.
+    </p>
+  </div>
 
 </body>
 </html>
