@@ -1,0 +1,26 @@
+name: Schema Enforcer (Canonical)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Enforce Notion Schemas
+        run: node scripts/schemas/enforce.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
+          CORE_DB: ${{ secrets.CORE_DB }}
+          OPS_DB: ${{ secrets.OPS_DB }}
+
