@@ -1,54 +1,48 @@
-name: OTOS Boot + Snapshot + Embeddings (Manual)
+name: OTOS Boot (Schema + Core Seed)
 
 on:
   workflow_dispatch:
 
 jobs:
-  boot_snapshot_embed:
+  boot:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+
+    env:
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+
+      # REQUIRED
+      NOTION_BRAIN_DB_ID: ${{ secrets.NOTION_BRAIN_DB_ID }}
+      NOTION_SYSTEM_CORE_DB_ID: ${{ secrets.NOTION_SYSTEM_CORE_DB_ID }}
+      NOTION_OPERATIONS_DB_ID: ${{ secrets.NOTION_OPERATIONS_DB_ID }}
+
+      # OPTIONAL (relations)
+      NOTION_PROJECTS_DB_ID: ${{ secrets.NOTION_PROJECTS_DB_ID }}
+      NOTION_TASKS_DB_ID: ${{ secrets.NOTION_TASKS_DB_ID }}
+      NOTION_FEEDER_INTAKE_DB_ID: ${{ secrets.NOTION_FEEDER_INTAKE_DB_ID }}
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Install runtime deps (no-save)
+      - name: Install dependencies (if package-lock exists)
         run: |
-          npm install --no-save @notionhq/client uuid
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install --no-fund --no-audit
+          fi
 
-      - name: BOOT (Rules → Memory → Schema validation)
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          BRAIN_DB: ${{ secrets.BRAIN_DB }}
-          CORE_DB: ${{ secrets.CORE_DB }}
-          OPS_DB: ${{ secrets.OPS_DB }}
-        run: |
-          node scripts/boot/boot.js
+      - name: Run OTOS Boot
+        run: node scripts/boot/run.js
 
-      - name: SNAPSHOT EXPORT (always-on)
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          BRAIN_DB: ${{ secrets.BRAIN_DB }}
-          CORE_DB: ${{ secrets.CORE_DB }}
-          OPS_DB: ${{ secrets.OPS_DB }}
-        run: |
-          node scripts/boot/snapshot.js
-
-      - name: EMBEDDINGS BUILD (Brain DB)
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          BRAIN_DB: ${{ secrets.BRAIN_DB }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          node scripts/embeddings/run.js
-
-      - name: Upload artifacts (snapshot + reports)
+      - name: Upload boot snapshot
         uses: actions/upload-artifact@v4
         with:
-          name: otos-artifacts
-          path: artifacts/
+          name: otos-boot-snapshot
+          path: artifacts/otos-boot-snapshot.json
           if-no-files-found: error
