@@ -1,32 +1,38 @@
 /**
  * MEMORY SNAPSHOT
- * Exports full memory DB state for rollback safety
+ * Exports frozen memory to JSON snapshot (audit + rollback)
  */
 
-import fs from "fs";
-import path from "path";
 import { Client } from "@notionhq/client";
+import fs from "fs";
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
-const MEMORY_DB = process.env.MEMORY_ANCHOR_DB;
-
-const SNAPSHOT_DIR = "memory/_snapshots";
+const MEMORY_DB = process.env.BRAIN_DB;
 
 async function run() {
-  const snapshot = await notion.databases.query({
-    database_id: MEMORY_DB
+  const pages = await notion.databases.query({
+    database_id: MEMORY_DB,
+    filter: {
+      property: "Frozen",
+      checkbox: { equals: true }
+    }
   });
 
-  fs.mkdirSync(SNAPSHOT_DIR, { recursive: true });
+  const snapshot = pages.results.map(p => ({
+    id: p.id,
+    title: p.properties.Title.title[0]?.plain_text || "",
+    content: p.properties.Content.rich_text.map(t => t.plain_text).join(""),
+    source: p.properties.Source.select.name,
+    agent: p.properties.Origin_Agent.select.name,
+    timestamp: new Date().toISOString()
+  }));
 
-  const file = path.join(
-    SNAPSHOT_DIR,
-    `snapshot_${Date.now()}.json`
+  fs.writeFileSync(
+    `snapshots/memory_snapshot_${Date.now()}.json`,
+    JSON.stringify(snapshot, null, 2)
   );
 
-  fs.writeFileSync(file, JSON.stringify(snapshot, null, 2), "utf8");
-
-  console.log(`📸 MEMORY SNAPSHOT SAVED → ${file}`);
+  console.log("📸 MEMORY SNAPSHOT WRITTEN");
 }
 
 run();
