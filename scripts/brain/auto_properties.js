@@ -1,40 +1,43 @@
-/* eslint-disable no-console */
+import { notion, requireEnv } from "../notion/client.js";
+import { ENV } from "../_bootstrap/esm-env.js";
 
-const { createNotionClient, requireEnv } = require("../notion/client");
+requireEnv("BRAIN_DB");
 
-async function main() {
-  const notion = createNotionClient();
-  const BRAIN_DB = requireEnv("NOTION_BRAIN_DB_ID");
+const REQUIRED_PROPERTIES = {
+  Title: { title: {} },
+  UUID: { rich_text: {} },
+  Source: { select: {} },
+  Created_At: { date: {} },
+  Updated_At: { date: {} },
+  Status: { select: {} },
+  Embedding_Version: { number: {} },
+};
 
-  const db = await notion.databases.retrieve({ database_id: BRAIN_DB });
+async function run() {
+  const dbId = ENV.BRAIN_DB;
 
-  const required = {
-    Summary: { rich_text: {} },
-    Content: { rich_text: {} },
-    "AI Notes": { rich_text: {} },
-    UUID: { rich_text: {} },
-    Tags: { multi_select: { options: [] } },
-    Status: { select: { options: ["Todo", "Processing", "Ready", "Archived"].map(n => ({ name: n })) } },
-    Priority: { select: { options: ["Low", "Medium", "High", "Critical"].map(n => ({ name: n })) } },
-  };
+  const db = await notion.databases.retrieve({ database_id: dbId });
+  const existing = db.properties;
 
   const missing = {};
-  for (const [k, v] of Object.entries(required)) {
-    if (!db.properties[k]) missing[k] = v;
+  for (const [key, value] of Object.entries(REQUIRED_PROPERTIES)) {
+    if (!existing[key]) missing[key] = value;
   }
 
-  if (Object.keys(missing).length) {
-    await notion.databases.update({
-      database_id: BRAIN_DB,
-      properties: missing,
-    });
-    console.log("🧠 Brain DB properties enforced:", Object.keys(missing));
-  } else {
+  if (Object.keys(missing).length === 0) {
     console.log("🧠 Brain DB already compliant");
+    return;
   }
+
+  await notion.databases.update({
+    database_id: dbId,
+    properties: missing,
+  });
+
+  console.log("🧠 Enforced Brain DB properties:", Object.keys(missing));
 }
 
-main().catch((e) => {
-  console.error(e);
+run().catch(err => {
+  console.error(err);
   process.exit(1);
 });
