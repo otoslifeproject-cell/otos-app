@@ -1,0 +1,28 @@
+name: Agent Boundary Enforcement
+
+on:
+  workflow_dispatch:
+
+jobs:
+  agents:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Initialise Agent Boundaries
+        run: node scripts/agents/boundary_init.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          AGENTS_DB: ${{ secrets.AGENTS_DB }}
+
+      - name: Guard Agent Boundaries
+        run: node scripts/agents/guard.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          AGENTS_DB: ${{ secrets.AGENTS_DB }}
