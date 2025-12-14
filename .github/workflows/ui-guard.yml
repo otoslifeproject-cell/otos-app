@@ -1,0 +1,17 @@
+name: UI Mirror Guard
+
+on:
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verify UI Mirror Read-Only
+        run: node scripts/ui/guard.js
