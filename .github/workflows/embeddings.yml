@@ -6,31 +6,13 @@ on:
 jobs:
   embed:
     runs-on: ubuntu-latest
-
-    env:
-      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-      NOTION_BRAIN_DB_ID: ${{ secrets.BRAIN_DB }}
-      NOTION_PROJECTS_DB_ID: ${{ secrets.NOTION_PROJECTS_DB_ID }}
-      NOTION_TASKS_DB_ID: ${{ secrets.NOTION_TASKS_DB_ID }}
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
 
-      - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci
-          else
-            npm install --no-fund --no-audit
-          fi
+      - run: npm install --no-fund --no-audit
 
-      - name: Run embeddings builder
-        run: node scripts/embeddings/run.js
+      - run: node scripts/embeddings/run.js
