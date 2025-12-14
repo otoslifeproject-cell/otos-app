@@ -1,0 +1,17 @@
+name: UI Command Guard
+
+on:
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Guard UI Command Registry
+        run: node scripts/ui/commands/guard.js
