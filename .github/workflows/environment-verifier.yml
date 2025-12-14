@@ -1,0 +1,29 @@
+name: Environment Verifier (Canonical)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - run: node scripts/env/verify.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
+          CORE_DB: ${{ secrets.CORE_DB }}
+          OPS_DB: ${{ secrets.OPS_DB }}
+          OTOS_INTAKE_FEEDER_DB: ${{ secrets.OTOS_INTAKE_FEEDER_DB }}
+          OTOS_FEEDER_INTAKE_ARCHIVE_DB: ${{ secrets.OTOS_FEEDER_INTAKE_ARCHIVE_DB }}
+          OTOS_IDEAS_DB: ${{ secrets.OTOS_IDEAS_DB }}
+          OTOS_KNOWLEDGE_DB: ${{ secrets.OTOS_KNOWLEDGE_DB }}
+          OTOS_AGENTS_DB: ${{ secrets.OTOS_AGENTS_DB }}
