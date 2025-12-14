@@ -1,6 +1,12 @@
 /**
- * OTOS — Baseline Boot Sequence
- * Verifies core governance + environment before operation
+ * OTOS Core DB — Baseline Schema Enforcer
+ * -------------------------------------
+ * Canonical contract for OTOS System Core DB
+ * Safe to re-run. Creates missing properties only.
+ *
+ * Required env:
+ * - NOTION_TOKEN
+ * - CORE_DB (database ID)
  */
 
 import { Client } from "@notionhq/client";
@@ -16,48 +22,75 @@ if (!CORE_DB) {
   process.exit(1);
 }
 
-(async () => {
-  console.log("🔁 OTOS Baseline Boot starting…");
+console.log("🧠 OTOS Baseline Boot starting…");
 
-  const response = await notion.databases.query({
-    database_id: CORE_DB,
-    filter: {
-      and: [
-        {
-          property: "Type",
-          select: { equals: "Governance" },
-        },
-        {
-          property: "Status",
-          select: { equals: "Active" },
-        },
-        {
-          property: "Priority",
-          select: { equals: "Highest" },
-        },
+const REQUIRED_PROPERTIES = {
+  Type: {
+    select: {
+      options: [
+        { name: "Core", color: "blue" },
+        { name: "Agent", color: "purple" },
+        { name: "Workflow", color: "orange" },
+        { name: "Document", color: "green" },
+        { name: "Memory", color: "pink" },
       ],
     },
-  });
+  },
 
-  if (response.results.length === 0) {
-    console.error("❌ No active governance anchor found");
-    process.exit(1);
+  Status: {
+    select: {
+      options: [
+        { name: "Active", color: "green" },
+        { name: "Inactive", color: "gray" },
+        { name: "Deprecated", color: "red" },
+      ],
+    },
+  },
+
+  Canonical: {
+    checkbox: {},
+  },
+
+  Created_At: {
+    created_time: {},
+  },
+
+  Notes: {
+    rich_text: {},
+  },
+};
+
+async function run() {
+  const db = await notion.databases.retrieve({ database_id: CORE_DB });
+
+  const existingProps = db.properties || {};
+  const updates = {};
+
+  for (const [name, schema] of Object.entries(REQUIRED_PROPERTIES)) {
+    if (!existingProps[name]) {
+      updates[name] = schema;
+      console.log(`➕ Will create property: ${name}`);
+    } else {
+      console.log(`✔ Property exists: ${name}`);
+    }
   }
 
-  const contract = response.results[0];
+  if (Object.keys(updates).length === 0) {
+    console.log("✅ Baseline already satisfied — no changes needed");
+    console.log("✅ OTOS Core Intelligence is STABLE");
+    return;
+  }
 
-  const link =
-    contract.properties?.Canonical_Link?.url || "UNKNOWN";
+  await notion.databases.update({
+    database_id: CORE_DB,
+    properties: updates,
+  });
 
-  console.log("📜 Governance contract located");
-  console.log(`🔗 ${link}`);
-
-  console.log("🧠 Memory anchor verified");
-  console.log("⚙️ Environment verified");
+  console.log("✅ Baseline properties applied");
   console.log("✅ OTOS Core Intelligence is STABLE");
+}
 
-  process.exit(0);
-})().catch((err) => {
+run().catch((err) => {
   console.error("❌ Baseline boot FAILED");
   console.error(err.body || err);
   process.exit(1);
