@@ -7,17 +7,20 @@ jobs:
   fix:
     runs-on: ubuntu-latest
 
-    env:
-      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-      NOTION_BRAIN_DB_ID: ${{ secrets.BRAIN_DB }}
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
 
-      - run: npm install --no-fund --no-audit
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
 
-      - run: node scripts/brain/auto_properties.js
+      - name: Enforce Brain DB properties
+        run: node scripts/brain/auto_properties.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
