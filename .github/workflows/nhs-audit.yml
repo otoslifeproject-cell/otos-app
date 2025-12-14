@@ -1,0 +1,34 @@
+name: NHS Audit Pack (Auto)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Generate NHS Audit Pack
+        run: node scripts/audit/nhs_pack_generate.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          CORE_DB: ${{ secrets.CORE_DB }}
+          OPS_DB: ${{ secrets.OPS_DB }}
+
+      - name: Validate NHS Audit Pack
+        run: node scripts/audit/nhs_validate.js
+
+      - name: Commit Audit Pack
+        run: |
+          git config user.name "otos-bot"
+          git config user.email "bot@otos.life"
+          git add audit/nhs
+          git commit -m "Auto-generate NHS audit pack" || echo "No changes"
+          git push
