@@ -1,0 +1,29 @@
+name: Feeder to Memory Bridge
+
+on:
+  workflow_dispatch:
+
+jobs:
+  memory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Validate Memory Schema
+        run: node scripts/memory/validate.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
+
+      - name: Bridge Feeder to Memory
+        run: node scripts/memory/bridge_from_feeder.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
