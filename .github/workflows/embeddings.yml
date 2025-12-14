@@ -1,4 +1,4 @@
-name: Embeddings Builder (Manual)
+name: Embeddings Builder (Canonical Brain)
 
 on:
   workflow_dispatch:
@@ -7,30 +7,30 @@ jobs:
   embed:
     runs-on: ubuntu-latest
 
+    env:
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      NOTION_BRAIN_DB_ID: ${{ secrets.BRAIN_DB }}
+      NOTION_PROJECTS_DB_ID: ${{ secrets.NOTION_PROJECTS_DB_ID }}
+      NOTION_TASKS_DB_ID: ${{ secrets.NOTION_TASKS_DB_ID }}
+
     steps:
-      # 1. Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
-      # 3. Install dependencies  ← THIS WAS MISSING
       - name: Install dependencies
-        run: npm install
-
-      # 4. Sanity check (optional but helpful)
-      - name: Verify Notion client installed
         run: |
-          ls node_modules/@notionhq/client || echo "❌ Notion client missing"
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install --no-fund --no-audit
+          fi
 
-      # 5. Run embeddings builder
       - name: Run embeddings builder
-        run: npm run embeddings:run
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: node scripts/embeddings/run.js
