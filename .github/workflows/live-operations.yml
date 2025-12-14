@@ -1,0 +1,25 @@
+name: Live Operations Enablement
+
+on:
+  workflow_dispatch:
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Enable Live Mode
+        run: node scripts/system/live_enable.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          CORE_DB: ${{ secrets.CORE_DB }}
+
+      - name: Enforce Live Guard
+        run: node scripts/system/live_guard.js
