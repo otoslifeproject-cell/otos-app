@@ -1,0 +1,54 @@
+name: OTOS Boot + Snapshot + Embeddings (Manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  boot_snapshot_embed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install runtime deps (no-save)
+        run: |
+          npm install --no-save @notionhq/client uuid
+
+      - name: BOOT (Rules → Memory → Schema validation)
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
+          CORE_DB: ${{ secrets.CORE_DB }}
+          OPS_DB: ${{ secrets.OPS_DB }}
+        run: |
+          node scripts/boot/boot.js
+
+      - name: SNAPSHOT EXPORT (always-on)
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
+          CORE_DB: ${{ secrets.CORE_DB }}
+          OPS_DB: ${{ secrets.OPS_DB }}
+        run: |
+          node scripts/boot/snapshot.js
+
+      - name: EMBEDDINGS BUILD (Brain DB)
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          node scripts/embeddings/run.js
+
+      - name: Upload artifacts (snapshot + reports)
+        uses: actions/upload-artifact@v4
+        with:
+          name: otos-artifacts
+          path: artifacts/
+          if-no-files-found: error
