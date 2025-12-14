@@ -1,0 +1,32 @@
+name: Feeder Ingest Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        description: "Raw feeder input"
+        required: true
+
+jobs:
+  feeder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Validate Feeder Schema
+        run: node scripts/feeder/validate.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
+
+      - name: Create Feeder Ingest
+        run: node scripts/feeder/init.js "${{ github.event.inputs.text }}"
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
