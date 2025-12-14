@@ -16,3 +16,6 @@ jobs:
       - run: npm install --no-fund --no-audit
 
       - run: node scripts/brain/auto_properties.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          BRAIN_DB: ${{ secrets.BRAIN_DB }}
