@@ -1,0 +1,23 @@
+name: Andy Agent — Intake (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      text:
+        description: "Text to send to Andy"
+        required: true
+        type: string
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-fund --no-audit
+      - run: node scripts/andy/intake.js "${{ inputs.text }}"
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          OTOS_INTAKE_FEEDER_DB: ${{ secrets.OTOS_INTAKE_FEEDER_DB }}
