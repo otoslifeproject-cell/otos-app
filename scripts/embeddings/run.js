@@ -1,16 +1,9 @@
-// scripts/embeddings/run.js
 import fs from "fs";
 import path from "path";
-import { Client } from "@notionhq/client";
 import OpenAI from "openai";
+import { createNotionClient, requireEnv } from "../notion/client.js";
 
-function requireEnv(name) {
-  const v = process.env[name];
-  if (!v) throw new Error(`Missing env: ${name}`);
-  return v;
-}
-
-const notion = new Client({ auth: requireEnv("NOTION_TOKEN") });
+const notion = createNotionClient();
 const openai = new OpenAI({ apiKey: requireEnv("OPENAI_API_KEY") });
 
 const BRAIN_DB_ID = requireEnv("BRAIN_DB");
@@ -20,23 +13,43 @@ async function run() {
     database_id: BRAIN_DB_ID
   });
 
+  if (!pages.results.length) {
+    console.log("🧠 No Brain records found");
+    return;
+  }
+
   let count = 0;
 
   for (const page of pages.results) {
-    const titleProp = Object.values(page.properties).find(p => p.type === "title");
-    const text = titleProp?.title?.map(t => t.plain_text).join(" ") || "";
+    const title =
+      page.properties.Title?.title?.[0]?.plain_text || "";
 
-    if (!text) continue;
+    if (!title) continue;
 
-    await openai.embeddings.create({
-      model: "text-embedding-3-large",
-      input: text
+    const embedding = await openai.embeddings.create({
+      model: "text-embedding-3-small",
+      input: title
+    });
+
+    await notion.pages.update({
+      page_id: page.id,
+      properties: {
+        Embedding_Vector: {
+          rich_text: [
+            {
+              text: {
+                content: JSON.stringify(embedding.data[0].embedding)
+              }
+            }
+          ]
+        }
+      }
     });
 
     count++;
   }
 
-  console.log(`Embeddings updated for ${count} pages`);
+  console.log(`✅ Embeddings updated for ${count} pages`);
 }
 
 run().catch(err => {
