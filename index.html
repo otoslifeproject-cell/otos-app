@@ -2,320 +2,254 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit — Enterprise Control</title>
+  <title>OTOS Cockpit — Enterprise Control Surface</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     :root {
-      --bg-main: #f4f8fc;
-      --bg-panel: rgba(255,255,255,0.98);
-      --border-soft: rgba(148,163,184,0.35);
-      --text-main: #0f172a;
-      --text-muted: #475569;
-
-      --accent-parent: #2563eb;
-      --accent-agent: #16a34a;
-      --accent-guard: #0b3c5d;
-      --accent-allow: #22c55e;
-      --accent-deny: #ef4444;
-      --accent-warn: #f59e0b;
+      --bg-main: #eef4fb;
+      --bg-card: #ffffff;
+      --blue-soft: #dbeafe;
+      --blue-strong: #2563eb;
+      --green-agent: #16a34a;
+      --grey-text: #475569;
+      --border-soft: rgba(0,0,0,0.08);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #f4f8fc, #e6f0fb);
-      color: var(--text-main);
-      height: 100vh;
-      overflow: hidden;
+      background: radial-gradient(circle at bottom right, #dbeafe 0%, var(--bg-main) 55%);
+      color: #0f172a;
     }
 
+    /* SKYHAWK TICKER */
+    .ticker {
+      height: 42px;
+      background: linear-gradient(90deg, #020617, #020617);
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+    }
+
+    .ticker span {
+      margin-right: 28px;
+      opacity: 0.85;
+    }
+
+    /* LAYOUT GRID */
     .layout {
       display: grid;
-      grid-template-columns: 1fr 640px;
-      height: 100vh;
-      width: 100vw;
+      grid-template-columns: 1fr 340px;
+      grid-template-rows: auto 1fr auto;
+      min-height: calc(100vh - 42px);
     }
 
-    /* ===== MAIN ===== */
+    /* MAIN EXECUTION */
     .main {
-      padding: 36px;
+      padding: 36px 40px;
     }
 
-    .main h1 {
-      margin: 0 0 12px 0;
-      font-size: 32px;
+    .title {
+      font-size: 34px;
       font-weight: 700;
-    }
-
-    .main p {
-      color: var(--text-muted);
-      max-width: 860px;
-      line-height: 1.6;
-    }
-
-    /* ===== RIGHT STACK ===== */
-    .control-stack {
-      position: relative;
-      border-left: 1px solid var(--border-soft);
-      background: linear-gradient(
-        180deg,
-        rgba(11,60,93,0.06),
-        var(--bg-panel)
-      );
-      backdrop-filter: blur(18px);
-      display: grid;
-      grid-template-rows: auto auto auto auto auto 1fr;
-    }
-
-    .section {
-      padding: 18px 24px;
-      border-bottom: 1px solid var(--border-soft);
-    }
-
-    .section h2 {
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-muted);
       margin-bottom: 10px;
     }
 
-    /* ===== CORE ===== */
-    .parent-core,
-    .agent-core {
-      text-align: center;
-      padding: 10px 0;
+    .subtitle {
+      max-width: 640px;
+      font-size: 15px;
+      color: var(--grey-text);
+      margin-bottom: 28px;
+      line-height: 1.6;
     }
 
-    .parent-core h3 {
-      color: var(--accent-parent);
-      font-size: 22px;
-      margin: 0;
+    /* PRIORITY STACK */
+    .priority-stack {
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      padding: 22px;
+      margin-bottom: 26px;
     }
 
-    .agent-core h3 {
-      color: var(--accent-agent);
-      font-size: 22px;
-      margin: 0;
+    .priority-stack h3 {
+      margin: 0 0 14px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      color: #1e293b;
     }
 
-    .parent-core p,
-    .agent-core p {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-top: 6px;
+    .task {
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border-soft);
+      margin-bottom: 10px;
+      font-size: 14px;
     }
 
-    /* ===== PERMISSION BADGES ===== */
-    .badges {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+    .task strong {
+      display: block;
+      margin-bottom: 4px;
     }
 
-    .badge {
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: white;
-      background: var(--accent-guard);
-    }
-
-    .badge.allow { background: var(--accent-allow); }
-    .badge.deny { background: var(--accent-deny); }
-    .badge.warn { background: var(--accent-warn); }
-
-    /* ===== TRUST BOUNDARIES ===== */
-    .boundary {
-      border: 1px dashed var(--border-soft);
-      border-radius: 14px;
-      padding: 14px;
-      background: rgba(255,255,255,0.85);
-    }
-
-    .boundary h4 {
-      margin: 0 0 6px 0;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--accent-guard);
-    }
-
-    .boundary p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.45;
-    }
-
-    /* ===== WRITE GATES ===== */
-    .gates {
+    /* STATS PANEL */
+    .stats {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 14px;
     }
 
-    .gate {
-      border-radius: 16px;
-      padding: 14px;
-      background: rgba(255,255,255,0.9);
-      border: 2px solid var(--border-soft);
-      text-align: center;
+    .stat {
+      background: var(--bg-card);
+      border-radius: 14px;
+      padding: 18px;
+      border: 1px solid var(--border-soft);
     }
 
-    .gate.locked {
-      border-color: var(--accent-deny);
-      background: linear-gradient(
-        180deg,
-        rgba(239,68,68,0.12),
-        rgba(255,255,255,0.95)
-      );
-    }
-
-    .gate.controlled {
-      border-color: var(--accent-warn);
-      background: linear-gradient(
-        180deg,
-        rgba(245,158,11,0.12),
-        rgba(255,255,255,0.95)
-      );
-    }
-
-    .gate.allowed {
-      border-color: var(--accent-allow);
-      background: linear-gradient(
-        180deg,
-        rgba(34,197,94,0.12),
-        rgba(255,255,255,0.95)
-      );
-    }
-
-    .gate h5 {
-      margin: 0 0 6px 0;
+    .stat h4 {
+      margin: 0 0 6px;
       font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      color: var(--grey-text);
+      letter-spacing: 0.05em;
     }
 
-    .gate p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.4;
+    .stat span {
+      font-size: 26px;
+      font-weight: 600;
     }
 
-    /* ===== FOOT GUARD STRIP ===== */
-    .guard-strip {
-      margin-top: auto;
-      padding: 14px 24px;
-      border-top: 1px solid var(--border-soft);
-      background: linear-gradient(
-        90deg,
-        rgba(11,60,93,0.12),
-        rgba(255,255,255,0.96)
-      );
-      font-size: 11px;
-      color: var(--text-muted);
+    /* RIGHT SIDEBAR */
+    .sidebar {
+      background: #f8fafc;
+      border-left: 1px solid var(--border-soft);
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
     }
 
-    @media (max-width: 1200px) {
-      .layout { grid-template-columns: 1fr; }
-      .control-stack { display: none; }
+    .panel {
+      padding: 22px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .panel h3 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: #334155;
+    }
+
+    .eye {
+      font-weight: 700;
+      color: var(--blue-strong);
+      margin-bottom: 8px;
+    }
+
+    .andy {
+      color: var(--green-agent);
+      font-weight: 600;
+    }
+
+    .panel p {
+      font-size: 13px;
+      color: var(--grey-text);
+      line-height: 1.5;
     }
   </style>
 </head>
 
 <body>
+
+  <!-- SKYHAWK -->
+  <div class="ticker">
+    <span>🛰️ SKYHAWK · Signals Nominal</span>
+    <span>Latency: 14ms</span>
+    <span>Feeds: 6 active</span>
+    <span>No anomalies detected</span>
+  </div>
+
   <div class="layout">
 
     <!-- MAIN -->
     <main class="main">
-      <h1>OTOS Cockpit</h1>
-      <p>Enterprise operational surface.</p>
-      <p>Human-led execution with explicit trust, permission, and write controls.</p>
+      <div class="title">OTOS Cockpit</div>
+      <div class="subtitle">
+        Enterprise execution surface.  
+        Human authority at the centre. Agents operate within visible, bounded lanes.
+      </div>
+
+      <!-- PRIORITY TASKS -->
+      <section class="priority-stack">
+        <h3>TOP PRIORITY</h3>
+
+        <div class="task">
+          <strong>Lock Parent Node Governance</strong>
+          Confirm write-gates and authority boundaries.
+        </div>
+
+        <div class="task">
+          <strong>Prepare Demo Narrative</strong>
+          Sequence system layers for stakeholder walkthrough.
+        </div>
+
+        <div class="task">
+          <strong>Stabilise Visual Frame</strong>
+          Freeze layout before logic injection.
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="stats">
+        <div class="stat">
+          <h4>ACTIVE TASKS</h4>
+          <span>12</span>
+        </div>
+        <div class="stat">
+          <h4>AGENTS ONLINE</h4>
+          <span>1</span>
+        </div>
+        <div class="stat">
+          <h4>SIGNALS</h4>
+          <span>37</span>
+        </div>
+        <div class="stat">
+          <h4>SYSTEM STATE</h4>
+          <span>STABLE</span>
+        </div>
+      </section>
     </main>
 
-    <!-- CONTROL STACK -->
-    <aside class="control-stack">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
 
-      <!-- PARENT -->
-      <section class="section">
-        <h2>Parent Node</h2>
-        <div class="parent-core">
-          <h3>EYE20</h3>
-          <p>Root authority · Policy owner · Final arbiter</p>
-        </div>
-      </section>
+      <div class="panel">
+        <div class="eye">EYE20 — Parent Node</div>
+        <p>
+          Authoritative system presence.<br>
+          Memory-anchored · Non-drifting · Board-safe.
+        </p>
+      </div>
 
-      <!-- AGENT -->
-      <section class="section">
-        <h2>Agent</h2>
-        <div class="agent-core">
-          <h3>Andy</h3>
-          <p>Subordinate execution · No independent write access</p>
-        </div>
-      </section>
-
-      <!-- PERMISSIONS -->
-      <section class="section">
-        <h2>Permissions</h2>
-        <div class="badges">
-          <div class="badge allow">Read</div>
-          <div class="badge deny">Write</div>
-          <div class="badge deny">Deploy</div>
-          <div class="badge warn">Propose</div>
-        </div>
-      </section>
-
-      <!-- TRUST BOUNDARY -->
-      <section class="section">
-        <h2>Trust Boundary</h2>
-        <div class="boundary">
-          <h4>Isolated Execution Zone</h4>
-          <p>
-            Agents operate within a hardened boundary. No state mutation,
-            no memory writes, no cross-layer escalation without Parent approval.
-          </p>
-        </div>
-      </section>
-
-      <!-- WRITE GATES -->
-      <section class="section">
-        <h2>Write Gates</h2>
-        <div class="gates">
-          <div class="gate locked">
-            <h5>Memory</h5>
-            <p>Locked · Parent only</p>
-          </div>
-          <div class="gate controlled">
-            <h5>Tasks</h5>
-            <p>Controlled · Approval required</p>
-          </div>
-          <div class="gate allowed">
-            <h5>Visual</h5>
-            <p>Allowed · Non-persistent</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- GUARD STRIP -->
-      <div class="guard-strip">
-        <span>Trust Mode: Enforced</span>
-        <span>Write Access: Gated</span>
-        <span>Audit: Continuous</span>
+      <div class="panel">
+        <div class="andy">Andy — Execution Agent</div>
+        <p>
+          Scoped task execution only.<br>
+          No autonomous memory.<br>
+          Operates under explicit instruction.
+        </p>
       </div>
 
     </aside>
 
   </div>
+
 </body>
 </html>
