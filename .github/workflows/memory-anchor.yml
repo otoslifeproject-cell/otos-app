@@ -1,4 +1,4 @@
-name: Memory Anchor & Stability
+name: Memory Anchor (Canonical)
 
 on:
   workflow_dispatch:
@@ -6,29 +6,22 @@ on:
 jobs:
   memory:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    env:
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+      CORE_DB: ${{ secrets.CORE_DB }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm install --no-fund --no-audit
+      - name: Install deps
+        run: npm install --no-fund --no-audit
 
-      - name: Initialise Anchor
+      - name: Run memory anchor
         run: node scripts/memory/anchor_init.js
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          MEMORY_ANCHOR_DB: ${{ secrets.MEMORY_ANCHOR_DB }}
-
-      - name: Guard Baseline
-        run: node scripts/memory/guard.js
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          MEMORY_ANCHOR_DB: ${{ secrets.MEMORY_ANCHOR_DB }}
-
-      - name: Snapshot Memory
-        run: node scripts/memory/snapshot.js
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          MEMORY_ANCHOR_DB: ${{ secrets.MEMORY_ANCHOR_DB }}
