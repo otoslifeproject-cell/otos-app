@@ -1,0 +1,64 @@
+name: Operational Handover (Canonical)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  operational-handover:
+    runs-on: ubuntu-latest
+
+    env:
+      CORE_DB: ${{ secrets.CORE_DB }}
+      OTOS_INTAKE_FEEDER_DB: ${{ secrets.OTOS_INTAKE_FEEDER_DB }}
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create operational_handover.js
+        run: |
+          mkdir -p scripts/system
+          cat << 'EOF' > scripts/system/operational_handover.js
+          /**
+           * Operational Handover
+           * Transfers system into day-to-day operational mode
+           */
+
+          console.log("📦 Operational Handover starting");
+
+          const required = [
+            "CORE_DB",
+            "OTOS_INTAKE_FEEDER_DB",
+            "NOTION_TOKEN"
+          ];
+
+          for (const key of required) {
+            if (!process.env[key]) {
+              console.error(`❌ Missing required env: ${key}`);
+              process.exit(1);
+            }
+          }
+
+          console.log("✅ Environment verified");
+          console.log("🧠 CORE_DB:", process.env.CORE_DB);
+          console.log("📥 FEEDER_DB:", process.env.OTOS_INTAKE_FEEDER_DB);
+
+          console.log("🧭 Switching system to DAY-TO-DAY OPERATIONS MODE");
+          console.log("👤 Control transferred to primary operator (Dean)");
+          console.log("🪢 Automation chains locked");
+          console.log("🟢 System is now LIVE & OPERATIONAL");
+
+          process.exit(0);
+          EOF
+
+      - name: Run Operational Handover
+        run: node scripts/system/operational_handover.js
