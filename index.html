@@ -8,13 +8,15 @@
   <style>
     :root {
       --bg-main: #f4f8fc;
-      --bg-panel: rgba(255,255,255,0.94);
+      --bg-panel: rgba(255,255,255,0.96);
       --border-soft: rgba(148,163,184,0.35);
       --text-main: #0f172a;
       --text-muted: #475569;
       --accent-parent: #2563eb;
       --accent-agent: #16a34a;
       --accent-active: #0ea5e9;
+      --accent-wait: #94a3b8;
+      --accent-done: #22c55e;
     }
 
     * { box-sizing: border-box; }
@@ -30,32 +32,33 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 460px;
+      grid-template-columns: 1fr 480px;
       height: 100vh;
       width: 100vw;
     }
 
     .main {
-      padding: 32px;
+      padding: 36px;
       overflow-y: auto;
     }
 
     .main h1 {
-      margin-top: 0;
-      font-size: 30px;
+      margin: 0 0 12px 0;
+      font-size: 32px;
       font-weight: 700;
     }
 
     .main p {
       color: var(--text-muted);
-      max-width: 780px;
+      max-width: 820px;
       line-height: 1.65;
+      margin: 0 0 10px 0;
     }
 
     .control-stack {
       border-left: 1px solid var(--border-soft);
       background: var(--bg-panel);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
       display: grid;
       grid-template-rows: auto auto 1fr;
     }
@@ -66,7 +69,7 @@
     }
 
     .section {
-      padding: 18px 22px;
+      padding: 18px 24px;
       border-bottom: 1px solid var(--border-soft);
     }
 
@@ -86,13 +89,13 @@
 
     .parent-core h3 {
       color: var(--accent-parent);
-      font-size: 20px;
+      font-size: 21px;
       margin: 0 0 6px 0;
     }
 
     .agent-core h3 {
       color: var(--accent-agent);
-      font-size: 20px;
+      font-size: 21px;
       margin: 0 0 6px 0;
     }
 
@@ -104,128 +107,56 @@
     }
 
     .execution-lane {
-      padding: 18px 22px;
+      padding: 20px 24px;
       display: flex;
       flex-direction: column;
       gap: 14px;
     }
 
+    .queue-title {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
     .execution-item {
       border: 1px solid var(--border-soft);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 14px 16px;
-      background: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.82);
+      transition: transform .4s ease, box-shadow .4s ease, opacity .4s ease;
     }
 
     .execution-item.active {
       border-color: var(--accent-active);
       background: linear-gradient(
         180deg,
-        rgba(14,165,233,0.08),
-        rgba(255,255,255,0.85)
+        rgba(14,165,233,0.10),
+        rgba(255,255,255,0.9)
       );
+      box-shadow: 0 8px 20px rgba(14,165,233,0.15);
+      transform: translateY(-2px);
+    }
+
+    .execution-item.waiting {
+      border-color: var(--accent-wait);
+      opacity: 0.9;
+    }
+
+    .execution-item.done {
+      border-color: var(--accent-done);
+      background: linear-gradient(
+        180deg,
+        rgba(34,197,94,0.10),
+        rgba(255,255,255,0.9)
+      );
+      opacity: 0.85;
     }
 
     .execution-item h4 {
       margin: 0 0 6px 0;
       font-size: 13px;
       font-weight: 600;
-      color: var(--accent-active);
-    }
-
-    .execution-item p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.45;
-    }
-
-    .execution-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 8px;
-    }
-
-    @media (max-width: 1000px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-      .control-stack {
-        display: none;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="layout">
-
-    <main class="main">
-      <h1>OTOS Cockpit</h1>
-      <p>
-        Enterprise operational surface.<br />
-        Human-led execution, systems visibility, and decision control live here.
-      </p>
-      <p>
-        This workspace remains unconstrained by AI presence.<br />
-        All intelligence layers are anchored separately to prevent drift.
-      </p>
-    </main>
-
-    <aside class="control-stack locked">
-
-      <section class="section">
-        <h2>Parent Node</h2>
-        <div class="parent-core">
-          <h3>EYE20</h3>
-          <p>Authoritative · Memory-anchored · Non-drifting</p>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>Agent</h2>
-        <div class="agent-core">
-          <h3>Andy</h3>
-          <p>Scoped execution agent · No autonomous memory</p>
-        </div>
-      </section>
-
-      <section class="execution-lane">
-
-        <div class="execution-item active">
-          <h4>ACTIVE TASK</h4>
-          <p>
-            Capture current cockpit state for documentation & animation sequencing.
-          </p>
-          <div class="execution-meta">
-            Status: In progress · Injected by Parent Node
-          </div>
-        </div>
-
-        <div class="execution-item">
-          <h4>NEXT</h4>
-          <p>
-            Prepare execution lane for multi-task queue (read-only).
-          </p>
-          <div class="execution-meta">
-            Status: Pending
-          </div>
-        </div>
-
-        <div class="execution-item">
-          <h4>GUARDRAILS</h4>
-          <p>
-            No self-initiation · No UI control · No memory write.
-          </p>
-          <div class="execution-meta">
-            Authority: Parent-locked
-          </div>
-        </div>
-
-      </section>
-
-    </aside>
-
-  </div>
-</body>
-</html>
+      color: var(--text
