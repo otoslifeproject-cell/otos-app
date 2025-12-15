@@ -1,68 +1,34 @@
-/**
- * MEMORY ANCHOR INITIALISER
- * Establishes a permanent, non-editable baseline record for system stability
- */
-
 import { Client } from "@notionhq/client";
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
-
-const MEMORY_DB = process.env.MEMORY_ANCHOR_DB;
+const notion = new Client({
+  auth: process.env.NOTION_TOKEN,
+});
 
 async function run() {
-  const existing = await notion.databases.query({
-    database_id: MEMORY_DB,
-    filter: {
-      property: "Anchor_Type",
-      select: { equals: "Baseline" }
-    }
-  });
+  const CORE_DB = process.env.CORE_DB;
 
-  if (existing.results.length > 0) {
-    console.log("🧠 Memory Anchor already exists. Skipping.");
-    return;
+  console.log("🧠 Memory Anchor Initialiser starting");
+
+  if (!CORE_DB) {
+    console.error("❌ CORE_DB is missing");
+    process.exit(1);
   }
 
-  await notion.pages.create({
-    parent: { database_id: MEMORY_DB },
-    properties: {
-      Title: {
-        title: [{ text: { content: "SYSTEM BASELINE ANCHOR" } }]
-      },
-      Anchor_Type: {
-        select: { name: "Baseline" }
-      },
-      Status: {
-        select: { name: "Locked" }
-      },
-      Scope: {
-        multi_select: [
-          { name: "Core Identity" },
-          { name: "Rules" },
-          { name: "Memory Model" },
-          { name: "Deployment Contract" }
-        ]
-      },
-      Created_At: {
-        date: { start: new Date().toISOString() }
-      },
-      Immutable: {
-        checkbox: true
-      },
-      Notes: {
-        rich_text: [
-          {
-            text: {
-              content:
-                "This record defines the canonical stability baseline. It must never be edited or deleted."
-            }
-          }
-        ]
-      }
-    }
+  console.log(`CORE_DB: ${CORE_DB}`);
+
+  // Validate DB exists & is reachable
+  await notion.databases.retrieve({
+    database_id: CORE_DB,
   });
 
-  console.log("🔒 MEMORY ANCHOR CREATED");
+  console.log("🧠 Memory anchor verified");
+
+  // Optional: mark a system property or heartbeat write later
+  console.log("✅ Memory Anchor initialised");
 }
 
-run();
+run().catch((err) => {
+  console.error("❌ Memory Anchor FAILED");
+  console.error(err.message || err);
+  process.exit(1);
+});
