@@ -8,14 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CORE_DB: ${{ secrets.OTOS_CORE_DB }}
+      CORE_DB: ${{ secrets.CORE_DB }}
       NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -23,5 +23,6 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: Freeze Memory
+      - name: Freeze memory
         run: node scripts/memory/freeze.js
+
