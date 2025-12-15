@@ -1,0 +1,35 @@
+name: Daily Operations Mode
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: "Daily command ID"
+        required: true
+      role:
+        description: "Invoker role"
+        required: true
+      payload:
+        description: "Optional payload"
+        required: false
+
+jobs:
+  daily:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Guard Daily Command
+        run: node scripts/ops/daily_guard.js "${{ github.event.inputs.command }}"
+
+      - name: Execute Command
+        run: node scripts/ui/commands/execute.js "${{ github.event.inputs.command }}" "${{ github.event.inputs.role }}" "${{ github.event.inputs.payload }}"
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          OPS_DB: ${{ secrets.OPS_DB }}
