@@ -1,0 +1,37 @@
+name: YouTube Playlist → Feeder (Controlled Batch)
+
+on:
+  workflow_dispatch:
+    inputs:
+      playlist_url:
+        description: "YouTube playlist URL"
+        required: true
+      batch_size:
+        description: "Items per batch"
+        required: false
+        default: "5"
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yt-dlp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yt-dlp ffmpeg
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Playlist Ingest
+        run: node scripts/youtube/playlist_ingest.js "${{ github.event.inputs.playlist_url }}"
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
+          BATCH_SIZE: ${{ github.event.inputs.batch_size }}
+          SLEEP_MS: 3000
