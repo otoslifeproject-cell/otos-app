@@ -1,0 +1,28 @@
+name: YouTube Bulk Audio Extract (Queue Safe)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bulk_extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yt-dlp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yt-dlp ffmpeg
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Bulk Extract
+        run: node scripts/youtube/bulk_extract_audio.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
+          LIMIT: 3
