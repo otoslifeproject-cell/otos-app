@@ -22,6 +22,10 @@
       --pulse-ok: #22c55e;
       --pulse-warn: #f59e0b;
       --pulse-idle: #64748b;
+
+      --notice-info: #0ea5e9;
+      --notice-warn: #f59e0b;
+      --notice-critical: #ef4444;
     }
 
     * { box-sizing: border-box; }
@@ -37,7 +41,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 520px;
+      grid-template-columns: 1fr 560px;
       height: 100vh;
       width: 100vw;
     }
@@ -55,7 +59,7 @@
 
     .main p {
       color: var(--text-muted);
-      max-width: 860px;
+      max-width: 880px;
       line-height: 1.65;
       margin: 0 0 10px 0;
     }
@@ -65,7 +69,7 @@
       background: var(--bg-panel);
       backdrop-filter: blur(18px);
       display: grid;
-      grid-template-rows: auto auto auto 1fr;
+      grid-template-rows: auto auto auto auto 1fr;
     }
 
     .locked * {
@@ -149,6 +153,54 @@
       0% { box-shadow: 0 0 0 0 rgba(0,0,0,0.15); }
       70% { box-shadow: 0 0 0 10px rgba(0,0,0,0); }
       100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+    }
+
+    /* ===== FEEDS ===== */
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .feed-item {
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.9);
+      display: grid;
+      grid-template-columns: 8px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .feed-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 6px;
+    }
+
+    .info .feed-dot { background: var(--notice-info); }
+    .warn .feed-dot { background: var(--notice-warn); }
+    .critical .feed-dot { background: var(--notice-critical); }
+
+    .feed-text h4 {
+      margin: 0 0 4px 0;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .feed-text p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .feed-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 6px;
     }
 
     /* ===== EXECUTION QUEUE ===== */
@@ -273,25 +325,58 @@
         </div>
       </section>
 
+      <!-- LIVE FEED -->
+      <section class="section">
+        <h2>Live Feed</h2>
+        <div class="feed">
+          <div class="feed-item info">
+            <div class="feed-dot"></div>
+            <div class="feed-text">
+              <h4>UI Layer Activated</h4>
+              <p>Execution queue and system pulse successfully initialised.</p>
+              <div class="feed-meta">Source: Parent · Just now</div>
+            </div>
+          </div>
+
+          <div class="feed-item warn">
+            <div class="feed-dot"></div>
+            <div class="feed-text">
+              <h4>Memory Write Disabled</h4>
+              <p>All agents operating in read-only mode pending approval.</p>
+              <div class="feed-meta">Policy · Active</div>
+            </div>
+          </div>
+
+          <div class="feed-item critical">
+            <div class="feed-dot"></div>
+            <div class="feed-text">
+              <h4>Alert Channel Reserved</h4>
+              <p>No active alerts. Channel standing by.</p>
+              <div class="feed-meta">System · Idle</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- EXECUTION QUEUE -->
       <section class="execution-lane">
         <div class="queue-title">Execution Queue</div>
 
         <div class="execution-item active">
           <h4>ACTIVE</h4>
-          <p>Animate layered cockpit build (signals + queue + pulse).</p>
+          <p>Animate cockpit layering (pulse → feed → queue).</p>
           <div class="execution-meta">Status: In progress · Authority: Parent</div>
         </div>
 
         <div class="execution-item waiting">
           <h4>QUEUED</h4>
-          <p>Introduce signal feeds (events, notices, alerts).</p>
+          <p>Introduce live data adapters (events only).</p>
           <div class="execution-meta">Status: Waiting</div>
         </div>
 
         <div class="execution-item done">
           <h4>COMPLETED</h4>
-          <p>Parent Node lock, agent separation, execution lane.</p>
+          <p>Parent Node lock, agent separation, visual scaffolding.</p>
           <div class="execution-meta">Status: Complete</div>
         </div>
       </section>
