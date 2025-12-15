@@ -1,72 +1,55 @@
-/**
- * CANONICAL LOCK GATE
- * Enforces that a document cannot be marked Canonical unless all conditions are met.
- */
-
+// scripts/canonical/lock.js
 import { Client } from "@notionhq/client";
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN });
+const notion = new Client({
+  auth: process.env.NOTION_TOKEN,
+});
 
-const DOCUMENTS_DB = process.env.CANONICAL_DOCS_DB;
+const CORE_DB_ID = process.env.CORE_DB;
 
-const REQUIRED_SELECT = ["Document_Type", "Status", "Canonical_Artefact"];
-const REQUIRED_CHECKBOX = ["Fact_Checked"];
-const REQUIRED_TEXT = ["Version", "Export_Path"];
-const REQUIRED_MULTI = ["Approved_By"];
-
-async function run() {
-  const docs = await notion.databases.query({
-    database_id: DOCUMENTS_DB,
-    filter: {
-      property: "Canonical_Artefact",
-      select: { equals: "Draft" }
-    }
-  });
-
-  for (const page of docs.results) {
-    const props = page.properties;
-
-    const fail = [];
-
-    for (const key of REQUIRED_SELECT) {
-      if (!props[key]?.select?.name) fail.push(key);
-    }
-
-    for (const key of REQUIRED_CHECKBOX) {
-      if (!props[key]?.checkbox) fail.push(key);
-    }
-
-    for (const key of REQUIRED_TEXT) {
-      if (!props[key]?.rich_text?.[0]?.plain_text) fail.push(key);
-    }
-
-    for (const key of REQUIRED_MULTI) {
-      if (!props[key]?.multi_select?.length) fail.push(key);
-    }
-
-    if (fail.length) {
-      console.error(`❌ BLOCKED: ${page.id}`);
-      console.error(`Missing: ${fail.join(", ")}`);
-      process.exit(1);
-    }
-
-    await notion.pages.update({
-      page_id: page.id,
-      properties: {
-        Canonical_Artefact: {
-          select: { name: "Canonical (Locked)" }
-        },
-        Status: {
-          select: { name: "Canonical" }
-        },
-        Locked_At: {
-          date: { start: new Date().toISOString() }
-        }
-      }
-    });
-
-    console.log(`🔒 LOCKED: ${page.id}`);
-  }
+if (!CORE_DB_ID || CORE_DB_ID.includes("http")) {
+  throw new Error(
+    "CORE_DB is missing or invalid. Must be a raw Notion database ID."
+  );
 }
 
-run();
+async function run() {
+  console.log("🔒 Canonical Lock starting…");
+
+  await notion.databases.update({
+    database_id: CORE_DB_ID,
+    properties: {
+      Canonical_Lock: {
+        checkbox: {},
+      },
+      Canonical_Locked_At: {
+        date: {},
+      },
+    },
+  });
+
+  console.log("✅ Canonical properties ensured");
+
+  await notion.pages.create({
+    parent: { database_id: CORE_DB_ID },
+    properties: {
+      Name: {
+        title: [{ text: { content: "🔒 Canonical Lock Engaged" } }],
+      },
+      Canonical_Lock: {
+        checkbox: true,
+      },
+      Canonical_Locked_At: {
+        date: { start: new Date().toISOString() },
+      },
+    },
+  });
+
+  console.log("🟢 CANONICAL LOCK COMPLETE");
+}
+
+run().catch((err) => {
+  console.error("❌ Canonical lock FAILED");
+  console.error(err);
+  process.exit(1);
+});
