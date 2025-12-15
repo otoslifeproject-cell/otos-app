@@ -6,19 +6,23 @@ on:
 jobs:
   ready:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm install --no-fund --no-audit
+      - name: Install deps
+        run: npm install --no-fund --no-audit
 
       - name: Run System Ready Check
-        run: node scripts/system/ready_check.js
         env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           CORE_DB: ${{ secrets.CORE_DB }}
-          BRAIN_DB: ${{ secrets.BRAIN_DB }}
-          AGENTS_DB: ${{ secrets.AGENTS_DB }}
+          INTAKE_DB: ${{ secrets.INTAKE_DB }}
+        run: |
+          node scripts/system/ready_check.js
+
