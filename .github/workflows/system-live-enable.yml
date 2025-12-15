@@ -1,0 +1,19 @@
+name: System Live Enable (Canonical)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install deps
+        run: npm install
+
+      - name: Enable system live
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          CORE_DB: ${{ secrets.CORE_DB }}
+        run: node scripts/system/live_enable.js
