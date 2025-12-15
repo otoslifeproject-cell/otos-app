@@ -1,40 +1,60 @@
-/**
- * LIVE OPERATIONS ENABLEMENT
- * Flips system from build-mode → live-mode
- * Requires prior GO state
- */
-
+// scripts/system/live_enable.js
 import { Client } from "@notionhq/client";
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
+
 const CORE_DB = process.env.CORE_DB;
 
-async function run() {
-  const res = await notion.databases.query({
-    database_id: CORE_DB,
-    filter: {
-      property: "Title",
-      title: { equals: "CORE_STABILITY_SEAL" }
-    }
-  });
+if (!CORE_DB) {
+  console.error("❌ CORE_DB missing at runtime");
+  process.exit(1);
+}
 
-  if (res.results.length === 0) {
-    console.error("❌ NO CORE SEAL — CANNOT ENABLE LIVE MODE");
+console.log("🚀 LIVE OPERATIONS ENABLE starting");
+console.log("CORE_DB:", CORE_DB);
+
+async function run() {
+  // Notion databases do NOT have a property called "Title"
+  // They have a title-type property with an arbitrary name.
+  // We must read the schema dynamically.
+
+  const db = await notion.databases.retrieve({ database_id: CORE_DB });
+
+  const titlePropName = Object.entries(db.properties).find(
+    ([_, prop]) => prop.type === "title"
+  )?.[0];
+
+  if (!titlePropName) {
+    console.error("❌ No title property found in CORE_DB");
     process.exit(1);
   }
 
-  const seal = res.results[0];
-
-  await notion.pages.update({
-    page_id: seal.id,
+  await notion.pages.create({
+    parent: { database_id: CORE_DB },
     properties: {
-      Live_Mode: {
-        checkbox: true
-      }
-    }
+      [titlePropName]: {
+        title: [
+          {
+            text: {
+              content: "LIVE_OPERATIONS_ENABLED",
+            },
+          },
+        ],
+      },
+      System_Status: {
+        select: { name: "LIVE" },
+      },
+      Stability_Flag: {
+        select: { name: "LOCKED" },
+      },
+    },
   });
 
-  console.log("🚀 LIVE OPERATIONS ENABLED");
+  console.log("✅ LIVE OPERATIONS ENABLED");
 }
 
-run();
+run().catch((err) => {
+  console.error("❌ LIVE ENABLE FAILED");
+  console.error(err);
+  process.exit(1);
+});
