@@ -2,130 +2,256 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit • Module 1 • Parent Node</title>
+  <title>OTOS Cockpit — Enterprise Control</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Module 1 = Parent Node (YOU) -->
-  <link rel="stylesheet" href="./modules/parent-node/parent-node.css" />
+  <style>
+    :root {
+      --bg-main: #f4f8fc;
+      --bg-panel: rgba(255,255,255,0.92);
+      --border-soft: rgba(148,163,184,0.35);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent-parent: #2563eb;
+      --accent-agent: #16a34a;
+      --accent-status: #64748b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #f4f8fc, #e6f0fb);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ===== MASTER LAYOUT ===== */
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* ===== MAIN WORKSPACE ===== */
+    .main {
+      padding: 32px;
+      overflow-y: auto;
+    }
+
+    .main h1 {
+      margin-top: 0;
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    .main p {
+      color: var(--text-muted);
+      max-width: 780px;
+      line-height: 1.65;
+    }
+
+    /* ===== RIGHT CONTROL STACK ===== */
+    .control-stack {
+      border-left: 1px solid var(--border-soft);
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+    }
+
+    .locked * {
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ===== SECTION BASE ===== */
+    .section {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .section:last-child {
+      border-bottom: none;
+    }
+
+    .section h2 {
+      margin: 0 0 10px 0;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ===== PARENT NODE ===== */
+    .parent-core {
+      text-align: center;
+      padding: 14px 0;
+    }
+
+    .parent-core h3 {
+      margin: 0 0 6px 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-parent);
+    }
+
+    .parent-core p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .parent-footer {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      padding-top: 10px;
+    }
+
+    /* ===== AGENT CORE ===== */
+    .agent-core {
+      text-align: center;
+      padding: 14px 0;
+    }
+
+    .agent-core h3 {
+      margin: 0 0 6px 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-agent);
+    }
+
+    .agent-core p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ===== EXECUTION LANE ===== */
+    .execution-lane {
+      padding: 18px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .execution-item {
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.75);
+    }
+
+    .execution-item h4 {
+      margin: 0 0 4px 0;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-status);
+    }
+
+    .execution-item p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .execution-empty {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    /* ===== MOBILE FAILSAFE ===== */
+    @media (max-width: 1000px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+      .control-stack {
+        display: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <!-- TOP BAR -->
-  <header class="otos-topbar">
-    <div class="otos-topbar-inner">
+  <div class="layout">
 
-      <!-- BRAND -->
-      <div class="otos-brand">
-        <img
-          src="./assets/otos-logo.png"
-          alt="OTOS"
-          class="otos-logo"
-        />
-        <div class="otos-brand-text">
-          <span class="otos-badge-pill">OTOS • LIVE FEED</span>
-          <span class="otos-badge-sub">EYE20 • Cockpit • Parent Node</span>
+    <!-- MAIN OPERATIONAL SURFACE -->
+    <main class="main">
+      <h1>OTOS Cockpit</h1>
+      <p>
+        Enterprise operational surface.<br />
+        Human-led execution, systems visibility, and decision control live here.
+      </p>
+      <p>
+        This workspace remains unconstrained by AI presence.<br />
+        All intelligence layers are anchored separately to prevent drift.
+      </p>
+    </main>
+
+    <!-- ENTERPRISE CONTROL STACK -->
+    <aside class="control-stack locked">
+
+      <!-- PARENT NODE -->
+      <section class="section">
+        <h2>Parent Node</h2>
+        <div class="parent-core">
+          <h3>EYE20</h3>
+          <p>
+            Authoritative system presence.<br />
+            Memory-anchored · Non-drifting · Board-safe.
+          </p>
         </div>
-      </div>
-
-      <!-- ACTIONS -->
-      <div class="otos-topbar-actions">
-        <button class="otos-pill" id="btn-layout-lock" type="button" aria-pressed="true">
-          Layout locked
-        </button>
-        <button class="otos-pill" id="btn-refresh-ui" type="button">
-          Refresh UI
-        </button>
-      </div>
-
-    </div>
-  </header>
-
-  <!-- MAIN LAYOUT -->
-  <main class="otos-shell" role="main">
-
-    <!-- LEFT: PARENT NODE -->
-    <section class="otos-col otos-col-left" aria-label="Parent Node">
-
-      <div class="otos-card otos-card-strong">
-
-        <div class="otos-parent-header">
-          <img
-            src="./assets/otos-logo.png"
-            alt="OTOS Parent Node"
-            class="otos-parent-logo"
-          />
-          <div>
-            <h2 class="otos-kicker">PARENT NODE • EYE20</h2>
-            <span class="otos-status otos-status-online">ONLINE</span>
-          </div>
+        <div class="parent-footer">
+          Parent layer · Locked · Read-only presence
         </div>
+      </section>
 
-        <p class="otos-small">
-          This is the system brain.
-          <br />• Kernel rules
-          <br />• Network context
-          <br />• Memory routing (internal ↔ Notion)
-          <br />• Autonomy settings
-          <br /><strong>Everything stabilises from here.</strong>
-        </p>
+      <!-- AGENT CORE -->
+      <section class="section">
+        <h2>Agent</h2>
+        <div class="agent-core">
+          <h3>Andy</h3>
+          <p>
+            Task execution agent.<br />
+            Scoped · Subordinate · No autonomous memory.
+          </p>
+        </div>
+      </section>
 
-        <div class="otos-chiprow">
-          <span class="otos-chip otos-chip-blue">Kernel Loaded</span>
-          <span class="otos-chip otos-chip-purple">MemorySeeder ON</span>
-          <span class="otos-chip otos-chip-slate">Sync Stable</span>
+      <!-- ANDY EXECUTION LANE -->
+      <section class="execution-lane">
+        <div class="execution-item">
+          <h4>Status</h4>
+          <p>Idle · Awaiting authorised task</p>
         </div>
 
-        <div class="otos-directive">
-          <div class="otos-directive-title">Current Directive</div>
-          <div class="otos-directive-body" id="current-directive">
-            Module 1: Lock Parent Node in UI. No deviation. No Andy until stable.
-          </div>
+        <div class="execution-item">
+          <h4>Scope</h4>
+          <p>Read-only execution reporting · No self-initiation</p>
         </div>
 
-      </div>
-
-      <div class="otos-card">
-        <div class="otos-card-head">
-          <h3 class="otos-kicker">PARENT NODE CONSOLE</h3>
-          <span class="otos-mini" id="console-state">Stable • Waiting</span>
+        <div class="execution-item">
+          <h4>Authority</h4>
+          <p>Operates only under Parent Node instruction</p>
         </div>
 
-        <div class="otos-console" id="parent-console"></div>
-
-        <div class="otos-row">
-          <button class="otos-btn otos-btn-primary" id="btn-announce">Announce status</button>
-          <button class="otos-btn" id="btn-copy-state">Copy state</button>
+        <div class="execution-empty">
+          No active tasks
         </div>
+      </section>
 
-        <p class="otos-tiny">
-          UI anchor only. No external writes. Andy installs as Module 2.
-        </p>
-      </div>
+    </aside>
 
-    </section>
-
-    <!-- CENTRE (MUTED) -->
-    <section class="otos-col otos-col-centre">
-      <div class="otos-card otos-card-muted">
-        <h2 class="otos-kicker">CENTRE • MUTED</h2>
-        <div class="otos-placeholder">
-          Focus module installs after Parent Node stability.
-        </div>
-      </div>
-    </section>
-
-    <!-- RIGHT (MUTED) -->
-    <section class="otos-col otos-col-right">
-      <div class="otos-card otos-card-muted">
-        <h2 class="otos-kicker">ANDY AGENT • NOT INSTALLED</h2>
-        <div class="otos-placeholder">
-          Module 2 pending.
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <script src="./modules/parent-node/parent-node.js"></script>
+  </div>
 </body>
 </html>
