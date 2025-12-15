@@ -1,0 +1,34 @@
+name: Transcription Engine (Whisper)
+
+on:
+  workflow_dispatch:
+    inputs:
+      audio_path:
+        description: "Local path or mounted audio file"
+        required: true
+
+jobs:
+  transcribe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Run Whisper Transcription
+        run: node scripts/transcription/whisper_transcribe.js "${{ github.event.inputs.audio_path }}"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+      - name: Generate VTT
+        run: node scripts/transcription/vtt_generate.js
+
+      - name: Link to Feeder
+        run: node scripts/transcription/link_to_feeder.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
