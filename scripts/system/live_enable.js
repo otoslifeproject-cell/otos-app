@@ -1,3 +1,9 @@
+/**
+ * SYSTEM LIVE ENABLE — CANONICAL (NO ASSUMPTIONS)
+ * Enables system live state by writing a single marker row
+ * into CORE_DB using the ACTUAL Notion title property.
+ */
+
 import { Client } from "@notionhq/client";
 
 const notion = new Client({
@@ -6,52 +12,46 @@ const notion = new Client({
 
 const CORE_DB = process.env.CORE_DB;
 
-if (!CORE_DB) {
-  console.error("❌ CORE_DB is missing");
+function fail(msg) {
+  console.error("❌ SYSTEM LIVE ENABLE FAILED");
+  console.error(msg);
   process.exit(1);
 }
 
 async function run() {
   console.log("🚀 SYSTEM LIVE ENABLE starting");
 
-  const response = await notion.databases.query({
-    database_id: CORE_DB,
-    page_size: 1,
-  });
-
-  if (!response.results.length) {
-    console.error("❌ CORE_DB is empty");
-    process.exit(1);
+  if (!CORE_DB) {
+    fail("CORE_DB missing");
   }
 
-  const pageId = response.results[0].id;
+  // 🔒 CANONICAL TITLE PROPERTY NAME (NOT 'Title')
+  const TITLE_PROP = "Name";
 
-  await notion.pages.update({
-    page_id: pageId,
+  await notion.pages.create({
+    parent: { database_id: CORE_DB },
     properties: {
-      Name: {
+      [TITLE_PROP]: {
         title: [
           {
             text: {
-              content: "OTOS SYSTEM — LIVE",
+              content: "SYSTEM_LIVE",
             },
           },
         ],
       },
       Status: {
-        select: {
-          name: "LIVE",
-        },
+        select: { name: "Live" },
+      },
+      Source: {
+        select: { name: "System" },
       },
     },
   });
 
-  console.log("✅ SYSTEM LIVE ENABLED");
+  console.log("✅ SYSTEM IS LIVE");
 }
 
 run().catch((err) => {
-  console.error("❌ SYSTEM LIVE ENABLE FAILED");
-  console.error(err);
-  process.exit(1);
+  fail(err.message || err);
 });
-;
