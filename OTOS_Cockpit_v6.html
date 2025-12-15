@@ -1,0 +1,794 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;OTOS Cockpit v6 – Parent Node Home&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>"Segoe UI", sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.otos-bg {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: radial-gradient(circle at top left, #f5fbff 0, #eaf4ff 35%, #f5f7ff 100%);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.glass-card {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: linear-gradient(</p>
+<p class="p1"><span class="Apple-converted-space">        </span>145deg,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>rgba(255, 255, 255, 0.82),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>rgba(248, 250, 252, 0.88)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>backdrop-filter: blur(18px);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>-webkit-backdrop-filter: blur(18px);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 32px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: 1.6px solid rgba(148, 163, 184, 0.45);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>box-shadow:</p>
+<p class="p1"><span class="Apple-converted-space">        </span>0 18px 45px rgba(15, 23, 42, 0.16),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>0 0 0 1px rgba(255, 255, 255, 0.4) inset;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.glass-tile {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background: radial-gradient(circle at top left, #ffffff 0, #f1f5f9 55%, #e2e8f0 100%);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>backdrop-filter: blur(12px);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>-webkit-backdrop-filter: blur(12px);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 24px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border: 1.3px solid rgba(148, 163, 184, 0.5);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>box-shadow:</p>
+<p class="p1"><span class="Apple-converted-space">        </span>0 14px 30px rgba(15, 23, 42, 0.16),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>0 0 0 1px rgba(255, 255, 255, 0.5) inset;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>transition:</p>
+<p class="p1"><span class="Apple-converted-space">        </span>transform 160ms ease-out,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>box-shadow 160ms ease-out,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>border-color 160ms ease-out,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>background 220ms ease-out;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.glass-tile:hover {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>transform: translateY(-4px) scale(1.01);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>box-shadow:</p>
+<p class="p1"><span class="Apple-converted-space">        </span>0 20px 40px rgba(15, 23, 42, 0.22),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>0 0 0 1px rgba(255, 255, 255, 0.7) inset;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-color: rgba(59, 130, 246, 0.55);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn-shadow {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 10px 20px rgba(15, 23, 42, 0.18);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.focus-active {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.28);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.toast {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>position: fixed;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>right: 1.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>bottom: 1.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>z-index: 40;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>footer {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>backdrop-filter: blur(18px);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>-webkit-backdrop-filter: blur(18px);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="otos-bg min-h-screen text-slate-800 flex flex-col"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- HEADER --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;header class="w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-sm"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="flex items-center gap-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex h-9 w-9 items-center justify-center rounded-2xl bg-slate-900 text-xs font-semibold tracking-[0.15em] text-white shadow-md"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>OT</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex flex-col"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold tracking-wide text-slate-500 w-fit"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>OTOS • LIVE FEED</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="text-[11px] text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>EYE17 · Parent Node Home · Three-screen organism</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="flex items-center gap-3 text-[11px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label</p>
+<p class="p1"><span class="Apple-converted-space">          </span>class="flex cursor-pointer items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-500 shadow-sm hover:bg-slate-50"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span id="model-label" class="hidden sm:inline"&gt;Select otos_ui_model_v17.json…&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="sm:hidden"&gt;Load model…&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;input type="file" id="model-file" accept="application/json" class="hidden" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">          </span>id="btn-save-model"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>class="rounded-full border border-emerald-400 bg-emerald-50 px-3 py-1 text-emerald-700 hover:bg-emerald-100"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>💾 Save model</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">          </span>id="btn-toggle-lock"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>class="rounded-full border border-slate-300 bg-slate-50 px-3 py-1 text-slate-600 hover:bg-slate-100"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>🔒 Layout locked</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- MAIN LAYOUT --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;main class="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-4 px-4 pb-4 pt-5 lg:flex-row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- LEFT --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;section class="flex w-full flex-col gap-4 lg:w-[30%]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Parent Node --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="glass-card p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-2 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;h2 class="text-xs font-semibold tracking-[0.15em] text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>PARENT NODE • EYE17</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span</p>
+<p class="p1"><span class="Apple-converted-space">            </span>class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-600 border border-emerald-200"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>ONLINE</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="text-[11px] leading-relaxed text-slate-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Home of the OTOS Kernel.&lt;br /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>• HARD LOGS · rules · network map&lt;br /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>• Agents · tiles · project registry&lt;br /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>• One source of truth for the cockpit.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mt-3 flex flex-wrap gap-1.5 text-[11px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="rounded-full bg-blue-50 px-3 py-1 text-blue-600 border border-blue-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Kernel Loaded</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="rounded-full bg-purple-50 px-3 py-1 text-purple-600 border border-purple-200" id="agent-count-pill"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Agents: 0</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="rounded-full bg-slate-100 px-3 py-1 text-slate-600 border border-slate-300" id="project-count-pill"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Projects: 0</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;!-- Active agents --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mt-4 rounded-2xl bg-slate-900/90 p-3 text-[11px] text-slate-100 shadow-inner"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="mb-1 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="text-[10px] uppercase tracking-wide text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>Active Agents</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>All online</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div id="agent-strip" class="flex flex-wrap gap-1.5"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- Filled from JSON --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mt-4 rounded-2xl bg-slate-50 p-3 text-[11px] ring-1 ring-slate-200/70"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="text-[10px] uppercase tracking-wide text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Current Directive</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p class="mt-1 text-slate-600" id="directive-text"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Load a model file to hydrate tiles, projects, and tasks.</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Task Stack --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="glass-card p-4 flex-1 min-h-[180px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-2 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;h2 class="text-xs font-semibold tracking-[0.15em] text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>TASK STACK</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span</p>
+<p class="p1"><span class="Apple-converted-space">            </span>class="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] text-slate-400"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span id="task-count"&gt;0&lt;/span&gt; items</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="mb-3 text-xs leading-relaxed text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Unified queue from all projects. OppGen ranks; SkyHawk can boost. Click a</p>
+<p class="p1"><span class="Apple-converted-space">          </span>card to set your focus.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="task-stack" class="space-y-2 text-[11px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p class="text-slate-400"&gt;Waiting for model…&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- MIDDLE --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;section class="flex w-full flex-col gap-3 lg:w-[40%]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- One Thing Only --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="focus-card" class="glass-card p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-2 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-xs font-semibold tracking-[0.15em] text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>ONE THING ONLY</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="mt-1 text-xs text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>Click a task or project tile to set your focus.</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span id="focus-badge" class="text-[11px] text-sky-500"&gt;Waiting for model…&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;label class="mt-2 block text-xs font-medium text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Focus task title</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;input</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id="focus-title"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>type="text"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>placeholder="Nothing selected yet"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>class="mt-1 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 focus:bg-white focus:ring-1 focus:ring-blue-300"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/label&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p id="focus-description" class="mt-2 text-[11px] leading-relaxed text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>When you choose a task or project, its purpose will appear here so you</p>
+<p class="p1"><span class="Apple-converted-space">          </span>remember why it matters.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mt-3 flex flex-wrap items-center gap-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id="btn-start"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>class="btn-shadow rounded-full bg-blue-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-blue-500"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>▶ Start Focus</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id="btn-pause"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>class="rounded-full border border-slate-300 bg-slate-50 px-4 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>‖ Pause</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id="btn-done"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>class="rounded-full border border-emerald-500/70 bg-emerald-50 px-4 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>✅ Mark Done (local)</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="ml-auto flex items-center gap-1.5 text-[11px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="text-slate-400"&gt;Quick set:&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">              </span>data-minutes="15"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>class="btn-duration rounded-full bg-slate-100 px-2.5 py-1 text-[11px] text-slate-600 hover:bg-slate-200"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>15m</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">              </span>data-minutes="25"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>class="btn-duration rounded-full bg-slate-100 px-2.5 py-1 text-[11px] text-slate-600 hover:bg-slate-200"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>25m</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">              </span>data-minutes="50"</p>
+<p class="p1"><span class="Apple-converted-space">              </span>class="btn-duration rounded-full bg-slate-100 px-2.5 py-1 text-[11px] text-slate-600 hover:bg-slate-200"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>50m</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mt-3 flex items-baseline gap-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span id="timer-label" class="text-xs text-slate-500"&gt;Ready&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span id="timer-display" class="text-lg font-semibold tabular-nums text-slate-800"&gt;00:00&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Project Field --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="glass-card flex-1 p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-2 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-xs font-semibold tracking-[0.15em] text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>PROJECT FIELD</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="mt-1 text-xs text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>Tiles self-adapt and grow like cells. Projects come from the model.</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="rounded-full bg-slate-900/90 px-3 py-1 text-[11px] text-slate-100"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Organism Mode</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div</p>
+<p class="p1"><span class="Apple-converted-space">          </span>id="project-grid"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>class="mt-2 grid auto-rows-[minmax(120px,1fr)] gap-3 sm:grid-cols-2 xl:grid-cols-3"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;p class="text-[11px] text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Waiting for model…</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- RIGHT --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;section class="flex w-full flex-col gap-3 lg:w-[30%]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Feeder --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="glass-card p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-2 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;h2 class="text-xs font-semibold tracking-[0.15em] text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>FEEDER PIPE</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="text-[11px] text-sky-500 hover:text-sky-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Sort &amp;amp; classify</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;textarea</p>
+<p class="p1"><span class="Apple-converted-space">          </span>id="feeder-input"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>rows="4"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>class="mt-1 w-full resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 outline-none focus:border-blue-400 focus:bg-white focus:ring-1 focus:ring-blue-300"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>placeholder="Drop text, notes, or ideas here. This simulates your Feeder DB and Memory Seeder."</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&gt;&lt;/textarea&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mt-2 flex flex-wrap gap-1.5 text-[11px]"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button data-tag="Rule / Protocol" class="chip-tag rounded-full bg-slate-100 px-3 py-1 text-slate-600 hover:bg-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Rule / Protocol</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button data-tag="Golden Statement" class="chip-tag rounded-full bg-slate-100 px-3 py-1 text-slate-600 hover:bg-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Golden Statement</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button data-tag="Idea / Plan" class="chip-tag rounded-full bg-slate-100 px-3 py-1 text-slate-600 hover:bg-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Idea / Plan</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button data-tag="Task / Decision" class="chip-tag rounded-full bg-slate-100 px-3 py-1 text-slate-600 hover:bg-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Task / Decision</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button data-tag="Code / Script" class="chip-tag rounded-full bg-slate-100 px-3 py-1 text-slate-600 hover:bg-slate-200"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Code / Script</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">          </span>id="btn-send-memory"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>class="btn-shadow mt-4 flex w-full items-center justify-center rounded-full bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-500"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>➕ Send to Memory (local only)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="mt-2 text-[11px] leading-relaxed text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>This does not write to any external system yet — it mirrors what the</p>
+<p class="p1"><span class="Apple-converted-space">          </span>real Memory Seeder will do.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Memory Inspector --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="glass-card p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-2 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;h2 class="text-xs font-semibold tracking-[0.15em] text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>MEMORY INSPECTOR</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span</p>
+<p class="p1"><span class="Apple-converted-space">            </span>id="memory-count"</p>
+<p class="p1"><span class="Apple-converted-space">            </span>class="rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] text-slate-400"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>0 items</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;ul id="memory-list" class="space-y-1.5 text-[11px] text-slate-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;li class="text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Nothing stored yet. Use “Send to Memory” to add entries.</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- SkyHawk Radar / Ticker / Comms Stub combined --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="glass-card p-4"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="mb-2 flex items-center justify-between"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;h2 class="text-xs font-semibold tracking-[0.15em] text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>SKYHAWK · TICKER · COMMS</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="text-[11px] text-slate-400"&gt;Watching external signals…&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;ul id="skyhawk-list" class="space-y-1.5 text-[11px] text-slate-600"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;li class="rounded-xl bg-slate-900/95 px-3 py-2 text-slate-100 shadow-inner"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="text-[10px] uppercase tracking-wide text-slate-400"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>System</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="mt-0.5" id="ticker-line"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>Load a model to start the ticker and comms queue.</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/section&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- FOOTER --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;footer class="mt-2 w-full border-t border-slate-200/70 bg-white/80"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-2 text-[11px] text-slate-500"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="flex items-center gap-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="rounded-full bg-slate-100 px-2 py-0.5"&gt;OTOS Cockpit v6&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span&gt;Build: &lt;span id="build-timestamp"&gt;&lt;/span&gt;&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="flex items-center gap-2"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button</p>
+<p class="p1"><span class="Apple-converted-space">          </span>id="btn-record"</p>
+<p class="p1"><span class="Apple-converted-space">          </span>class="rounded-full border border-rose-400 bg-rose-50 px-3 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-100"</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>⏺ Record now (idea / insight)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;span class="text-slate-400 hidden sm:inline"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>1-click capture flows into Andy ➜ Feeder ➜ Memory (future live hook).</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/footer&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- TOAST --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="toast" class="toast hidden"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="rounded-xl bg-slate-900/90 px-4 py-2 text-xs text-slate-50 shadow-lg"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;span id="toast-text"&gt;SkyHawk update…&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- SCRIPT --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const buildTs = document.getElementById("build-timestamp");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>buildTs.textContent = new Date().toLocaleString();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>let layoutLocked = true;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const btnToggleLock = document.getElementById("btn-toggle-lock");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btnToggleLock.addEventListener("click", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>layoutLocked = !layoutLocked;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>btnToggleLock.textContent = layoutLocked ? "🔒 Layout locked" : "🔓 Layout unlocked";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Timer</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let timerSeconds = 0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let timerInterval = null;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const timerDisplay = document.getElementById("timer-display");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const timerLabel = document.getElementById("timer-label");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const focusCard = document.getElementById("focus-card");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const btnStart = document.getElementById("btn-start");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const btnPause = document.getElementById("btn-pause");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const btnDone = document.getElementById("btn-done");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function renderTimer() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const m = String(Math.floor(timerSeconds / 60)).padStart(2, "0");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const s = String(timerSeconds % 60).padStart(2, "0");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>timerDisplay.textContent = `${m}:${s}`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function startTimer() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (timerInterval) return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>timerLabel.textContent = "Focusing…";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>focusCard.classList.add("focus-active");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>timerInterval = setInterval(() =&gt; { timerSeconds++; renderTimer(); }, 1000);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function pauseTimer() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!timerInterval) return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>clearInterval(timerInterval);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>timerInterval = null;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>timerLabel.textContent = "Paused";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>focusCard.classList.remove("focus-active");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function resetTimer() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>pauseTimer();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>timerSeconds = 0;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderTimer();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>timerLabel.textContent = "Ready";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>focusCard.classList.remove("focus-active");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btnStart.addEventListener("click", startTimer);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btnPause.addEventListener("click", pauseTimer);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btnDone.addEventListener("click", () =&gt; { resetTimer(); timerLabel.textContent = "Done (local)"; });</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.querySelectorAll(".btn-duration").forEach(btn =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>btn.addEventListener("click", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const mins = Number(btn.dataset.minutes || "0");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>timerSeconds = mins * 60;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>renderTimer();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>timerLabel.textContent = `Set for ${mins} minutes`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderTimer();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Memory</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const feederInput = document.getElementById("feeder-input");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const memoryList = document.getElementById("memory-list");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const memoryCount = document.getElementById("memory-count");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const btnSendMemory = document.getElementById("btn-send-memory");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const memoryStore = [];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.querySelectorAll(".chip-tag").forEach(chip =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>chip.addEventListener("click", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const tag = chip.dataset.tag;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const prefix = `[${tag}] `;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const val = feederInput.value || "";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (!val.startsWith(prefix)) feederInput.value = prefix + val;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function renderMemory() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>memoryList.innerHTML = "";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!memoryStore.length) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const li = document.createElement("li");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>li.className = "text-slate-400";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>li.textContent = "Nothing stored yet. Use “Send to Memory” to add entries.";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>memoryList.appendChild(li);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>memoryStore.slice().reverse().forEach(item =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const li = document.createElement("li");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>li.className = "rounded-lg bg-slate-50 px-2 py-1.5 leading-snug text-slate-700";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>li.textContent = item;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>memoryList.appendChild(li);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>memoryCount.textContent = memoryStore.length + " item" + (memoryStore.length === 1 ? "" : "s");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btnSendMemory.addEventListener("click", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const text = feederInput.value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!text) return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>memoryStore.push(text);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>feederInput.value = "";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderMemory();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderMemory();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Record stub</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const btnRecord = document.getElementById("btn-record");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>btnRecord.addEventListener("click", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>alert("Record hook fired. In live build this will start audio capture into Andy/Feeder.");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Model handling</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let uiModel = null;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const modelInput = document.getElementById("model-file");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const modelLabel = document.getElementById("model-label");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const btnSaveModel = document.getElementById("btn-save-model");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const agentStrip = document.getElementById("agent-strip");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const agentCountPill = document.getElementById("agent-count-pill");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const projectCountPill = document.getElementById("project-count-pill");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const directiveText = document.getElementById("directive-text");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const taskStackEl = document.getElementById("task-stack");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const taskCountEl = document.getElementById("task-count");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const projectGridEl = document.getElementById("project-grid");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const focusTitleInput = document.getElementById("focus-title");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const focusDescriptionEl = document.getElementById("focus-description");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const focusBadgeEl = document.getElementById("focus-badge");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const tickerLine = document.getElementById("ticker-line");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>modelInput.addEventListener("change", (e) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const file = e.target.files[0];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!file) return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>modelLabel.textContent = file.name;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const reader = new FileReader();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>reader.onload = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>try {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>uiModel = JSON.parse(reader.result);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>hydrateFromModel();</p>
+<p class="p1"><span class="Apple-converted-space">          </span>showToast("Model loaded and cockpit hydrated.");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>} catch (err) {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>alert("Could not parse JSON model: " + err.message);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p1"><span class="Apple-converted-space">      </span>reader.readAsText(file);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>btnSaveModel.addEventListener("click", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!uiModel) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>alert("No model in memory to save yet.");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const blob = new Blob([JSON.stringify(uiModel, null, 2)], { type: "application/json" });</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const a = document.createElement("a");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>a.href = URL.createObjectURL(blob);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>a.download = "otos_ui_model_v17_saved.json";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>a.click();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>URL.revokeObjectURL(a.href);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function hydrateFromModel() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const agents = uiModel.agents || [];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const projects = uiModel.projects || [];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const tiles = uiModel.tiles || [];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Agents</p>
+<p class="p1"><span class="Apple-converted-space">      </span>agentStrip.innerHTML = "";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>agents.forEach(agent =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const span = document.createElement("span");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>span.className = "rounded-full bg-slate-800 px-2 py-1 text-[11px]";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const icon = agent.id === "andy" ? "🧠" : agent.id === "oppgen" ? "⚡" : "🛰️";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>span.textContent = `${icon} ${agent.label} · ${agent.role}`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>agentStrip.appendChild(span);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>agentCountPill.textContent = `Agents: ${agents.length}`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>projectCountPill.textContent = `Projects: ${projects.length}`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>directiveText.textContent = "Model loaded. Tiles, projects and tasks are now driven from otos_ui_model_v17.json.";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>tickerLine.textContent = "Model v" + (uiModel.meta?.version || "?") + " loaded · " + projects.length + " projects · " + agents.length + " agents.";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderProjectsAndTasks(projects, agents, tiles);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function laneStyles(lane) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>switch (lane) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>case "DO":</p>
+<p class="p1"><span class="Apple-converted-space">          </span>return { bg: "bg-emerald-50", text: "text-emerald-700", border: "border-emerald-200" };</p>
+<p class="p1"><span class="Apple-converted-space">        </span>case "SHOULD":</p>
+<p class="p1"><span class="Apple-converted-space">          </span>return { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200" };</p>
+<p class="p1"><span class="Apple-converted-space">        </span>case "COULD":</p>
+<p class="p1"><span class="Apple-converted-space">        </span>default:</p>
+<p class="p1"><span class="Apple-converted-space">          </span>return { bg: "bg-slate-100", text: "text-slate-700", border: "border-slate-200" };</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function renderProjectsAndTasks(projects, agents, tiles) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Flatten tasks from projects</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const allTasks = [];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>projects.forEach(project =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>(project.tasks || []).forEach(task =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>allTasks.push({</p>
+<p class="p1"><span class="Apple-converted-space">            </span>...task,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>projectId: project.id,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>projectName: project.name,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>leadAgent: project.lead_agent</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// TASK STACK</p>
+<p class="p1"><span class="Apple-converted-space">      </span>taskStackEl.innerHTML = "";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!allTasks.length) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const p = document.createElement("p");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>p.className = "text-slate-400";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>p.textContent = "No tasks found in model yet.";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>taskStackEl.appendChild(p);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const sorted = allTasks.slice().sort((a, b) =&gt; (a.priority || 99) - (b.priority || 99));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>sorted.forEach(task =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const lane = laneStyles(task.lane || "COULD");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const wrapper = document.createElement("article");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>wrapper.className = "group rounded-xl border bg-white px-3 py-2.5 shadow-sm transition-all cursor-pointer hover:-translate-y-0.5 hover:shadow-md flex flex-col gap-1 " + lane.border;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>wrapper.addEventListener("click", () =&gt; focusTask(task));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const topRow = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>topRow.className = "flex items-center justify-between gap-2";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const titleEl = document.createElement("h3");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>titleEl.className = "text-[11px] font-semibold text-slate-800";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>titleEl.textContent = task.title;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const badge = document.createElement("span");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>badge.className = "rounded-full px-2 py-0.5 text-[10px] font-semibold " + lane.bg + " " + lane.text + " " + lane.border;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>badge.textContent = task.lane || "COULD";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>topRow.appendChild(titleEl);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>topRow.appendChild(badge);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const desc = document.createElement("p");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>desc.className = "text-[11px] text-slate-500";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>desc.textContent = task.description || "";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const bottomRow = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>bottomRow.className = "mt-1 flex items-center justify-between gap-2 text-[10px] text-slate-400";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>bottomRow.innerHTML = `&lt;span&gt;${task.projectName || ""}&lt;/span&gt;&lt;span&gt;Priority ${task.priority || "?"}&lt;/span&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>wrapper.appendChild(topRow);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>wrapper.appendChild(desc);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>wrapper.appendChild(bottomRow);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>taskStackEl.appendChild(wrapper);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>taskCountEl.textContent = allTasks.length;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// PROJECT FIELD</p>
+<p class="p1"><span class="Apple-converted-space">      </span>projectGridEl.innerHTML = "";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (!projects.length) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const p = document.createElement("p");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>p.className = "text-[11px] text-slate-400";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>p.textContent = "No projects in model yet.";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>projectGridEl.appendChild(p);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>projects.forEach(project =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const lane = laneStyles(project.lane || "COULD");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const tile = document.createElement("article");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>tile.className = "glass-tile flex flex-col justify-between p-3 cursor-pointer select-none";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>tile.addEventListener("click", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// focus on the highest priority task in this project if any</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const projTasks = (project.tasks || []).slice().sort((a, b) =&gt; (a.priority || 99) - (b.priority || 99));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (projTasks[0]) {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>focusTask({</p>
+<p class="p1"><span class="Apple-converted-space">                </span>...projTasks[0],</p>
+<p class="p1"><span class="Apple-converted-space">                </span>projectName: project.name</p>
+<p class="p1"><span class="Apple-converted-space">              </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">              </span>focusTitleInput.value = project.name;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>focusDescriptionEl.textContent = "Project has no tasks in the model yet.";</p>
+<p class="p1"><span class="Apple-converted-space">              </span>focusBadgeEl.textContent = (project.lane || "COULD") + " • Project";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const topRow = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>topRow.className = "flex items-start justify-between gap-2";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const titleWrap = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const title = document.createElement("h3");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>title.className = "text-[12px] font-semibold text-slate-900 leading-snug";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>title.textContent = project.name;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const subtitle = document.createElement("p");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>subtitle.className = "mt-0.5 text-[11px] text-slate-500 line-clamp-2";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>subtitle.textContent = (project.summary || "Project from model JSON.");</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>titleWrap.appendChild(title);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>titleWrap.appendChild(subtitle);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const badge = document.createElement("span");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>badge.className = "rounded-full px-2 py-0.5 text-[10px] font-semibold " + lane.bg + " " + lane.text + " " + lane.border;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>badge.textContent = project.lane || "COULD";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>topRow.appendChild(titleWrap);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>topRow.appendChild(badge);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// middle</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const middle = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>middle.className = "mt-2 flex items-center justify-between text-[10px]";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const lead = document.createElement("span");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const leadAgent = agents.find(a =&gt; a.id === project.lead_agent);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>lead.textContent = leadAgent ? (leadAgent.label + " lead") : "No lead";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>lead.className = "rounded-full bg-slate-900 text-slate-100 px-2 py-0.5";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const agentIcons = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>agentIcons.className = "flex items-center gap-1";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>(project.support_agents || []).forEach(aid =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const aSpan = document.createElement("span");</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const icon = aid === "andy" ? "🧠" : aid === "oppgen" ? "⚡" : "🛰️";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>aSpan.className = "rounded-full bg-slate-100 px-2 py-0.5";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>aSpan.textContent = icon;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>agentIcons.appendChild(aSpan);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>middle.appendChild(lead);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>middle.appendChild(agentIcons);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>// bottom</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const bottom = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>bottom.className = "mt-2";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const barBg = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>barBg.className = "h-1.5 w-full rounded-full bg-slate-200/80 overflow-hidden";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const barFill = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>barFill.className = "h-full rounded-full bg-emerald-500";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>barFill.style.width = Math.round((project.progress || 0) * 100) + "%";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>barBg.appendChild(barFill);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>const meta = document.createElement("div");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>meta.className = "mt-1 flex items-center justify-between text-[10px] text-slate-500";</p>
+<p class="p1"><span class="Apple-converted-space">          </span>meta.innerHTML = `&lt;span&gt;Progress ${(project.progress || 0) * 100}%&lt;/span&gt;&lt;span&gt;${(project.tasks || []).length} tasks&lt;/span&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>bottom.appendChild(barBg);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>bottom.appendChild(meta);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>tile.appendChild(topRow);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>tile.appendChild(middle);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>tile.appendChild(bottom);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">          </span>projectGridEl.appendChild(tile);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function focusTask(task) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>focusTitleInput.value = task.title || "Untitled task";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>focusDescriptionEl.textContent = task.description || "";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>focusBadgeEl.textContent = (task.lane || "COULD") + (task.projectName ? " • " + task.projectName : "");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Toast</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const toastEl = document.getElementById("toast");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const toastTextEl = document.getElementById("toast-text");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function showToast(msg) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>toastTextEl.textContent = msg;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>toastEl.classList.remove("hidden");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(() =&gt; toastEl.classList.add("hidden"), 4000);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
