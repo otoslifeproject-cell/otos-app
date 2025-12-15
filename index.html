@@ -8,13 +8,13 @@
   <style>
     :root {
       --bg-main: #f4f8fc;
-      --bg-panel: rgba(255,255,255,0.92);
+      --bg-panel: rgba(255,255,255,0.94);
       --border-soft: rgba(148,163,184,0.35);
       --text-main: #0f172a;
       --text-muted: #475569;
       --accent-parent: #2563eb;
       --accent-agent: #16a34a;
-      --accent-status: #64748b;
+      --accent-active: #0ea5e9;
     }
 
     * { box-sizing: border-box; }
@@ -28,15 +28,13 @@
       overflow: hidden;
     }
 
-    /* ===== MASTER LAYOUT ===== */
     .layout {
       display: grid;
-      grid-template-columns: 1fr 440px;
+      grid-template-columns: 1fr 460px;
       height: 100vh;
       width: 100vw;
     }
 
-    /* ===== MAIN WORKSPACE ===== */
     .main {
       padding: 32px;
       overflow-y: auto;
@@ -54,7 +52,6 @@
       line-height: 1.65;
     }
 
-    /* ===== RIGHT CONTROL STACK ===== */
     .control-stack {
       border-left: 1px solid var(--border-soft);
       background: var(--bg-panel);
@@ -68,14 +65,9 @@
       pointer-events: none;
     }
 
-    /* ===== SECTION BASE ===== */
     .section {
       padding: 18px 22px;
       border-bottom: 1px solid var(--border-soft);
-    }
-
-    .section:last-child {
-      border-bottom: none;
     }
 
     .section h2 {
@@ -86,73 +78,59 @@
       color: var(--text-muted);
     }
 
-    /* ===== PARENT NODE ===== */
-    .parent-core {
-      text-align: center;
-      padding: 14px 0;
-    }
-
-    .parent-core h3 {
-      margin: 0 0 6px 0;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--accent-parent);
-    }
-
-    .parent-core p {
-      margin: 0;
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .parent-footer {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-align: center;
-      padding-top: 10px;
-    }
-
-    /* ===== AGENT CORE ===== */
+    .parent-core,
     .agent-core {
       text-align: center;
       padding: 14px 0;
     }
 
-    .agent-core h3 {
-      margin: 0 0 6px 0;
+    .parent-core h3 {
+      color: var(--accent-parent);
       font-size: 20px;
-      font-weight: 700;
-      color: var(--accent-agent);
+      margin: 0 0 6px 0;
     }
 
+    .agent-core h3 {
+      color: var(--accent-agent);
+      font-size: 20px;
+      margin: 0 0 6px 0;
+    }
+
+    .parent-core p,
     .agent-core p {
-      margin: 0;
       font-size: 13px;
       color: var(--text-muted);
-      line-height: 1.5;
+      margin: 0;
     }
 
-    /* ===== EXECUTION LANE ===== */
     .execution-lane {
       padding: 18px 22px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
     }
 
     .execution-item {
       border: 1px solid var(--border-soft);
-      border-radius: 8px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.75);
+      border-radius: 10px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.8);
+    }
+
+    .execution-item.active {
+      border-color: var(--accent-active);
+      background: linear-gradient(
+        180deg,
+        rgba(14,165,233,0.08),
+        rgba(255,255,255,0.85)
+      );
     }
 
     .execution-item h4 {
-      margin: 0 0 4px 0;
+      margin: 0 0 6px 0;
       font-size: 13px;
       font-weight: 600;
-      color: var(--accent-status);
+      color: var(--accent-active);
     }
 
     .execution-item p {
@@ -162,15 +140,12 @@
       line-height: 1.45;
     }
 
-    .execution-empty {
-      font-size: 12px;
+    .execution-meta {
+      font-size: 11px;
       color: var(--text-muted);
-      text-align: center;
-      margin-top: auto;
-      margin-bottom: auto;
+      margin-top: 8px;
     }
 
-    /* ===== MOBILE FAILSAFE ===== */
     @media (max-width: 1000px) {
       .layout {
         grid-template-columns: 1fr;
@@ -185,7 +160,6 @@
 <body>
   <div class="layout">
 
-    <!-- MAIN OPERATIONAL SURFACE -->
     <main class="main">
       <h1>OTOS Cockpit</h1>
       <p>
@@ -198,56 +172,56 @@
       </p>
     </main>
 
-    <!-- ENTERPRISE CONTROL STACK -->
     <aside class="control-stack locked">
 
-      <!-- PARENT NODE -->
       <section class="section">
         <h2>Parent Node</h2>
         <div class="parent-core">
           <h3>EYE20</h3>
-          <p>
-            Authoritative system presence.<br />
-            Memory-anchored · Non-drifting · Board-safe.
-          </p>
-        </div>
-        <div class="parent-footer">
-          Parent layer · Locked · Read-only presence
+          <p>Authoritative · Memory-anchored · Non-drifting</p>
         </div>
       </section>
 
-      <!-- AGENT CORE -->
       <section class="section">
         <h2>Agent</h2>
         <div class="agent-core">
           <h3>Andy</h3>
-          <p>
-            Task execution agent.<br />
-            Scoped · Subordinate · No autonomous memory.
-          </p>
+          <p>Scoped execution agent · No autonomous memory</p>
         </div>
       </section>
 
-      <!-- ANDY EXECUTION LANE -->
       <section class="execution-lane">
-        <div class="execution-item">
-          <h4>Status</h4>
-          <p>Idle · Awaiting authorised task</p>
+
+        <div class="execution-item active">
+          <h4>ACTIVE TASK</h4>
+          <p>
+            Capture current cockpit state for documentation & animation sequencing.
+          </p>
+          <div class="execution-meta">
+            Status: In progress · Injected by Parent Node
+          </div>
         </div>
 
         <div class="execution-item">
-          <h4>Scope</h4>
-          <p>Read-only execution reporting · No self-initiation</p>
+          <h4>NEXT</h4>
+          <p>
+            Prepare execution lane for multi-task queue (read-only).
+          </p>
+          <div class="execution-meta">
+            Status: Pending
+          </div>
         </div>
 
         <div class="execution-item">
-          <h4>Authority</h4>
-          <p>Operates only under Parent Node instruction</p>
+          <h4>GUARDRAILS</h4>
+          <p>
+            No self-initiation · No UI control · No memory write.
+          </p>
+          <div class="execution-meta">
+            Authority: Parent-locked
+          </div>
         </div>
 
-        <div class="execution-empty">
-          No active tasks
-        </div>
       </section>
 
     </aside>
