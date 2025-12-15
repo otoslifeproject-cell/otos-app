@@ -14,5 +14,6 @@ jobs:
         with:
           node-version: 20
 
-      - name: Mirror UI
+      - name: Run UI Mirror
         run: node scripts/ui/mirror_readonly.js
+
