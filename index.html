@@ -8,16 +8,17 @@
   <style>
     :root {
       --bg-main: #f4f8fc;
-      --bg-panel: rgba(255,255,255,0.97);
+      --bg-panel: rgba(255,255,255,0.98);
       --border-soft: rgba(148,163,184,0.35);
       --text-main: #0f172a;
       --text-muted: #475569;
 
       --accent-parent: #2563eb;
       --accent-agent: #16a34a;
-      --accent-active: #0ea5e9;
-      --accent-done: #22c55e;
-      --accent-audit: #7c3aed;
+      --accent-guard: #0b3c5d;
+      --accent-allow: #22c55e;
+      --accent-deny: #ef4444;
+      --accent-warn: #f59e0b;
     }
 
     * { box-sizing: border-box; }
@@ -33,7 +34,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: 1fr 600px;
+      grid-template-columns: 1fr 640px;
       height: 100vh;
       width: 100vw;
     }
@@ -51,7 +52,7 @@
 
     .main p {
       color: var(--text-muted);
-      max-width: 820px;
+      max-width: 860px;
       line-height: 1.6;
     }
 
@@ -59,10 +60,14 @@
     .control-stack {
       position: relative;
       border-left: 1px solid var(--border-soft);
-      background: var(--bg-panel);
+      background: linear-gradient(
+        180deg,
+        rgba(11,60,93,0.06),
+        var(--bg-panel)
+      );
       backdrop-filter: blur(18px);
       display: grid;
-      grid-template-rows: auto auto auto auto 1fr;
+      grid-template-rows: auto auto auto auto auto 1fr;
     }
 
     .section {
@@ -82,7 +87,7 @@
     .parent-core,
     .agent-core {
       text-align: center;
-      padding: 12px 0;
+      padding: 10px 0;
     }
 
     .parent-core h3 {
@@ -101,75 +106,119 @@
     .agent-core p {
       font-size: 13px;
       color: var(--text-muted);
-      margin: 6px 0 0 0;
+      margin-top: 6px;
     }
 
-    /* ===== SYSTEM STATE ===== */
-    .state-badge {
-      display: inline-block;
-      padding: 6px 14px;
+    /* ===== PERMISSION BADGES ===== */
+    .badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 6px 12px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 600;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: white;
-      background: linear-gradient(90deg, var(--accent-parent), var(--accent-active));
+      background: var(--accent-guard);
     }
 
-    /* ===== AUDIT TIMELINE ===== */
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+    .badge.allow { background: var(--accent-allow); }
+    .badge.deny { background: var(--accent-deny); }
+    .badge.warn { background: var(--accent-warn); }
+
+    /* ===== TRUST BOUNDARIES ===== */
+    .boundary {
+      border: 1px dashed var(--border-soft);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255,255,255,0.85);
     }
 
-    .event {
-      display: grid;
-      grid-template-columns: 14px 1fr;
-      gap: 14px;
-      align-items: start;
-    }
-
-    .event-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      margin-top: 2px;
-    }
-
-    .event.parent .event-dot { background: var(--accent-parent); }
-    .event.agent .event-dot { background: var(--accent-agent); }
-    .event.system .event-dot { background: var(--accent-audit); }
-
-    .event-body h4 {
-      margin: 0 0 4px 0;
+    .boundary h4 {
+      margin: 0 0 6px 0;
       font-size: 13px;
       font-weight: 600;
+      color: var(--accent-guard);
     }
 
-    .event-body p {
+    .boundary p {
       margin: 0;
       font-size: 12px;
       color: var(--text-muted);
       line-height: 1.45;
     }
 
-    .event-meta {
-      margin-top: 4px;
-      font-size: 11px;
-      color: var(--text-muted);
+    /* ===== WRITE GATES ===== */
+    .gates {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
     }
 
-    /* ===== FOOT AUDIT STRIP ===== */
-    .audit-strip {
+    .gate {
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,0.9);
+      border: 2px solid var(--border-soft);
+      text-align: center;
+    }
+
+    .gate.locked {
+      border-color: var(--accent-deny);
+      background: linear-gradient(
+        180deg,
+        rgba(239,68,68,0.12),
+        rgba(255,255,255,0.95)
+      );
+    }
+
+    .gate.controlled {
+      border-color: var(--accent-warn);
+      background: linear-gradient(
+        180deg,
+        rgba(245,158,11,0.12),
+        rgba(255,255,255,0.95)
+      );
+    }
+
+    .gate.allowed {
+      border-color: var(--accent-allow);
+      background: linear-gradient(
+        180deg,
+        rgba(34,197,94,0.12),
+        rgba(255,255,255,0.95)
+      );
+    }
+
+    .gate h5 {
+      margin: 0 0 6px 0;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .gate p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ===== FOOT GUARD STRIP ===== */
+    .guard-strip {
       margin-top: auto;
       padding: 14px 24px;
       border-top: 1px solid var(--border-soft);
       background: linear-gradient(
         90deg,
-        rgba(124,58,237,0.08),
-        rgba(255,255,255,0.95)
+        rgba(11,60,93,0.12),
+        rgba(255,255,255,0.96)
       );
       font-size: 11px;
       color: var(--text-muted);
@@ -178,11 +227,7 @@
       align-items: center;
     }
 
-    .audit-strip span {
-      white-space: nowrap;
-    }
-
-    @media (max-width: 1100px) {
+    @media (max-width: 1200px) {
       .layout { grid-template-columns: 1fr; }
       .control-stack { display: none; }
     }
@@ -196,7 +241,7 @@
     <main class="main">
       <h1>OTOS Cockpit</h1>
       <p>Enterprise operational surface.</p>
-      <p>Human-led execution with full AI provenance and audit continuity.</p>
+      <p>Human-led execution with explicit trust, permission, and write controls.</p>
     </main>
 
     <!-- CONTROL STACK -->
@@ -207,7 +252,7 @@
         <h2>Parent Node</h2>
         <div class="parent-core">
           <h3>EYE20</h3>
-          <p>Authoritative · Memory-anchored · Non-drifting</p>
+          <p>Root authority · Policy owner · Final arbiter</p>
         </div>
       </section>
 
@@ -216,56 +261,57 @@
         <h2>Agent</h2>
         <div class="agent-core">
           <h3>Andy</h3>
-          <p>Scoped execution · No autonomous memory</p>
+          <p>Subordinate execution · No independent write access</p>
         </div>
       </section>
 
-      <!-- STATE -->
+      <!-- PERMISSIONS -->
       <section class="section">
-        <h2>System State</h2>
-        <span class="state-badge">LIVE · AUDITED</span>
-      </section>
-
-      <!-- TIMELINE / PROVENANCE -->
-      <section class="section">
-        <h2>Timeline · Provenance</h2>
-        <div class="timeline">
-
-          <div class="event parent">
-            <div class="event-dot"></div>
-            <div class="event-body">
-              <h4>Parent Node Anchored</h4>
-              <p>EYE20 established as authoritative control layer.</p>
-              <div class="event-meta">Source: Parent · T-0</div>
-            </div>
-          </div>
-
-          <div class="event agent">
-            <div class="event-dot"></div>
-            <div class="event-body">
-              <h4>Agent Activated</h4>
-              <p>Andy instantiated with read-only execution scope.</p>
-              <div class="event-meta">Source: Agent · T+1</div>
-            </div>
-          </div>
-
-          <div class="event system">
-            <div class="event-dot"></div>
-            <div class="event-body">
-              <h4>Audit Layer Online</h4>
-              <p>Timeline, provenance, and state tracking enabled.</p>
-              <div class="event-meta">System · T+2</div>
-            </div>
-          </div>
-
+        <h2>Permissions</h2>
+        <div class="badges">
+          <div class="badge allow">Read</div>
+          <div class="badge deny">Write</div>
+          <div class="badge deny">Deploy</div>
+          <div class="badge warn">Propose</div>
         </div>
       </section>
 
-      <!-- AUDIT STRIP -->
-      <div class="audit-strip">
-        <span>Audit Mode: Enabled</span>
-        <span>Write Access: Disabled</span>
-        <span>Environment: Production-Safe</span>
+      <!-- TRUST BOUNDARY -->
+      <section class="section">
+        <h2>Trust Boundary</h2>
+        <div class="boundary">
+          <h4>Isolated Execution Zone</h4>
+          <p>
+            Agents operate within a hardened boundary. No state mutation,
+            no memory writes, no cross-layer escalation without Parent approval.
+          </p>
+        </div>
+      </section>
+
+      <!-- WRITE GATES -->
+      <section class="section">
+        <h2>Write Gates</h2>
+        <div class="gates">
+          <div class="gate locked">
+            <h5>Memory</h5>
+            <p>Locked · Parent only</p>
+          </div>
+          <div class="gate controlled">
+            <h5>Tasks</h5>
+            <p>Controlled · Approval required</p>
+          </div>
+          <div class="gate allowed">
+            <h5>Visual</h5>
+            <p>Allowed · Non-persistent</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GUARD STRIP -->
+      <div class="guard-strip">
+        <span>Trust Mode: Enforced</span>
+        <span>Write Access: Gated</span>
+        <span>Audit: Continuous</span>
       </div>
 
     </aside>
