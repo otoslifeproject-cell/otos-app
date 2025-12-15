@@ -1,0 +1,47 @@
+name: ANDY Capability Expansion
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Capability mode (init | youtube | audio)"
+        required: true
+      payload:
+        description: "URL or reference"
+        required: false
+
+jobs:
+  andy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Guard ANDY Scope
+        run: node scripts/andy/guard.js
+
+      - name: Init Capabilities
+        if: ${{ github.event.inputs.mode == 'init' }}
+        run: node scripts/andy/capabilities_init.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          AGENTS_DB: ${{ secrets.AGENTS_DB }}
+
+      - name: YouTube Ingest
+        if: ${{ github.event.inputs.mode == 'youtube' }}
+        run: node scripts/andy/youtube_ingest.js "${{ github.event.inputs.payload }}"
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
+
+      - name: Audio Ingest
+        if: ${{ github.event.inputs.mode == 'audio' }}
+        run: node scripts/andy/audio_ingest.js "${{ github.event.inputs.payload }}"
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
