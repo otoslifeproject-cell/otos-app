@@ -1,28 +1,27 @@
-name: Memory Freeze & Snapshot
+name: Memory Freeze (Canonical)
 
 on:
   workflow_dispatch:
 
 jobs:
-  memory:
+  freeze:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    env:
+      CORE_DB: ${{ secrets.OTOS_CORE_DB }}
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm install --no-fund --no-audit
+      - name: Install deps
+        run: npm ci
 
       - name: Freeze Memory
         run: node scripts/memory/freeze.js
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          BRAIN_DB: ${{ secrets.BRAIN_DB }}
-
-      - name: Snapshot Memory
-        run: node scripts/memory/snapshot.js
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          BRAIN_DB: ${{ secrets.BRAIN_DB }}
