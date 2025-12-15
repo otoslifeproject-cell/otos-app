@@ -1,7 +1,7 @@
 /**
- * SYSTEM LIVE ENABLE — CANONICAL (NO ASSUMPTIONS)
- * Enables system live state by writing a single marker row
- * into CORE_DB using the ACTUAL Notion title property.
+ * SYSTEM LIVE ENABLE — MINIMAL / GUARANTEED
+ * Writes ONE row using ONLY the guaranteed Notion title property.
+ * ZERO optional fields. ZERO assumptions.
  */
 
 import { Client } from "@notionhq/client";
@@ -25,26 +25,30 @@ async function run() {
     fail("CORE_DB missing");
   }
 
-  // 🔒 CANONICAL TITLE PROPERTY NAME (NOT 'Title')
-  const TITLE_PROP = "Name";
+  // ⚠️ CANONICAL NOTION TITLE PROPERTY
+  // Notion ALWAYS has exactly ONE title property
+  // We reference it by type, not by guessed name
+  const db = await notion.databases.retrieve({ database_id: CORE_DB });
+
+  const titleProp = Object.entries(db.properties).find(
+    ([, prop]) => prop.type === "title"
+  );
+
+  if (!titleProp) {
+    fail("No title property found in CORE_DB");
+  }
+
+  const [TITLE_KEY] = titleProp;
 
   await notion.pages.create({
     parent: { database_id: CORE_DB },
     properties: {
-      [TITLE_PROP]: {
+      [TITLE_KEY]: {
         title: [
           {
-            text: {
-              content: "SYSTEM_LIVE",
-            },
+            text: { content: "SYSTEM_LIVE" },
           },
         ],
-      },
-      Status: {
-        select: { name: "Live" },
-      },
-      Source: {
-        select: { name: "System" },
       },
     },
   });
@@ -52,6 +56,4 @@ async function run() {
   console.log("✅ SYSTEM IS LIVE");
 }
 
-run().catch((err) => {
-  fail(err.message || err);
-});
+run().catch((err) => fail(err.message || err));
