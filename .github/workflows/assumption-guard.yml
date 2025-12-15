@@ -1,0 +1,19 @@
+name: Assumption Guard (Hard Lock)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install deps
+        run: npm install
+
+      - name: Run Assumption Guard
+        env:
+          CORE_DB: ${{ secrets.CORE_DB }}
+          OTOS_INTAKE_FEEDER_DB: ${{ secrets.OTOS_INTAKE_FEEDER_DB }}
+        run: node scripts/system/assumption_guard.js
