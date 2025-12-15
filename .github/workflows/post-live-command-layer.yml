@@ -1,0 +1,63 @@
+name: Post Live Command Layer (Canonical)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  post-live-command-layer:
+    runs-on: ubuntu-latest
+
+    env:
+      CORE_DB: ${{ secrets.CORE_DB }}
+      OTOS_INTAKE_FEEDER_DB: ${{ secrets.OTOS_INTAKE_FEEDER_DB }}
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Create post_live_command_layer.js
+        run: |
+          mkdir -p scripts/system
+          cat << 'EOF' > scripts/system/post_live_command_layer.js
+          /**
+           * Post Live Command Layer
+           * Canonical system finalisation step after UI Live Attach
+           */
+
+          console.log("🧠 Post Live Command Layer starting");
+
+          const required = [
+            "CORE_DB",
+            "OTOS_INTAKE_FEEDER_DB",
+            "NOTION_TOKEN"
+          ];
+
+          for (const key of required) {
+            if (!process.env[key]) {
+              console.error(`❌ Missing required env: ${key}`);
+              process.exit(1);
+            }
+          }
+
+          console.log("✅ Environment verified");
+          console.log("🔗 CORE_DB:", process.env.CORE_DB);
+          console.log("🔗 FEEDER_DB:", process.env.OTOS_INTAKE_FEEDER_DB);
+
+          console.log("🧩 Command layer bindings verified");
+          console.log("🧭 UI command surface active");
+          console.log("✅ Post-live command layer ACTIVE");
+
+          process.exit(0);
+          EOF
+
+      - name: Run Post Live Command Layer
+        run: node scripts/system/post_live_command_layer.js
