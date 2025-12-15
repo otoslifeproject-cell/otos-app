@@ -2,17 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit — Parent Node Locked</title>
+  <title>OTOS Cockpit — Enterprise Parent & Agent</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     :root {
-      --bg-main: #f5fbff;
-      --bg-panel: rgba(255,255,255,0.85);
+      --bg-main: #f4f8fc;
+      --bg-panel: rgba(255,255,255,0.9);
       --border-soft: rgba(148,163,184,0.35);
       --text-main: #0f172a;
       --text-muted: #475569;
-      --accent: #38bdf8;
+      --accent-parent: #2563eb;
+      --accent-agent: #16a34a;
     }
 
     * {
@@ -22,79 +23,81 @@
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #f5fbff, #eaf4ff);
+      background: radial-gradient(circle at top left, #f4f8fc, #e6f0fb);
       color: var(--text-main);
       height: 100vh;
       overflow: hidden;
     }
 
-    /* ===== LAYOUT ===== */
+    /* ===== MASTER LAYOUT ===== */
     .layout {
       display: grid;
-      grid-template-columns: 1fr 360px;
+      grid-template-columns: 1fr 420px;
       height: 100vh;
       width: 100vw;
     }
 
-    /* ===== MAIN CANVAS ===== */
+    /* ===== MAIN WORKSPACE ===== */
     .main {
-      padding: 24px;
+      padding: 28px;
       overflow-y: auto;
     }
 
     .main h1 {
       margin-top: 0;
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 700;
     }
 
     .main p {
       color: var(--text-muted);
-      max-width: 720px;
-      line-height: 1.6;
+      max-width: 760px;
+      line-height: 1.65;
     }
 
-    /* ===== PARENT NODE (LOCKED) ===== */
-    .parent-node {
-      position: relative;
+    /* ===== RIGHT CONTROL STACK ===== */
+    .control-stack {
       border-left: 1px solid var(--border-soft);
       background: var(--bg-panel);
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(16px);
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+    }
+
+    /* ===== SHARED LOCK RULES ===== */
+    .locked * {
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* ===== PARENT NODE ===== */
+    .parent-node {
+      border-bottom: 1px solid var(--border-soft);
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
-    .parent-header {
-      padding: 16px 18px;
-      border-bottom: 1px solid var(--border-soft);
-    }
-
-    .parent-header h2 {
+    .parent-node h2 {
       margin: 0;
-      font-size: 14px;
-      letter-spacing: 0.08em;
+      font-size: 12px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--text-muted);
     }
 
-    .parent-body {
-      padding: 18px;
-      flex-grow: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
     .parent-core {
-      max-width: 260px;
+      text-align: center;
+      margin-top: auto;
+      margin-bottom: auto;
     }
 
     .parent-core h3 {
-      margin: 0 0 8px 0;
-      font-size: 18px;
-      font-weight: 600;
+      margin: 0 0 6px 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-parent);
     }
 
     .parent-core p {
@@ -105,25 +108,61 @@
     }
 
     .parent-footer {
-      padding: 14px 18px;
-      border-top: 1px solid var(--border-soft);
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
       text-align: center;
+      padding-top: 12px;
     }
 
-    /* HARD LOCKS */
-    .parent-node * {
-      user-select: none;
-      pointer-events: none;
+    /* ===== AGENT: ANDY ===== */
+    .agent-node {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    /* MOBILE FAILSAFE */
-    @media (max-width: 900px) {
+    .agent-node h2 {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .agent-core {
+      text-align: center;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .agent-core h3 {
+      margin: 0 0 6px 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-agent);
+    }
+
+    .agent-core p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .agent-footer {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-align: center;
+      padding-top: 12px;
+    }
+
+    /* ===== MOBILE FAILSAFE ===== */
+    @media (max-width: 1000px) {
       .layout {
         grid-template-columns: 1fr;
       }
-      .parent-node {
+      .control-stack {
         display: none;
       }
     }
@@ -133,40 +172,57 @@
 <body>
   <div class="layout">
 
-    <!-- MAIN WORKSPACE -->
+    <!-- MAIN OPERATIONAL SURFACE -->
     <main class="main">
       <h1>OTOS Cockpit</h1>
       <p>
-        Primary operational workspace.  
-        All user-driven interaction, controls, feeds, and modules live here.
+        Enterprise operational surface.<br />
+        Human-led execution, systems visibility, and decision control live here.
       </p>
 
       <p>
-        This surface is intentionally unconstrained.  
-        Structure, flow, and tooling will be layered progressively.
+        This workspace remains unconstrained by AI presence.<br />
+        All intelligence layers are anchored separately to prevent drift.
       </p>
     </main>
 
-    <!-- PARENT NODE — LOCKED -->
-    <aside class="parent-node">
-      <div class="parent-header">
-        <h2>Parent Node</h2>
-      </div>
+    <!-- RIGHT-HAND ENTERPRISE CONTROL STACK -->
+    <aside class="control-stack locked">
 
-      <div class="parent-body">
+      <!-- PARENT NODE -->
+      <section class="parent-node">
+        <h2>Parent Node</h2>
+
         <div class="parent-core">
           <h3>EYE20</h3>
           <p>
-            Stable system presence.<br />
-            Anchored. Non-drifting.<br />
-            Observing, not interfering.
+            Authoritative system presence.<br />
+            Memory-anchored · Non-drifting · Board-safe.
           </p>
         </div>
-      </div>
 
-      <div class="parent-footer">
-        Parent Node locked · UI anchor established
-      </div>
+        <div class="parent-footer">
+          Parent layer · Locked · Read-only presence
+        </div>
+      </section>
+
+      <!-- AGENT: ANDY -->
+      <section class="agent-node">
+        <h2>Agent</h2>
+
+        <div class="agent-core">
+          <h3>Andy</h3>
+          <p>
+            Task execution agent.<br />
+            Scoped · Subordinate · No autonomous memory.
+          </p>
+        </div>
+
+        <div class="agent-footer">
+          Agent layer · Controlled · No independent authority
+        </div>
+      </section>
+
     </aside>
 
   </div>
