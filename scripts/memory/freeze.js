@@ -1,8 +1,7 @@
 /**
  * OTOS Memory Freeze (Canonical)
  * HARD-LOCK SAFE
- * This script WILL NOT fail if Stability_Flag is missing.
- * It auto-detects or creates the required property.
+ * ZERO GUESSING
  */
 
 import { Client } from "@notionhq/client";
@@ -14,36 +13,29 @@ const notion = new Client({
 const CORE_DB = process.env.CORE_DB;
 
 if (!CORE_DB) {
-  console.error("❌ CORE_DB is missing");
+  console.error("❌ CORE_DB is missing at runtime");
+  console.error("This indicates a workflow wiring fault, not a script fault.");
   process.exit(1);
 }
 
 async function ensureStabilityFlag(databaseId) {
   const db = await notion.databases.retrieve({ database_id: databaseId });
-  const properties = db.properties;
 
-  if (properties.Stability_Flag) {
-    return "Stability_Flag";
-  }
+  if (db.properties?.Stability_Flag) return;
 
-  // Create Stability_Flag safely
   await notion.databases.update({
     database_id: databaseId,
     properties: {
-      Stability_Flag: {
-        checkbox: {},
-      },
+      Stability_Flag: { checkbox: {} },
     },
   });
-
-  return "Stability_Flag";
 }
 
 async function run() {
   console.log("🧊 Memory Freeze Initialiser starting");
   console.log("CORE_DB:", CORE_DB);
 
-  const flagName = await ensureStabilityFlag(CORE_DB);
+  await ensureStabilityFlag(CORE_DB);
 
   const pages = await notion.databases.query({
     database_id: CORE_DB,
@@ -51,19 +43,15 @@ async function run() {
   });
 
   if (!pages.results.length) {
-    console.log("⚠️ No pages found to freeze (DB valid)");
-    console.log("✅ Memory state frozen (empty DB)");
+    console.log("✅ DB verified (no pages yet)");
+    console.log("🔒 Memory frozen");
     return;
   }
 
-  const pageId = pages.results[0].id;
-
   await notion.pages.update({
-    page_id: pageId,
+    page_id: pages.results[0].id,
     properties: {
-      [flagName]: {
-        checkbox: true,
-      },
+      Stability_Flag: { checkbox: true },
     },
   });
 
@@ -73,7 +61,6 @@ async function run() {
 
 run().catch((err) => {
   console.error("❌ Memory Freeze FAILED");
-  console.error(err.message || err);
+  console.error(err);
   process.exit(1);
 });
-
