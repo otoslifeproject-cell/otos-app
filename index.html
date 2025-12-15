@@ -159,4 +159,87 @@
       margin: 0 0 6px 0;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text
+      color: var(--text-main);
+    }
+
+    .execution-item p {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .execution-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    @media (max-width: 1000px) {
+      .layout { grid-template-columns: 1fr; }
+      .control-stack { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="layout">
+
+    <main class="main">
+      <h1>OTOS Cockpit</h1>
+      <p>Enterprise operational surface.</p>
+      <p>Human-led execution, systems visibility, and decision control live here.</p>
+      <p>All intelligence layers are anchored separately to prevent drift.</p>
+    </main>
+
+    <aside class="control-stack locked">
+
+      <section class="section">
+        <h2>Parent Node</h2>
+        <div class="parent-core">
+          <h3>EYE20</h3>
+          <p>Authoritative · Memory-anchored · Non-drifting</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Agent</h2>
+        <div class="agent-core">
+          <h3>Andy</h3>
+          <p>Scoped execution agent · No autonomous memory</p>
+        </div>
+      </section>
+
+      <section class="execution-lane">
+        <div class="queue-title">Execution Queue</div>
+
+        <div class="execution-item active">
+          <h4>ACTIVE</h4>
+          <p>Capture cockpit layer progression for animation & documentation.</p>
+          <div class="execution-meta">Status: In progress · Authority: Parent</div>
+        </div>
+
+        <div class="execution-item waiting">
+          <h4>QUEUED</h4>
+          <p>Prepare multi-lane expansion (signals, feeds, alerts).</p>
+          <div class="execution-meta">Status: Waiting</div>
+        </div>
+
+        <div class="execution-item waiting">
+          <h4>QUEUED</h4>
+          <p>Visualise agent handoff boundaries (Andy → future agents).</p>
+          <div class="execution-meta">Status: Waiting</div>
+        </div>
+
+        <div class="execution-item done">
+          <h4>COMPLETED</h4>
+          <p>Parent Node anchoring & UI lock.</p>
+          <div class="execution-meta">Status: Complete</div>
+        </div>
+      </section>
+
+    </aside>
+
+  </div>
+</body>
+</html>
