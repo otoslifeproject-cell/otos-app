@@ -1,28 +1,26 @@
-name: Canonical Lock + Export
+name: Canonical Lock (Canonical)
 
 on:
   workflow_dispatch:
 
 jobs:
-  canonical:
+  canonical-lock:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm install --no-fund --no-audit
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
 
-      - name: Lock Canonical
+      - name: Run Canonical Lock
         run: node scripts/canonical/lock.js
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          CANONICAL_DOCS_DB: ${{ secrets.CANONICAL_DOCS_DB }}
-
-      - name: Export Canonical
-        run: node scripts/canonical/export.js
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
-          CANONICAL_DOCS_DB: ${{ secrets.CANONICAL_DOCS_DB }}
+          CORE_DB: ${{ secrets.CORE_DB }}
