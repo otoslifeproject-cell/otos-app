@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OTOS Cockpit • Module 1 • Parent Node</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Module 1 = Parent Node (YOU) -->
+  <link rel="stylesheet" href="./modules/parent-node/parent-node.css" />
+</head>
+
+<body>
+  <!-- TOP BAR -->
+  <header class="otos-topbar">
+    <div class="otos-topbar-inner">
+
+      <!-- BRAND -->
+      <div class="otos-brand">
+        <img
+          src="./assets/otos-logo.png"
+          alt="OTOS"
+          class="otos-logo"
+        />
+        <div class="otos-brand-text">
+          <span class="otos-badge-pill">OTOS • LIVE FEED</span>
+          <span class="otos-badge-sub">EYE20 • Cockpit • Parent Node</span>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="otos-topbar-actions">
+        <button class="otos-pill" id="btn-layout-lock" type="button" aria-pressed="true">
+          Layout locked
+        </button>
+        <button class="otos-pill" id="btn-refresh-ui" type="button">
+          Refresh UI
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <main class="otos-shell" role="main">
+
+    <!-- LEFT: PARENT NODE -->
+    <section class="otos-col otos-col-left" aria-label="Parent Node">
+
+      <div class="otos-card otos-card-strong">
+
+        <div class="otos-parent-header">
+          <img
+            src="./assets/otos-logo.png"
+            alt="OTOS Parent Node"
+            class="otos-parent-logo"
+          />
+          <div>
+            <h2 class="otos-kicker">PARENT NODE • EYE20</h2>
+            <span class="otos-status otos-status-online">ONLINE</span>
+          </div>
+        </div>
+
+        <p class="otos-small">
+          This is the system brain.
+          <br />• Kernel rules
+          <br />• Network context
+          <br />• Memory routing (internal ↔ Notion)
+          <br />• Autonomy settings
+          <br /><strong>Everything stabilises from here.</strong>
+        </p>
+
+        <div class="otos-chiprow">
+          <span class="otos-chip otos-chip-blue">Kernel Loaded</span>
+          <span class="otos-chip otos-chip-purple">MemorySeeder ON</span>
+          <span class="otos-chip otos-chip-slate">Sync Stable</span>
+        </div>
+
+        <div class="otos-directive">
+          <div class="otos-directive-title">Current Directive</div>
+          <div class="otos-directive-body" id="current-directive">
+            Module 1: Lock Parent Node in UI. No deviation. No Andy until stable.
+          </div>
+        </div>
+
+      </div>
+
+      <div class="otos-card">
+        <div class="otos-card-head">
+          <h3 class="otos-kicker">PARENT NODE CONSOLE</h3>
+          <span class="otos-mini" id="console-state">Stable • Waiting</span>
+        </div>
+
+        <div class="otos-console" id="parent-console"></div>
+
+        <div class="otos-row">
+          <button class="otos-btn otos-btn-primary" id="btn-announce">Announce status</button>
+          <button class="otos-btn" id="btn-copy-state">Copy state</button>
+        </div>
+
+        <p class="otos-tiny">
+          UI anchor only. No external writes. Andy installs as Module 2.
+        </p>
+      </div>
+
+    </section>
+
+    <!-- CENTRE (MUTED) -->
+    <section class="otos-col otos-col-centre">
+      <div class="otos-card otos-card-muted">
+        <h2 class="otos-kicker">CENTRE • MUTED</h2>
+        <div class="otos-placeholder">
+          Focus module installs after Parent Node stability.
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT (MUTED) -->
+    <section class="otos-col otos-col-right">
+      <div class="otos-card otos-card-muted">
+        <h2 class="otos-kicker">ANDY AGENT • NOT INSTALLED</h2>
+        <div class="otos-placeholder">
+          Module 2 pending.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="./modules/parent-node/parent-node.js"></script>
+</body>
+</html>
