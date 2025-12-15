@@ -1,0 +1,22 @@
+name: Day-One Runbook
+
+on:
+  workflow_dispatch:
+
+jobs:
+  runbook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Export Runbook
+        run: node scripts/ops/runbook_export.js
+      - name: Commit Runbook
+        run: |
+          git config user.name "otos-bot"
+          git config user.email "bot@otos.life"
+          git add ops/DAY_ONE_RUNBOOK.md
+          git commit -m "Add day-one runbook" || echo "No changes"
+          git push
