@@ -143,19 +143,13 @@
     .pulse.warn .pulse-dot { background: var(--pulse-warn); animation-duration: 1.6s; }
     .pulse.idle .pulse-dot { background: var(--pulse-idle); animation-duration: 3s; }
 
-    .pulse-text {
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.3;
-    }
-
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(0,0,0,0.15); }
       70% { box-shadow: 0 0 0 10px rgba(0,0,0,0); }
       100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
     }
 
-    /* ===== FEEDS ===== */
+    /* ===== FEEDS (SEQUENCED) ===== */
     .feed {
       display: flex;
       flex-direction: column;
@@ -171,7 +165,14 @@
       grid-template-columns: 8px 1fr;
       gap: 12px;
       align-items: start;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: reveal .6s ease forwards;
     }
+
+    .feed-item:nth-child(1) { animation-delay: .6s; }
+    .feed-item:nth-child(2) { animation-delay: 1.4s; }
+    .feed-item:nth-child(3) { animation-delay: 2.2s; }
 
     .feed-dot {
       width: 8px;
@@ -203,7 +204,11 @@
       margin-top: 6px;
     }
 
-    /* ===== EXECUTION QUEUE ===== */
+    @keyframes reveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== EXECUTION QUEUE (STATUS CYCLE) ===== */
     .execution-lane {
       padding: 20px 24px;
       display: flex;
@@ -224,6 +229,7 @@
       border-radius: 14px;
       padding: 14px 16px;
       background: rgba(255,255,255,0.82);
+      opacity: .9;
     }
 
     .execution-item.active {
@@ -233,11 +239,7 @@
         rgba(14,165,233,0.12),
         rgba(255,255,255,0.92)
       );
-    }
-
-    .execution-item.waiting {
-      border-color: var(--accent-wait);
-      opacity: 0.92;
+      animation: glow 2.2s ease-in-out infinite;
     }
 
     .execution-item.done {
@@ -247,26 +249,12 @@
         rgba(34,197,94,0.12),
         rgba(255,255,255,0.92)
       );
-      opacity: 0.9;
+      opacity: 1;
     }
 
-    .execution-item h4 {
-      margin: 0 0 6px 0;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .execution-item p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.45;
-    }
-
-    .execution-meta {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 8px;
+    @keyframes glow {
+      0%,100% { box-shadow: 0 0 0 rgba(14,165,233,0.0); }
+      50% { box-shadow: 0 0 16px rgba(14,165,233,0.35); }
     }
 
     @media (max-width: 1000px) {
@@ -288,7 +276,6 @@
 
     <aside class="control-stack locked">
 
-      <!-- PARENT -->
       <section class="section">
         <h2>Parent Node</h2>
         <div class="parent-core">
@@ -297,7 +284,6 @@
         </div>
       </section>
 
-      <!-- AGENT -->
       <section class="section">
         <h2>Agent</h2>
         <div class="agent-core">
@@ -306,78 +292,56 @@
         </div>
       </section>
 
-      <!-- SYSTEM PULSE -->
       <section class="section">
         <h2>System Pulse</h2>
         <div class="pulse-row">
-          <div class="pulse ok">
-            <div class="pulse-dot"></div>
-            <div class="pulse-text">Parent Anchor · Stable</div>
-          </div>
-          <div class="pulse ok">
-            <div class="pulse-dot"></div>
-            <div class="pulse-text">Agent Channel · Online</div>
-          </div>
-          <div class="pulse idle">
-            <div class="pulse-dot"></div>
-            <div class="pulse-text">Memory Sync · Standby</div>
-          </div>
+          <div class="pulse ok"><div class="pulse-dot"></div><div>Parent Anchor · Stable</div></div>
+          <div class="pulse ok"><div class="pulse-dot"></div><div>Agent Channel · Online</div></div>
+          <div class="pulse idle"><div class="pulse-dot"></div><div>Memory Sync · Standby</div></div>
         </div>
       </section>
 
-      <!-- LIVE FEED -->
       <section class="section">
         <h2>Live Feed</h2>
         <div class="feed">
           <div class="feed-item info">
             <div class="feed-dot"></div>
             <div class="feed-text">
-              <h4>UI Layer Activated</h4>
-              <p>Execution queue and system pulse successfully initialised.</p>
-              <div class="feed-meta">Source: Parent · Just now</div>
+              <h4>Layer Online</h4>
+              <p>Timed motion and status cycling activated.</p>
+              <div class="feed-meta">System · Just now</div>
             </div>
           </div>
-
           <div class="feed-item warn">
             <div class="feed-dot"></div>
             <div class="feed-text">
-              <h4>Memory Write Disabled</h4>
-              <p>All agents operating in read-only mode pending approval.</p>
+              <h4>Memory Writes Disabled</h4>
+              <p>Agents operating in read-only mode.</p>
               <div class="feed-meta">Policy · Active</div>
             </div>
           </div>
-
           <div class="feed-item critical">
             <div class="feed-dot"></div>
             <div class="feed-text">
               <h4>Alert Channel Reserved</h4>
-              <p>No active alerts. Channel standing by.</p>
+              <p>No active alerts.</p>
               <div class="feed-meta">System · Idle</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- EXECUTION QUEUE -->
       <section class="execution-lane">
         <div class="queue-title">Execution Queue</div>
 
         <div class="execution-item active">
           <h4>ACTIVE</h4>
-          <p>Animate cockpit layering (pulse → feed → queue).</p>
-          <div class="execution-meta">Status: In progress · Authority: Parent</div>
-        </div>
-
-        <div class="execution-item waiting">
-          <h4>QUEUED</h4>
-          <p>Introduce live data adapters (events only).</p>
-          <div class="execution-meta">Status: Waiting</div>
+          <p>Animate layered cockpit build.</p>
         </div>
 
         <div class="execution-item done">
           <h4>COMPLETED</h4>
-          <p>Parent Node lock, agent separation, visual scaffolding.</p>
-          <div class="execution-meta">Status: Complete</div>
+          <p>Structural scaffolding and controls.</p>
         </div>
       </section>
 
