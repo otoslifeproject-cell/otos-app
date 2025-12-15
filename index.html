@@ -8,24 +8,15 @@
   <style>
     :root {
       --bg-main: #f4f8fc;
-      --bg-panel: rgba(255,255,255,0.96);
+      --bg-panel: rgba(255,255,255,0.97);
       --border-soft: rgba(148,163,184,0.35);
       --text-main: #0f172a;
       --text-muted: #475569;
 
       --accent-parent: #2563eb;
       --accent-agent: #16a34a;
-      --accent-active: #0ea5e9;
-      --accent-wait: #94a3b8;
+      --accent-live: #0ea5e9;
       --accent-done: #22c55e;
-
-      --pulse-ok: #22c55e;
-      --pulse-warn: #f59e0b;
-      --pulse-idle: #64748b;
-
-      --notice-info: #0ea5e9;
-      --notice-warn: #f59e0b;
-      --notice-critical: #ef4444;
     }
 
     * { box-sizing: border-box; }
@@ -46,9 +37,9 @@
       width: 100vw;
     }
 
+    /* ===== MAIN ===== */
     .main {
       padding: 36px;
-      overflow-y: auto;
     }
 
     .main h1 {
@@ -57,24 +48,29 @@
       font-weight: 700;
     }
 
-    .main p {
-      color: var(--text-muted);
-      max-width: 880px;
-      line-height: 1.65;
-      margin: 0 0 10px 0;
-    }
-
+    /* ===== RIGHT STACK ===== */
     .control-stack {
+      position: relative;
       border-left: 1px solid var(--border-soft);
       background: var(--bg-panel);
       backdrop-filter: blur(18px);
       display: grid;
-      grid-template-rows: auto auto auto auto 1fr;
+      grid-template-rows: auto auto auto 1fr;
     }
 
-    .locked * {
-      user-select: none;
-      pointer-events: none;
+    /* 🔥 VISUAL STATE BAND (NEW) */
+    .state-band {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(
+        90deg,
+        var(--accent-parent),
+        var(--accent-live),
+        var(--accent-agent)
+      );
     }
 
     .section {
@@ -83,11 +79,11 @@
     }
 
     .section h2 {
-      margin: 0 0 10px 0;
       font-size: 11px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--text-muted);
+      margin-bottom: 8px;
     }
 
     .parent-core,
@@ -98,163 +94,49 @@
 
     .parent-core h3 {
       color: var(--accent-parent);
-      font-size: 21px;
-      margin: 0 0 6px 0;
+      font-size: 22px;
+      margin: 0;
     }
 
     .agent-core h3 {
       color: var(--accent-agent);
-      font-size: 21px;
-      margin: 0 0 6px 0;
-    }
-
-    .parent-core p,
-    .agent-core p {
-      font-size: 13px;
-      color: var(--text-muted);
+      font-size: 22px;
       margin: 0;
     }
 
-    /* ===== SYSTEM PULSE ===== */
-    .pulse-row {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-    }
-
-    .pulse {
-      border: 1px solid var(--border-soft);
-      border-radius: 14px;
-      padding: 14px;
-      background: rgba(255,255,255,0.85);
+    /* 🔥 SYSTEM STATE BADGE (NEW) */
+    .system-state {
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
+      margin-top: 10px;
     }
 
-    .pulse-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      animation: pulse 2.4s infinite;
-    }
-
-    .pulse.ok .pulse-dot { background: var(--pulse-ok); }
-    .pulse.warn .pulse-dot { background: var(--pulse-warn); animation-duration: 1.6s; }
-    .pulse.idle .pulse-dot { background: var(--pulse-idle); animation-duration: 3s; }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(0,0,0,0.15); }
-      70% { box-shadow: 0 0 0 10px rgba(0,0,0,0); }
-      100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
-    }
-
-    /* ===== FEEDS (SEQUENCED) ===== */
-    .feed {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .feed-item {
-      border: 1px solid var(--border-soft);
-      border-radius: 12px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.9);
-      display: grid;
-      grid-template-columns: 8px 1fr;
-      gap: 12px;
-      align-items: start;
-      opacity: 0;
-      transform: translateY(6px);
-      animation: reveal .6s ease forwards;
-    }
-
-    .feed-item:nth-child(1) { animation-delay: .6s; }
-    .feed-item:nth-child(2) { animation-delay: 1.4s; }
-    .feed-item:nth-child(3) { animation-delay: 2.2s; }
-
-    .feed-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      margin-top: 6px;
-    }
-
-    .info .feed-dot { background: var(--notice-info); }
-    .warn .feed-dot { background: var(--notice-warn); }
-    .critical .feed-dot { background: var(--notice-critical); }
-
-    .feed-text h4 {
-      margin: 0 0 4px 0;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .feed-text p {
-      margin: 0;
-      font-size: 12px;
-      color: var(--text-muted);
-      line-height: 1.45;
-    }
-
-    .feed-meta {
+    .badge {
+      padding: 6px 14px;
+      border-radius: 999px;
       font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 6px;
-    }
-
-    @keyframes reveal {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ===== EXECUTION QUEUE (STATUS CYCLE) ===== */
-    .execution-lane {
-      padding: 20px 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .queue-title {
-      font-size: 12px;
-      letter-spacing: 0.12em;
+      font-weight: 600;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+      color: white;
+      background: var(--accent-live);
+      box-shadow: 0 0 0 4px rgba(14,165,233,0.15);
     }
 
-    .execution-item {
-      border: 1px solid var(--border-soft);
-      border-radius: 14px;
-      padding: 14px 16px;
-      background: rgba(255,255,255,0.82);
-      opacity: .9;
-    }
-
-    .execution-item.active {
-      border-color: var(--accent-active);
+    /* 🔥 PROGRESS SPINE (NEW) */
+    .spine {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 6px;
       background: linear-gradient(
         180deg,
-        rgba(14,165,233,0.12),
-        rgba(255,255,255,0.92)
+        var(--accent-parent),
+        var(--accent-live),
+        var(--accent-done)
       );
-      animation: glow 2.2s ease-in-out infinite;
-    }
-
-    .execution-item.done {
-      border-color: var(--accent-done);
-      background: linear-gradient(
-        180deg,
-        rgba(34,197,94,0.12),
-        rgba(255,255,255,0.92)
-      );
-      opacity: 1;
-    }
-
-    @keyframes glow {
-      0%,100% { box-shadow: 0 0 0 rgba(14,165,233,0.0); }
-      50% { box-shadow: 0 0 16px rgba(14,165,233,0.35); }
     }
 
     @media (max-width: 1000px) {
@@ -270,17 +152,17 @@
     <main class="main">
       <h1>OTOS Cockpit</h1>
       <p>Enterprise operational surface.</p>
-      <p>Human-led execution, systems visibility, and decision control live here.</p>
-      <p>All intelligence layers are anchored separately to prevent drift.</p>
+      <p>Human-led execution, systems visibility, and decision control.</p>
     </main>
 
-    <aside class="control-stack locked">
+    <aside class="control-stack">
+      <div class="state-band"></div>
+      <div class="spine"></div>
 
       <section class="section">
         <h2>Parent Node</h2>
         <div class="parent-core">
           <h3>EYE20</h3>
-          <p>Authoritative · Memory-anchored · Non-drifting</p>
         </div>
       </section>
 
@@ -288,60 +170,13 @@
         <h2>Agent</h2>
         <div class="agent-core">
           <h3>Andy</h3>
-          <p>Scoped execution agent · No autonomous memory</p>
         </div>
       </section>
 
       <section class="section">
-        <h2>System Pulse</h2>
-        <div class="pulse-row">
-          <div class="pulse ok"><div class="pulse-dot"></div><div>Parent Anchor · Stable</div></div>
-          <div class="pulse ok"><div class="pulse-dot"></div><div>Agent Channel · Online</div></div>
-          <div class="pulse idle"><div class="pulse-dot"></div><div>Memory Sync · Standby</div></div>
-        </div>
-      </section>
-
-      <section class="section">
-        <h2>Live Feed</h2>
-        <div class="feed">
-          <div class="feed-item info">
-            <div class="feed-dot"></div>
-            <div class="feed-text">
-              <h4>Layer Online</h4>
-              <p>Timed motion and status cycling activated.</p>
-              <div class="feed-meta">System · Just now</div>
-            </div>
-          </div>
-          <div class="feed-item warn">
-            <div class="feed-dot"></div>
-            <div class="feed-text">
-              <h4>Memory Writes Disabled</h4>
-              <p>Agents operating in read-only mode.</p>
-              <div class="feed-meta">Policy · Active</div>
-            </div>
-          </div>
-          <div class="feed-item critical">
-            <div class="feed-dot"></div>
-            <div class="feed-text">
-              <h4>Alert Channel Reserved</h4>
-              <p>No active alerts.</p>
-              <div class="feed-meta">System · Idle</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="execution-lane">
-        <div class="queue-title">Execution Queue</div>
-
-        <div class="execution-item active">
-          <h4>ACTIVE</h4>
-          <p>Animate layered cockpit build.</p>
-        </div>
-
-        <div class="execution-item done">
-          <h4>COMPLETED</h4>
-          <p>Structural scaffolding and controls.</p>
+        <h2>System State</h2>
+        <div class="system-state">
+          <div class="badge">LIVE · LAYERED</div>
         </div>
       </section>
 
