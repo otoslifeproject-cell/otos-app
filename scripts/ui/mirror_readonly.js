@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-const SOURCE_DIR = "ui";           // CANONICAL SOURCE (REPO TRACKED)
-const TARGET_DIR = "public/ui";    // READ-ONLY MIRROR TARGET
+const ROOT_DIR = ".";
+const TARGET_DIR = "public/ui";
 
 function fail(msg) {
   console.error("❌ UI MIRROR FAILED");
@@ -11,24 +11,19 @@ function fail(msg) {
 }
 
 function run() {
-  console.log("🪞 UI Read-Only Mirror starting");
+  console.log("🪞 UI Read-Only Mirror starting (root HTML)");
 
-  if (!fs.existsSync(SOURCE_DIR)) {
-    fail(`Source folder missing: ${SOURCE_DIR}`);
-  }
-
-  const files = fs.readdirSync(SOURCE_DIR).filter(f =>
-    fs.statSync(path.join(SOURCE_DIR, f)).isFile()
-  );
+  const files = fs.readdirSync(ROOT_DIR)
+    .filter(f => f.endsWith(".html"));
 
   if (files.length === 0) {
-    fail("No UI files found in source folder");
+    fail("No HTML files found at repo root");
   }
 
   fs.mkdirSync(TARGET_DIR, { recursive: true });
 
   for (const file of files) {
-    const src = path.join(SOURCE_DIR, file);
+    const src = path.join(ROOT_DIR, file);
     const dst = path.join(TARGET_DIR, file);
     fs.copyFileSync(src, dst);
     console.log(`→ mirrored ${file}`);
