@@ -2,7 +2,7 @@ console.log("🧪 SYSTEM READY CHECK starting");
 
 const required = [
   "CORE_DB",
-  "OTOS_INTAKE_FEEDER_DB"
+  "INTAKE_DB"
 ];
 
 let failed = false;
