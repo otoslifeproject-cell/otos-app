@@ -1,0 +1,39 @@
+name: YouTube → Audio Extractor (YT-DLP)
+
+on:
+  workflow_dispatch:
+    inputs:
+      youtube_url:
+        description: "YouTube video URL"
+        required: true
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install yt-dlp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yt-dlp ffmpeg
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install --no-fund --no-audit
+
+      - name: Extract Audio
+        run: node scripts/youtube/extract_audio.js "${{ github.event.inputs.youtube_url }}"
+
+      - name: Ingest to Feeder
+        run: node scripts/youtube/ingest_to_feeder.js "${{ github.event.inputs.youtube_url }}"
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          INTAKE_FEEDER_DB: ${{ secrets.INTAKE_FEEDER_DB }}
+
+      - name: Transcription Handoff
+        run: node scripts/youtube/handoff_to_transcription.js
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
