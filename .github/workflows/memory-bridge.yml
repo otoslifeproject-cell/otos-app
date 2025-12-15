@@ -23,6 +23,5 @@ jobs:
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           CORE_DB: ${{ secrets.CORE_DB }}
-          # ✅ Use your existing secret name, but keep fallback if FEEDER_DB also exists
           FEEDER_DB: ${{ secrets.OTOS_INTAKE_FEEDER_DB || secrets.FEEDER_DB }}
-        run: node scripts/memory/link_to_feeder.js
+        run: node scripts/memory/bridge.js
