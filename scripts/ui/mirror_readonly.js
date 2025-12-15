@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-const SOURCE_DIR = "Notion_Injection";
-const TARGET_DIR = "public/ui";
+const SOURCE_DIR = "ui";           // CANONICAL SOURCE (REPO TRACKED)
+const TARGET_DIR = "public/ui";    // READ-ONLY MIRROR TARGET
 
 function fail(msg) {
   console.error("❌ UI MIRROR FAILED");
@@ -17,21 +17,22 @@ function run() {
     fail(`Source folder missing: ${SOURCE_DIR}`);
   }
 
-  if (!fs.existsSync(TARGET_DIR)) {
-    fs.mkdirSync(TARGET_DIR, { recursive: true });
+  const files = fs.readdirSync(SOURCE_DIR).filter(f =>
+    fs.statSync(path.join(SOURCE_DIR, f)).isFile()
+  );
+
+  if (files.length === 0) {
+    fail("No UI files found in source folder");
   }
 
-  const files = fs.readdirSync(SOURCE_DIR);
+  fs.mkdirSync(TARGET_DIR, { recursive: true });
 
-  files.forEach(file => {
+  for (const file of files) {
     const src = path.join(SOURCE_DIR, file);
     const dst = path.join(TARGET_DIR, file);
-
-    if (fs.statSync(src).isFile()) {
-      fs.copyFileSync(src, dst);
-      console.log(`→ mirrored ${file}`);
-    }
-  });
+    fs.copyFileSync(src, dst);
+    console.log(`→ mirrored ${file}`);
+  }
 
   console.log("✅ UI READ-ONLY MIRROR COMPLETE");
 }
