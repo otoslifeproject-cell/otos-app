@@ -45,7 +45,7 @@ body {
   position: absolute;
   top: -6px;
   left: 36px;
-  height: 5px;     /* 🔥 DEFINITELY DIFFERENT */
+  height: 50px;     /* 🔥 DEFINITELY DIFFERENT */
   width: auto;
   display: block;
   pointer-events: none;
