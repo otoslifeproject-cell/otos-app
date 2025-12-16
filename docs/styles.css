@@ -1,127 +1,70 @@
-<!--
-  OTOS UI LAYER: 9E
-  STATUS: BASELINE (Logo + Hero + Layout)
-  NOTE: GitHub Pages root IS /docs, so DO NOT include /docs/ in asset paths.
--->
+/* ======================================================
+   OTOS UI — STYLESHEET
+   Layer: 9E (Authoritative)
+   ====================================================== */
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OTOS Cockpit</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  <body>
-    <!-- SKYHAWK STATUS BAR (ticker stays running) -->
-    <div class="skyhawk-bar" aria-label="Skyhawk status">
-      <div class="skyhawk-ticker">
-        <span>SKYHAWK</span>
-        <span>Signals nominal</span>
-        <span>Latency: 14ms</span>
-        <span>Feeds: 6 active</span>
-        <span>No anomalies detected</span>
-        <span class="sep">•</span>
+html, body {
+  height: 100%;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: linear-gradient(180deg, #f4f8fc 0%, #eef3f9 100%);
+  color: #0f172a;
+}
 
-        <span>SKYHAWK</span>
-        <span>Signals nominal</span>
-        <span>Latency: 14ms</span>
-        <span>Feeds: 6 active</span>
-        <span>No anomalies detected</span>
-        <span class="sep">•</span>
+/* SKYHAWK BAR */
+.skyhawk-bar {
+  background: #020617;
+  color: #c7d2fe;
+  font-size: 12px;
+  overflow: hidden;
+}
 
-        <span>SKYHAWK</span>
-        <span>Signals nominal</span>
-        <span>Latency: 14ms</span>
-        <span>Feeds: 6 active</span>
-        <span>No anomalies detected</span>
-      </div>
-    </div>
+.skyhawk-ticker {
+  display: flex;
+  gap: 16px;
+  padding: 6px 16px;
+  white-space: nowrap;
+}
 
-    <!-- HERO / BRAND (brain + OTOS letters split, brain can animate later) -->
-    <header class="hero">
-      <div class="brand">
-        <!-- IMPORTANT: GitHub Pages root IS /docs, so do NOT include /docs/ in this path -->
-        <img
-          class="brand-brain"
-          src="brand/brain/OTOS_BRAIN_ORANGE.svg"
-          alt="OTOS Brain"
-          draggable="false"
-        />
-        <div class="brand-word">OTOS</div>
-      </div>
-    </header>
+/* BRAND / LOGO */
+.hero {
+  padding: 10px 20px 6px 20px;
+}
 
-    <!-- MAIN LAYOUT -->
-    <main class="layout">
-      <section class="main">
-        <h1>OTOS Cockpit</h1>
-        <p class="sub">Sovereign life-management surface. Human authority at the centre.</p>
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-        <div class="panel">
-          <div class="panel-title">TOP PRIORITY</div>
+.brand-brain {
+  height: 40px;
+  width: auto;
+  display: block;
+}
 
-          <div class="priority">
-            <div class="priority-item primary">
-              <div class="priority-head">Lock Parent Node Governance</div>
-              <div class="priority-sub">Confirm runtime, memory and authority boundaries.</div>
-            </div>
+.brand-word {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
 
-            <div class="priority-item">
-              <div class="priority-head">Prepare Demo Narrative</div>
-              <div class="priority-sub">Sequence system layers for walkthrough.</div>
-            </div>
+/* LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  min-height: calc(100vh - 80px);
+}
 
-            <div class="priority-item">
-              <div class="priority-head">Stabilise Visual Frame</div>
-              <div class="priority-sub">Freeze layout before logic injection.</div>
-            </div>
-          </div>
-        </div>
+.main {
+  padding: 20px 32px;
+}
 
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-num">12</div>
-            <div class="stat-label">Active Tasks</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-num">1</div>
-            <div class="stat-label">Agents Online</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-num">37</div>
-            <div class="stat-label">Signals</div>
-          </div>
-
-          <div class="stat">
-            <div class="stat-num">STABLE</div>
-            <div class="stat-label">System State</div>
-          </div>
-        </div>
-
-        <footer class="telemetry">
-          <div class="telemetry-title">TELEMETRY (PREVIEW)</div>
-          <div class="telemetry-sub">
-            System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
-          </div>
-        </footer>
-      </section>
-
-      <!-- RIGHT SIDE -->
-      <aside class="side">
-        <div class="side-card">
-          <div class="side-title">EYE20 — Parent Node</div>
-          <div class="side-sub">Authoritative · Memory-anchored · Non-drifting</div>
-        </div>
-
-        <div class="side-card">
-          <div class="side-title green"><span class="dot"></span>Andy — Execution Agent</div>
-          <div class="side-sub">Scoped execution only · Read-only · Awaiting instruction</div>
-        </div>
-      </aside>
-    </main>
-  </body>
-</html>
+.side {
+  background: rgba
