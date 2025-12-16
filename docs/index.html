@@ -2,83 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OTOS Cockpit</title>
 
-  <!-- IMPORTANT: styles.css lives in /docs -->
-  <link rel="stylesheet" href="docs/styles.css" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
-
 <body>
 
-  <!-- SKYHAWK BAR -->
+  <!-- SKYHAWK STATUS BAR (UNCHANGED) -->
   <div class="skyhawk-bar">
-    <span>SKYHAWK</span>
-    <span>Signals nominal</span>
-    <span>Latency: 14ms</span>
-    <span>Feeds: 6 active</span>
-    <span>No anomalies detected</span>
+    SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
   </div>
 
-  <!-- HEADER / LOGO -->
-  <header class="top-header">
-    <img
-      src="docs/brand/logo/otos-logo.png"
-      alt="OTOS"
-      class="logo"
-    />
+  <!-- HEADER / BRAND -->
+  <header class="app-header">
+    <div class="brand-lockup">
+      <img
+        src="./brand/logo/otos-logo.png"
+        alt="OTOS"
+        class="otos-logo"
+      />
+    </div>
   </header>
 
-  <!-- MAIN LAYOUT -->
-  <div class="layout">
+  <!-- MAIN CONTENT -->
+  <main class="app-main">
 
-    <main class="main">
+    <section class="intro">
       <h1>OTOS Cockpit</h1>
       <p class="subtitle">
-        Sovereign life-management surface. Human authority at the centre.
+        Enterprise execution surface. Human authority at the centre.
+        Agents operate within visible, bounded lanes.
       </p>
+    </section>
 
-      <section class="panel">
-        <h2>Top Priority</h2>
-
-        <div class="item">Lock Parent Node Governance</div>
-        <div class="item">Prepare Demo Narrative</div>
-        <div class="item">Stabilise Visual Frame</div>
-      </section>
-
-      <section class="metrics">
-        <div class="metric">
-          <div class="value">12</div>
-          <div class="label">Active Tasks</div>
-        </div>
-        <div class="metric">
-          <div class="value">1</div>
-          <div class="label">Agents Online</div>
-        </div>
-        <div class="metric">
-          <div class="value">37</div>
-          <div class="label">Signals</div>
-        </div>
-        <div class="metric">
-          <div class="value">STABLE</div>
-          <div class="label">System State</div>
-        </div>
-      </section>
-    </main>
-
-    <aside class="side">
-      <div class="side-card">
-        <strong>EYE20 — Parent Node</strong>
-        <div>Authoritative · Memory-anchored · Non-drifting</div>
+    <section class="top-priority">
+      <div class="card primary">
+        <strong>Lock Parent Node Governance</strong>
+        <span>Confirm write-gates and authority boundaries.</span>
       </div>
 
-      <div class="side-card agent">
-        <strong>Andy — Execution Agent</strong>
-        <div>Scoped execution · Read-only · Awaiting instruction</div>
+      <div class="card">
+        <strong>Prepare Demo Narrative</strong>
+        <span>Sequence system layers for walkthrough.</span>
       </div>
-    </aside>
 
-  </div>
+      <div class="card">
+        <strong>Stabilise Visual Frame</strong>
+        <span>Freeze layout before logic injection.</span>
+      </div>
+    </section>
+
+    <section class="metrics">
+      <div class="metric"><strong>12</strong><span>Active Tasks</span></div>
+      <div class="metric"><strong>1</strong><span>Agents Online</span></div>
+      <div class="metric"><strong>37</strong><span>Signals</span></div>
+      <div class="metric"><strong>STABLE</strong><span>System State</span></div>
+    </section>
+
+    <section class="telemetry">
+      TELEMETRY (PREVIEW) — System heartbeat nominal.
+      Memory write-gates locked. No autonomous execution detected.
+    </section>
+
+  </main>
+
+  <!-- RIGHT SIDEBAR (UNCHANGED POSITION) -->
+  <aside class="side-panel">
+    <div class="node-card">
+      <strong>EYE20 — Parent Node</strong>
+      <span>Authoritative · Memory-anchored · Non-drifting</span>
+    </div>
+
+    <div class="node-card">
+      <strong>Andy — Execution Agent</strong>
+      <span>Scoped execution · Read-only · Awaiting instruction</span>
+    </div>
+  </aside>
 
 </body>
 </html>
+
