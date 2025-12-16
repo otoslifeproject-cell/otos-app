@@ -1,0 +1,13 @@
+{
+  "node_id": "EYE20",
+  "role": "PARENT_NODE",
+  "ui_layer": "9C",
+  "status": "ACTIVE",
+  "authority_mode": "HUMAN_ONLY",
+  "memory_mode": "ANCHOR_ONLY",
+  "export_required_on_exit": true,
+  "rehydrate_required_on_load": true,
+  "last_rehydrated_at": null,
+  "current_focus_id": null,
+  "version_registry_ref": "VERSION_REGISTRY.md"
+}
