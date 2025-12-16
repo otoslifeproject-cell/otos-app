@@ -1,33 +1,15 @@
 /* ================================
-   OTOS Cockpit — Base Styles (9C LOCKED)
-   ================================ */
-
-/* RESET */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* BODY */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
-  background: linear-gradient(180deg, #eef4fb 0%, #f7fbff 100%);
-  color: #0b1a2b;
-}
-
-/* SKYHAWK STATUS BAR */
    SKYHAWK STATUS BAR
 ================================ */
 .skyhawk-bar {
   background: #0b1220;
   color: #cbd5e1;
-@@ -27,31 +10,48 @@ body {
+  font-size: 13px;
+  padding: 6px 14px;
+  white-space: nowrap;
   overflow: hidden;
 }
 
-/* HEADER (positioning context) */
 /* ================================
    HEADER (POSITIONING CONTEXT)
 ================================ */
@@ -37,7 +19,6 @@ body {
   min-height: 140px;
 }
 
-/* BRAND WRAPPER */
 /* ================================
    BRAND WRAPPER
 ================================ */
@@ -46,17 +27,14 @@ body {
   height: 0;
 }
 
-/* LOGO — HERO MARK (TUNED) */
 /* ================================
    LOGO — HERO MARK (CONTROLLED)
    Smooth scaling. No jumps.
 ================================ */
 .otos-logo {
   position: absolute;
-  top: -6px;
   top: -8px;
   left: 36px;
-  height: 100px;     /* 🔥 DEFINITELY DIFFERENT */
 
   /* BASE SIZE */
   height: 400px;
@@ -71,18 +49,17 @@ body {
   pointer-events: none;
 }
 
-/* PAGE LAYOUT */
 /* ================================
    PAGE LAYOUT
 ================================ */
 .page {
   padding: 10px 36px 42px 36px;
   display: grid;
-@@ -60,39 +60,15 @@ body {
+  grid-template-columns: minmax(680px, 1fr) 360px;
+  gap: 22px;
   align-items: start;
 }
 
-/* RESPONSIVE */
 /* ================================
    RESPONSIVE
 ================================ */
@@ -90,36 +67,7 @@ body {
   .page {
     grid-template-columns: 1fr;
   }
-}
 
-/* CARDS */
-.card {
-  background: #ffffff;
-  border-radius: 14px;
-  padding: 18px 20px;
-  box-shadow: 0 10px 30px rgba(15, 30, 60, 0.06);
-}
-
-/* PRIORITY */
-.priority {
-  border: 2px solid #c7d2fe;
-}
-
-/* STATS */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-}
-
-/* TELEMETRY */
-.telemetry {
-  margin-top: 18px;
-  padding: 14px 18px;
-  background: #f1f6fc;
-  border-radius: 12px;
-  font-size: 13px;
-  color: #334155;
   .otos-logo {
     transform: scale(0.75);
   }
