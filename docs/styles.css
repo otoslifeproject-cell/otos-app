@@ -37,11 +37,11 @@
   left: 36px;
 
   /* BASE SIZE */
-  height: 500px;
+  height: 450px;
   width: auto;
 
   /* SMOOTH CONTROL */
-  max-height: 600px;
+  max-height: 550px;
   transform: scale(0.9);
   transform-origin: top left;
 
