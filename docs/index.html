@@ -44,18 +44,22 @@
     }
 
     /* =========================
-       HEADER — LOGO ONLY
+       HEADER (LOGO + TEXT ROW)
        ========================= */
     header.top-header {
-      padding: 24px 32px 12px 32px;
+      padding: 22px 32px;
+    }
+
+    .brand-row {
       display: flex;
       align-items: center;
+      gap: 18px;
     }
 
     .brand-logo {
-      height: 56px;
+      height: 64px;
       width: auto;
-      display: block;
+      flex-shrink: 0;
       animation: brainPulse 6s ease-in-out infinite;
     }
 
@@ -74,22 +78,23 @@
       }
     }
 
+    .brand-text h1 {
+      font-size: 28px;
+      margin: 0 0 4px 0;
+    }
+
+    .brand-text p {
+      margin: 0;
+      font-size: 15px;
+      color: var(--grey-text);
+      max-width: 720px;
+    }
+
     /* =========================
        MAIN LAYOUT
        ========================= */
     main {
       padding: 0 32px 40px 32px;
-    }
-
-    h1 {
-      font-size: 26px;
-      margin: 12px 0 6px 0;
-    }
-
-    .subtitle {
-      color: var(--grey-text);
-      max-width: 720px;
-      font-size: 15px;
     }
 
     .card {
@@ -139,7 +144,7 @@
     aside.sidebar {
       position: fixed;
       right: 24px;
-      top: 96px;
+      top: 120px;
       width: 260px;
     }
 
@@ -179,9 +184,6 @@
       100% { opacity: 1; }
     }
 
-    /* =========================
-       TELEMETRY
-       ========================= */
     .telemetry {
       margin-top: 18px;
       padding: 14px;
@@ -198,28 +200,32 @@
 
   <div class="ticker">
     <strong>SKYHAWK</strong>
-    <span>Signals nominal</span>
+    <span>Signals Nominal</span>
     <span>Latency: 14ms</span>
     <span>Feeds: 6 active</span>
     <span>No anomalies detected</span>
   </div>
 
-  <!-- LOGO ONLY -->
+  <!-- HEADER ROW -->
   <header class="top-header">
-    <img
-      src="otos%20long%20transparent%20logo.png"
-      alt="OTOS logo"
-      class="brand-logo"
-    />
+    <div class="brand-row">
+      <img
+        src="otos%20long%20transparent%20logo.png"
+        alt="OTOS logo"
+        class="brand-logo"
+      />
+
+      <div class="brand-text">
+        <h1>OTOS Cockpit</h1>
+        <p>
+          Enterprise execution surface. Human authority at the centre.
+          Agents operate within visible, bounded lanes.
+        </p>
+      </div>
+    </div>
   </header>
 
   <main>
-    <h1>OTOS Cockpit</h1>
-    <p class="subtitle">
-      Enterprise execution surface. Human authority at the centre.
-      Agents operate within visible, bounded lanes.
-    </p>
-
     <div class="card">
       <h3>TOP PRIORITY</h3>
 
