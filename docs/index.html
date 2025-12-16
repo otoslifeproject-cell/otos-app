@@ -30,16 +30,16 @@
     /* SKYHAWK TICKER */
     .ticker {
       height: 42px;
-      background: linear-gradient(90deg, #020617, #020617);
+      background: #020617;
       color: #e5e7eb;
       display: flex;
       align-items: center;
       padding: 0 16px;
       font-size: 13px;
       letter-spacing: 0.04em;
+      gap: 28px;
+      white-space: nowrap;
     }
-
-    .ticker span { margin-right: 28px; opacity: 0.85; }
 
     /* LAYOUT */
     .layout {
@@ -48,40 +48,38 @@
       min-height: calc(100vh - 42px);
     }
 
-    .main { padding: 36px 40px; }
+    /* MAIN */
+    main {
+      padding: 36px 40px;
+    }
 
-    /* HEADER WITH LOGO */
+    /* HEADER (LOGO + TITLE) */
     .header {
+      margin-bottom: 28px;
+    }
+
+    .header-left {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 6px;
+      gap: 16px;
     }
 
     .logo {
-      width: 42px;
-      height: 42px;
-      object-fit: contain;
-      opacity: 0;
-      transform: translateY(4px);
-      animation: logoIn 800ms ease-out forwards;
-    }
-
-    @keyframes logoIn {
-      to { opacity: 1; transform: translateY(0); }
+      height: 36px;
+      width: auto;
+      display: block;
     }
 
     .title {
       font-size: 34px;
       font-weight: 700;
-      margin: 0;
+      margin-bottom: 6px;
     }
 
     .subtitle {
       max-width: 640px;
       font-size: 15px;
       color: var(--grey-text);
-      margin-bottom: 28px;
       line-height: 1.6;
     }
 
@@ -96,8 +94,8 @@
 
     .priority-stack h3 {
       margin: 0 0 14px;
-      font-size: 14px;
-      letter-spacing: 0.08em;
+      font-size: 13px;
+      letter-spacing: 0.1em;
       color: #1e293b;
     }
 
@@ -110,13 +108,17 @@
       font-size: 14px;
     }
 
-    .task strong { display: block; margin-bottom: 4px; }
+    .task strong {
+      display: block;
+      margin-bottom: 4px;
+    }
 
     /* STATS */
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
+      margin-bottom: 22px;
     }
 
     .stat {
@@ -133,21 +135,23 @@
       letter-spacing: 0.05em;
     }
 
-    .stat span { font-size: 26px; font-weight: 600; }
+    .stat span {
+      font-size: 26px;
+      font-weight: 600;
+    }
 
     /* TELEMETRY */
     .telemetry {
-      margin-top: 18px;
-      background: #f1f5f9;
-      border-radius: 14px;
-      padding: 16px;
+      background: #f8fafc;
       border: 1px dashed var(--border-soft);
-      color: #334155;
+      border-radius: 14px;
+      padding: 16px 18px;
       font-size: 13px;
+      color: var(--grey-text);
     }
 
     /* SIDEBAR */
-    .sidebar {
+    aside {
       background: #f8fafc;
       border-left: 1px solid var(--border-soft);
       display: flex;
@@ -166,8 +170,16 @@
       color: #334155;
     }
 
-    .eye { font-weight: 700; color: var(--blue-strong); margin-bottom: 8px; }
-    .andy { color: var(--green-agent); font-weight: 600; }
+    .eye {
+      font-weight: 700;
+      color: var(--blue-strong);
+      margin-bottom: 8px;
+    }
+
+    .andy {
+      color: var(--green-agent);
+      font-weight: 600;
+    }
 
     .panel p {
       font-size: 13px;
@@ -190,18 +202,21 @@
   <div class="layout">
 
     <!-- MAIN -->
-    <main class="main">
+    <main>
 
-      <!-- HEADER + LOGO -->
-      <div class="header">
-        <img class="logo" src="./otos-logo.png" alt="OTOS logo" />
-        <h1 class="title">OTOS Cockpit</h1>
-      </div>
-
-      <div class="subtitle">
-        Enterprise execution surface.  
-        Human authority at the centre. Agents operate within visible, bounded lanes.
-      </div>
+      <!-- HEADER -->
+      <header class="header">
+        <div class="header-left">
+          <img src="otos-logo.png" alt="OTOS logo" class="logo" />
+          <div>
+            <div class="title">OTOS Cockpit</div>
+            <div class="subtitle">
+              Enterprise execution surface. Human authority at the centre.
+              Agents operate within visible, bounded lanes.
+            </div>
+          </div>
+        </div>
+      </header>
 
       <!-- PRIORITY -->
       <section class="priority-stack">
@@ -225,31 +240,51 @@
 
       <!-- STATS -->
       <section class="stats">
-        <div class="stat"><h4>ACTIVE TASKS</h4><span>12</span></div>
-        <div class="stat"><h4>AGENTS ONLINE</h4><span>1</span></div>
-        <div class="stat"><h4>SIGNALS</h4><span>37</span></div>
-        <div class="stat"><h4>SYSTEM STATE</h4><span>STABLE</span></div>
+        <div class="stat">
+          <h4>ACTIVE TASKS</h4>
+          <span>12</span>
+        </div>
+        <div class="stat">
+          <h4>AGENTS ONLINE</h4>
+          <span>1</span>
+        </div>
+        <div class="stat">
+          <h4>SIGNALS</h4>
+          <span>37</span>
+        </div>
+        <div class="stat">
+          <h4>SYSTEM STATE</h4>
+          <span>STABLE</span>
+        </div>
       </section>
 
       <!-- TELEMETRY -->
       <section class="telemetry">
-        <strong>TELEMETRY (PREVIEW)</strong><br/>
-        System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
+        <strong>TELEMETRY (PREVIEW)</strong><br />
+        System heartbeat nominal. Memory write-gates locked.
+        No autonomous execution detected.
       </section>
 
     </main>
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside>
+
       <div class="panel">
         <div class="eye">EYE20 — Parent Node</div>
-        <p>Authoritative · Memory-anchored · Non-drifting</p>
+        <p>
+          Authoritative · Memory-anchored · Non-drifting
+        </p>
       </div>
 
       <div class="panel">
         <div class="andy">Andy — Execution Agent</div>
-        <p>Scoped execution only · Read-only · Awaiting instruction</p>
+        <p>
+          Scoped execution only · Read-only<br />
+          Awaiting instruction
+        </p>
       </div>
+
     </aside>
 
   </div>
