@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS — Enterprise Control Surface</title>
+  <title>OTOS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     :root {
       --bg-main: #eef4fb;
       --bg-card: #ffffff;
-      --blue-soft: #dbeafe;
-      --grey-text: #475569;
       --border-soft: rgba(0,0,0,0.08);
+      --grey-text: #475569;
     }
 
     * {
@@ -21,12 +20,12 @@
 
     body {
       margin: 0;
-      background: radial-gradient(circle at bottom right, var(--blue-soft) 0%, var(--bg-main) 55%);
+      background: radial-gradient(circle at bottom right, #dbeafe 0%, var(--bg-main) 55%);
       color: #0f172a;
     }
 
     /* =========================
-       SKYHAWK TICKER
+       SKYHAWK BAR (DO NOT TOUCH)
     ========================== */
     .ticker {
       height: 42px;
@@ -36,44 +35,26 @@
       align-items: center;
       padding: 0 18px;
       font-size: 13px;
-      letter-spacing: 0.2px;
     }
 
     /* =========================
-       BRAND HEADER (LOGO ONLY)
+       LOGO ONLY
     ========================== */
-    .brand-header {
-      padding: 26px 28px 18px 28px;
+    .logo-only {
+      padding: 20px 24px 8px 24px;
     }
 
-    .brand-logo {
-      width: 180px;
-      max-width: 100%;
-    }
-
-    .brand-logo img {
-      width: 100%;
-      height: auto;
+    .logo-only img {
+      height: 56px;          /* ← correct visual size */
+      width: auto;
       display: block;
-      /* animation placeholder – OFF for now */
-    }
-
-    .brand-subtitle {
-      margin-top: 10px;
-      max-width: 640px;
-      font-size: 15px;
-      color: var(--grey-text);
-      line-height: 1.45;
     }
 
     /* =========================
-       MAIN LAYOUT
+       MAIN CONTENT
     ========================== */
     main {
-      padding: 10px 28px 40px 28px;
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 24px;
+      padding: 12px 24px 40px 24px;
     }
 
     .card {
@@ -97,120 +78,41 @@
       padding: 14px;
       margin-bottom: 10px;
     }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    .stat {
-      background: var(--bg-card);
-      border-radius: 12px;
-      border: 1px solid var(--border-soft);
-      padding: 14px;
-    }
-
-    .stat strong {
-      font-size: 22px;
-      display: block;
-    }
-
-    aside .panel {
-      background: var(--bg-card);
-      border-radius: 14px;
-      border: 1px solid var(--border-soft);
-      padding: 16px;
-      margin-bottom: 14px;
-    }
-
-    .agent {
-      color: #16a34a;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-
-    .telemetry {
-      margin-top: 18px;
-      font-size: 13px;
-      color: #64748b;
-      border: 1px dashed var(--border-soft);
-      padding: 14px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.5);
-    }
-
-    @media (max-width: 900px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-    }
   </style>
 </head>
 
 <body>
 
+  <!-- SKYHAWK -->
   <div class="ticker">
     🛰️ SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
   </div>
 
-  <!-- LOGO HEADER (NO TITLE TEXT) -->
-  <header class="brand-header">
-    <div class="brand-logo">
-      <img src="otos long transparent logo.png" alt="OTOS logo">
-    </div>
-    <div class="brand-subtitle">
-      Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.
-    </div>
-  </header>
+  <!-- LOGO ONLY -->
+  <div class="logo-only">
+    <img src="otos long transparent logo.png" alt="OTOS logo">
+  </div>
 
+  <!-- CONTENT -->
   <main>
+    <section class="priority card">
+      <h2>TOP PRIORITY</h2>
 
-    <section>
-      <div class="priority card">
-        <h2>TOP PRIORITY</h2>
-
-        <div class="item">
-          <strong>Lock Parent Node Governance</strong>
-          <p>Confirm write-gates and authority boundaries.</p>
-        </div>
-
-        <div class="item">
-          <strong>Prepare Demo Narrative</strong>
-          <p>Sequence system layers for stakeholder walkthrough.</p>
-        </div>
-
-        <div class="item">
-          <strong>Stabilise Visual Frame</strong>
-          <p>Freeze layout before logic injection.</p>
-        </div>
+      <div class="item">
+        <strong>Lock Parent Node Governance</strong>
+        <p>Confirm write-gates and authority boundaries.</p>
       </div>
 
-      <div class="stats">
-        <div class="stat"><strong>12</strong>Active Tasks</div>
-        <div class="stat"><strong>1</strong>Agents Online</div>
-        <div class="stat"><strong>37</strong>Signals</div>
-        <div class="stat"><strong>STABLE</strong>System State</div>
+      <div class="item">
+        <strong>Prepare Demo Narrative</strong>
+        <p>Sequence system layers for stakeholder walkthrough.</p>
       </div>
 
-      <div class="telemetry">
-        System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
+      <div class="item">
+        <strong>Stabilise Visual Frame</strong>
+        <p>Freeze layout before logic injection.</p>
       </div>
     </section>
-
-    <aside>
-      <div class="panel">
-        <strong>EYE20 — Parent Node</strong>
-        <p>Authoritative · Memory-anchored · Non-drifting</p>
-      </div>
-
-      <div class="panel">
-        <div class="agent">● Andy — Execution Agent</div>
-        <p>Scoped execution only · Read-only<br>Awaiting instruction</p>
-      </div>
-    </aside>
-
   </main>
 
 </body>
