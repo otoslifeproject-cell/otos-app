@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit – Enterprise Control Surface</title>
+  <title>OTOS — Enterprise Control Surface</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -11,7 +11,6 @@
       --bg-card: #ffffff;
       --blue-soft: #dbeafe;
       --blue-strong: #2563eb;
-      --green-agent: #16a34a;
       --grey-text: #475569;
       --border-soft: rgba(0,0,0,0.08);
     }
@@ -23,13 +22,13 @@
 
     body {
       margin: 0;
-      background: radial-gradient(circle at bottom right, #dbeafe 0%, var(--bg-main) 55%);
+      background: radial-gradient(circle at bottom right, var(--blue-soft) 0%, var(--bg-main) 55%);
       color: #0f172a;
     }
 
     /* =========================
        SKYHAWK TICKER
-       ========================= */
+    ========================== */
     .ticker {
       height: 42px;
       background: #020617;
@@ -39,159 +38,145 @@
       padding: 0 18px;
       font-size: 13px;
       letter-spacing: 0.2px;
-      gap: 18px;
-      white-space: nowrap;
     }
 
     /* =========================
-       HEADER (LOGO + TEXT ROW)
-       ========================= */
-    header.top-header {
-      padding: 22px 32px;
-    }
-
-    .brand-row {
+       HEADER BRAND BLOCK
+    ========================== */
+    .brand-header {
+      padding: 26px 28px 18px 28px;
       display: flex;
       align-items: center;
       gap: 18px;
     }
 
-    .brand-logo {
-      height: 64px;
-      width: auto;
-      flex-shrink: 0;
+    .brand-icon {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-icon img {
+      width: 100%;
+      height: auto;
+      display: block;
       animation: brainPulse 6s ease-in-out infinite;
+      transform-origin: center;
     }
 
     @keyframes brainPulse {
-      0% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 0 rgba(255,140,0,0));
-      }
-      50% {
-        transform: scale(1.04);
-        filter: drop-shadow(0 0 6px rgba(255,140,0,0.35));
-      }
-      100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 0 rgba(255,140,0,0));
-      }
+      0%   { transform: scale(1); opacity: 1; }
+      50%  { transform: scale(1.06); opacity: 0.92; }
+      100% { transform: scale(1); opacity: 1; }
     }
 
     .brand-text h1 {
-      font-size: 28px;
-      margin: 0 0 4px 0;
+      margin: 0;
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
     }
 
     .brand-text p {
-      margin: 0;
+      margin: 6px 0 0 0;
+      max-width: 640px;
       font-size: 15px;
       color: var(--grey-text);
-      max-width: 720px;
+      line-height: 1.45;
     }
 
     /* =========================
        MAIN LAYOUT
-       ========================= */
+    ========================== */
     main {
-      padding: 0 32px 40px 32px;
+      padding: 10px 28px 40px 28px;
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
     }
 
     .card {
       background: var(--bg-card);
       border-radius: 14px;
       border: 1px solid var(--border-soft);
-      padding: 18px;
-      margin-top: 18px;
+      padding: 16px 18px;
     }
 
     .card h3 {
-      margin: 0 0 10px 0;
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      color: #334155;
+      margin: 0 0 6px 0;
+      font-size: 15px;
     }
 
-    .task {
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--grey-text);
+    }
+
+    .priority h2 {
+      margin: 0 0 14px 0;
+      font-size: 13px;
+      letter-spacing: 1.2px;
+      color: #64748b;
+    }
+
+    .priority .item {
       background: #f8fafc;
       border: 1px solid var(--border-soft);
       border-radius: 10px;
-      padding: 12px 14px;
+      padding: 14px;
       margin-bottom: 10px;
     }
 
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+      gap: 16px;
       margin-top: 18px;
     }
 
     .stat {
       background: var(--bg-card);
       border-radius: 12px;
-      padding: 14px;
       border: 1px solid var(--border-soft);
+      padding: 14px;
     }
 
     .stat strong {
       font-size: 22px;
+      display: block;
     }
 
-    /* =========================
-       SIDEBAR
-       ========================= */
-    aside.sidebar {
-      position: fixed;
-      right: 24px;
-      top: 120px;
-      width: 260px;
-    }
-
-    .panel {
+    aside .panel {
       background: var(--bg-card);
       border-radius: 14px;
       border: 1px solid var(--border-soft);
-      padding: 14px;
+      padding: 16px;
       margin-bottom: 14px;
     }
 
-    .eye {
+    .agent {
+      color: #16a34a;
       font-weight: 600;
-      color: var(--blue-strong);
       margin-bottom: 6px;
-    }
-
-    .andy {
-      font-weight: 600;
-      color: var(--green-agent);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--green-agent);
-      animation: dotPulse 1.8s infinite;
-    }
-
-    @keyframes dotPulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.3; }
-      100% { opacity: 1; }
     }
 
     .telemetry {
       margin-top: 18px;
-      padding: 14px;
-      border-radius: 12px;
-      border: 1px dashed var(--border-soft);
-      background: #f8fafc;
       font-size: 13px;
-      color: #334155;
+      color: #64748b;
+      border: 1px dashed var(--border-soft);
+      padding: 14px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.5);
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -199,81 +184,67 @@
 <body>
 
   <div class="ticker">
-    <strong>SKYHAWK</strong>
-    <span>Signals Nominal</span>
-    <span>Latency: 14ms</span>
-    <span>Feeds: 6 active</span>
-    <span>No anomalies detected</span>
+    🛰️ SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
   </div>
 
-  <!-- HEADER ROW -->
-  <header class="top-header">
-    <div class="brand-row">
-      <img
-        src="otos%20long%20transparent%20logo.png"
-        alt="OTOS logo"
-        class="brand-logo"
-      />
-
-      <div class="brand-text">
-        <h1>OTOS Cockpit</h1>
-        <p>
-          Enterprise execution surface. Human authority at the centre.
-          Agents operate within visible, bounded lanes.
-        </p>
-      </div>
+  <!-- BRAND HEADER -->
+  <header class="brand-header">
+    <div class="brand-icon">
+      <img src="otos long transparent logo.png" alt="OTOS brain mark">
+    </div>
+    <div class="brand-text">
+      <h1>OTOS</h1>
+      <p>Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.</p>
     </div>
   </header>
 
   <main>
-    <div class="card">
-      <h3>TOP PRIORITY</h3>
 
-      <div class="task">
-        <strong>Lock Parent Node Governance</strong><br />
-        Confirm write-gates and authority boundaries.
+    <section>
+      <div class="priority card">
+        <h2>TOP PRIORITY</h2>
+
+        <div class="item">
+          <strong>Lock Parent Node Governance</strong>
+          <p>Confirm write-gates and authority boundaries.</p>
+        </div>
+
+        <div class="item">
+          <strong>Prepare Demo Narrative</strong>
+          <p>Sequence system layers for stakeholder walkthrough.</p>
+        </div>
+
+        <div class="item">
+          <strong>Stabilise Visual Frame</strong>
+          <p>Freeze layout before logic injection.</p>
+        </div>
       </div>
 
-      <div class="task">
-        <strong>Prepare Demo Narrative</strong><br />
-        Sequence system layers for stakeholder walkthrough.
+      <div class="stats">
+        <div class="stat"><strong>12</strong>Active Tasks</div>
+        <div class="stat"><strong>1</strong>Agents Online</div>
+        <div class="stat"><strong>37</strong>Signals</div>
+        <div class="stat"><strong>STABLE</strong>System State</div>
       </div>
 
-      <div class="task">
-        <strong>Stabilise Visual Frame</strong><br />
-        Freeze layout before logic injection.
+      <div class="telemetry">
+        System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
       </div>
-    </div>
+    </section>
 
-    <div class="stats">
-      <div class="stat"><strong>12</strong><br />Active Tasks</div>
-      <div class="stat"><strong>1</strong><br />Agents Online</div>
-      <div class="stat"><strong>37</strong><br />Signals</div>
-      <div class="stat"><strong>STABLE</strong><br />System State</div>
-    </div>
+    <aside>
+      <div class="panel">
+        <strong>EYE20 — Parent Node</strong>
+        <p>Authoritative · Memory-anchored · Non-drifting</p>
+      </div>
 
-    <div class="telemetry">
-      <strong>TELEMETRY (PREVIEW)</strong><br />
-      System heartbeat nominal. Memory write-gates locked.
-      No autonomous execution detected.
-    </div>
+      <div class="panel">
+        <div class="agent">● Andy — Execution Agent</div>
+        <p>Scoped execution only · Read-only<br/>Awaiting instruction</p>
+      </div>
+    </aside>
+
   </main>
-
-  <aside class="sidebar">
-    <div class="panel">
-      <div class="eye">EYE20 — Parent Node</div>
-      Authoritative · Memory-anchored · Non-drifting
-    </div>
-
-    <div class="panel">
-      <div class="andy">
-        <span class="pulse-dot"></span>
-        Andy — Execution Agent
-      </div>
-      Scoped execution only · Read-only<br />
-      Awaiting instruction
-    </div>
-  </aside>
 
 </body>
 </html>
