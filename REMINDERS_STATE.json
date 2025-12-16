@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "next_due_at": null,
+  "escalation_mode": "RADAR_GATED",
+  "last_check_at": null
+}
