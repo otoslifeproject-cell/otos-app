@@ -1,0 +1,13 @@
+{
+  "boot_order": [
+    "PARENT_NODE_STATE.json",
+    "LOCKS.json",
+    "EXPORT_POINTER.json",
+    "FOCUS_STACK.json",
+    "REMINDERS_STATE.json",
+    "AGENTS_STATE.json"
+  ],
+  "fail_closed": true,
+  "require_rehydrate": true,
+  "runtime_version": "EYE20-RUNTIME-1.0"
+}
