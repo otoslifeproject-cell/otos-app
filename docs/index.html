@@ -5,81 +5,108 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OTOS Cockpit</title>
 
+  <!-- Styles -->
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
 
-  <!-- SKYHAWK STATUS BAR (UNCHANGED) -->
-  <div class="skyhawk-bar">
-    SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
+<body>
+  <!-- SKYHAWK STATUS BAR (ticker) -->
+  <div class="skyhawk-bar" role="status" aria-label="SkyHawk status bar">
+    <div class="skyhawk-track">
+      <div class="skyhawk-ticker">
+        <span>SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected</span>
+        <span>SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected</span>
+        <span>SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected</span>
+      </div>
+    </div>
   </div>
 
-  <!-- HEADER / BRAND -->
+  <!-- HEADER -->
   <header class="app-header">
-    <div class="brand-lockup">
+    <div class="brand">
+      <!-- YOUR LOGO (PNG) -->
       <img
+        class="otos-logo"
         src="./brand/logo/otos-logo.png"
         alt="OTOS"
-        class="otos-logo"
+        loading="eager"
+        decoding="async"
       />
     </div>
   </header>
 
-  <!-- MAIN CONTENT -->
-  <main class="app-main">
+  <!-- MAIN LAYOUT -->
+  <main class="page">
+    <section class="main">
+      <h1 class="title">OTOS Cockpit</h1>
+      <p class="subtitle">Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.</p>
 
-    <section class="intro">
-      <h1>OTOS Cockpit</h1>
-      <p class="subtitle">
-        Enterprise execution surface. Human authority at the centre.
-        Agents operate within visible, bounded lanes.
-      </p>
-    </section>
+      <div class="panel">
+        <div class="panel-hdr">TOP PRIORITY</div>
 
-    <section class="top-priority">
-      <div class="card primary">
-        <strong>Lock Parent Node Governance</strong>
-        <span>Confirm write-gates and authority boundaries.</span>
+        <div class="priority-list">
+          <div class="priority-item is-active">
+            <div class="priority-title">Lock Parent Node Governance</div>
+            <div class="priority-desc">Confirm write-gates and authority boundaries.</div>
+          </div>
+
+          <div class="priority-item">
+            <div class="priority-title">Prepare Demo Narrative</div>
+            <div class="priority-desc">Sequence system layers for walkthrough.</div>
+          </div>
+
+          <div class="priority-item">
+            <div class="priority-title">Stabilise Visual Frame</div>
+            <div class="priority-desc">Freeze layout before logic injection.</div>
+          </div>
+        </div>
       </div>
 
-      <div class="card">
-        <strong>Prepare Demo Narrative</strong>
-        <span>Sequence system layers for walkthrough.</span>
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-label">ACTIVE TASKS</div>
+          <div class="metric-value">12</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">AGENTS ONLINE</div>
+          <div class="metric-value">1</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">SIGNALS</div>
+          <div class="metric-value">37</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-label">SYSTEM STATE</div>
+          <div class="metric-value">STABLE</div>
+        </div>
       </div>
 
-      <div class="card">
-        <strong>Stabilise Visual Frame</strong>
-        <span>Freeze layout before logic injection.</span>
+      <div class="telemetry">
+        <div class="telemetry-hdr">TELEMETRY (PREVIEW)</div>
+        <div class="telemetry-body">
+          System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
+        </div>
       </div>
     </section>
 
-    <section class="metrics">
-      <div class="metric"><strong>12</strong><span>Active Tasks</span></div>
-      <div class="metric"><strong>1</strong><span>Agents Online</span></div>
-      <div class="metric"><strong>37</strong><span>Signals</span></div>
-      <div class="metric"><strong>STABLE</strong><span>System State</span></div>
-    </section>
+    <!-- SIDEBAR -->
+    <aside class="side">
+      <div class="side-card">
+        <div class="side-title">EYE20 — Parent Node</div>
+        <div class="side-sub">Authoritative · Memory-anchored · Non-drifting</div>
+      </div>
 
-    <section class="telemetry">
-      TELEMETRY (PREVIEW) — System heartbeat nominal.
-      Memory write-gates locked. No autonomous execution detected.
-    </section>
-
+      <div class="side-card">
+        <div class="side-title">
+          <span class="dot" aria-hidden="true"></span>
+          Andy — Execution Agent
+        </div>
+        <div class="side-sub">Scoped execution · Read-only · Awaiting instruction</div>
+      </div>
+    </aside>
   </main>
-
-  <!-- RIGHT SIDEBAR (UNCHANGED POSITION) -->
-  <aside class="side-panel">
-    <div class="node-card">
-      <strong>EYE20 — Parent Node</strong>
-      <span>Authoritative · Memory-anchored · Non-drifting</span>
-    </div>
-
-    <div class="node-card">
-      <strong>Andy — Execution Agent</strong>
-      <span>Scoped execution · Read-only · Awaiting instruction</span>
-    </div>
-  </aside>
-
 </body>
 </html>
-
