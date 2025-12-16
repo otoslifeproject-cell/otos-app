@@ -27,9 +27,49 @@
       color: #0f172a;
     }
 
-    /* ===============================
+    /* =========================
+       TOP HEADER / BRAND
+       ========================= */
+    header.top-header {
+      padding: 28px 36px 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      height: 42px;              /* << key control */
+      width: auto;
+      display: block;
+      animation: brainPulse 6s ease-in-out infinite;
+    }
+
+    @keyframes brainPulse {
+      0%   { transform: scale(1);   filter: drop-shadow(0 0 0 rgba(255,140,0,0)); }
+      50%  { transform: scale(1.04); filter: drop-shadow(0 0 6px rgba(255,140,0,0.35)); }
+      100% { transform: scale(1);   filter: drop-shadow(0 0 0 rgba(255,140,0,0)); }
+    }
+
+    .brand-text h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: var(--grey-text);
+      max-width: 720px;
+    }
+
+    /* =========================
        SKYHAWK TICKER
-       =============================== */
+       ========================= */
     .ticker {
       height: 42px;
       background: #020617;
@@ -41,70 +81,31 @@
       letter-spacing: 0.2px;
     }
 
-    /* ===============================
-       HEADER / BRAND
-       =============================== */
-    .top-header {
-      padding: 28px 36px 22px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    /* 🔒 HARD-LOCKED LOGO SIZE */
-    .brand-logo {
-      height: 52px;
-      max-height: 52px;
-      width: auto;
-      display: block;
-      flex-shrink: 0;
-    }
-
-    .brand-text h1 {
-      margin: 0;
-      font-size: 32px;
-      font-weight: 700;
-      line-height: 1.05;
-    }
-
-    .brand-text p {
-      margin: 6px 0 0;
-      font-size: 14px;
-      color: var(--grey-text);
-      max-width: 520px;
-    }
-
-    /* ===============================
-       LAYOUT
-       =============================== */
-    .layout {
+    /* =========================
+       MAIN LAYOUT
+       ========================= */
+    main {
+      padding: 22px 36px 40px;
       display: grid;
       grid-template-columns: 1fr 320px;
-      gap: 24px;
-      padding: 0 36px 40px;
+      gap: 22px;
     }
 
     .card {
       background: var(--bg-card);
       border-radius: 14px;
+      padding: 18px 20px;
       border: 1px solid var(--border-soft);
-      padding: 18px;
     }
 
     .card h3 {
-      margin: 0 0 12px;
-      font-size: 14px;
-      letter-spacing: 0.04em;
+      margin: 0 0 10px;
+      font-size: 13px;
+      letter-spacing: 0.08em;
       color: #334155;
     }
 
-    /* ===============================
-       PRIORITY LIST
-       =============================== */
-    .priority-item {
+    .task {
       padding: 12px 14px;
       border-radius: 10px;
       background: #f8fafc;
@@ -112,96 +113,88 @@
       margin-bottom: 10px;
     }
 
-    .priority-item strong {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-
-    .priority-item span {
-      font-size: 13px;
-      color: var(--grey-text);
-    }
-
-    /* ===============================
-       STATS
-       =============================== */
-    .stats {
+    .metrics {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-      margin-top: 16px;
+      margin-top: 14px;
     }
 
-    .stat {
+    .metric {
       background: var(--bg-card);
       border-radius: 12px;
       padding: 16px;
       border: 1px solid var(--border-soft);
     }
 
-    .stat strong {
+    .metric strong {
       font-size: 22px;
       display: block;
     }
 
-    .stat span {
-      font-size: 12px;
-      color: var(--grey-text);
-    }
-
-    /* ===============================
+    /* =========================
        SIDEBAR
-       =============================== */
-    .panel {
+       ========================= */
+    aside .panel {
       background: var(--bg-card);
       border-radius: 14px;
+      padding: 16px 18px;
       border: 1px solid var(--border-soft);
-      padding: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .eye {
-      font-weight: 700;
+      font-weight: 600;
       color: var(--blue-strong);
       margin-bottom: 6px;
     }
 
     .andy {
-      font-weight: 700;
+      font-weight: 600;
       color: var(--green-agent);
-      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .panel p {
-      font-size: 13px;
-      color: var(--grey-text);
-      margin: 0;
+    .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green-agent);
+      animation: agentPulse 2s infinite;
     }
 
-    /* ===============================
-       TELEMETRY
-       =============================== */
-    .telemetry {
-      margin-top: 16px;
-      padding: 14px 16px;
+    @keyframes agentPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(22,163,74,0.6); }
+      70%  { box-shadow: 0 0 0 10px rgba(22,163,74,0); }
+      100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
+    }
+
+    footer.telemetry {
+      margin-top: 22px;
+      padding: 14px 18px;
       border-radius: 12px;
       background: #f1f5f9;
       border: 1px dashed var(--border-soft);
       font-size: 13px;
       color: #334155;
     }
+
+    @media (max-width: 980px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
   </style>
 </head>
 
 <body>
 
-  <!-- SKYHAWK -->
-  <div class="ticker">
-    SKYHAWK · Signals Nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
-  </div>
-
-  <!-- HEADER -->
   <header class="top-header">
     <div class="brand">
       <img
@@ -219,56 +212,56 @@
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main class="layout">
+  <div class="ticker">
+    🛰️ SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
+  </div>
 
-    <!-- LEFT -->
+  <main>
     <section>
       <div class="card">
         <h3>TOP PRIORITY</h3>
 
-        <div class="priority-item">
-          <strong>Lock Parent Node Governance</strong>
-          <span>Confirm write-gates and authority boundaries.</span>
+        <div class="task">
+          <strong>Lock Parent Node Governance</strong><br />
+          Confirm write-gates and authority boundaries.
         </div>
 
-        <div class="priority-item">
-          <strong>Prepare Demo Narrative</strong>
-          <span>Sequence system layers for stakeholder walkthrough.</span>
+        <div class="task">
+          <strong>Prepare Demo Narrative</strong><br />
+          Sequence system layers for stakeholder walkthrough.
         </div>
 
-        <div class="priority-item">
-          <strong>Stabilise Visual Frame</strong>
-          <span>Freeze layout before logic injection.</span>
+        <div class="task">
+          <strong>Stabilise Visual Frame</strong><br />
+          Freeze layout before logic injection.
         </div>
       </div>
 
-      <div class="stats">
-        <div class="stat">
+      <div class="metrics">
+        <div class="metric">
           <strong>12</strong>
-          <span>Active Tasks</span>
+          Active Tasks
         </div>
-        <div class="stat">
+        <div class="metric">
           <strong>1</strong>
-          <span>Agents Online</span>
+          Agents Online
         </div>
-        <div class="stat">
+        <div class="metric">
           <strong>37</strong>
-          <span>Signals</span>
+          Signals
         </div>
-        <div class="stat">
+        <div class="metric">
           <strong>STABLE</strong>
-          <span>System State</span>
+          System State
         </div>
       </div>
 
-      <div class="telemetry">
-        TELEMETRY (PREVIEW): System heartbeat nominal.
+      <footer class="telemetry">
+        <strong>TELEMETRY (PREVIEW)</strong> · System heartbeat nominal.
         Memory write-gates locked. No autonomous execution detected.
-      </div>
+      </footer>
     </section>
 
-    <!-- RIGHT -->
     <aside>
       <div class="panel">
         <div class="eye">EYE20 — Parent Node</div>
@@ -276,11 +269,13 @@
       </div>
 
       <div class="panel">
-        <div class="andy">● Andy — Execution Agent</div>
+        <div class="andy">
+          <span class="pulse"></span>
+          Andy — Execution Agent
+        </div>
         <p>Scoped execution only · Read-only<br />Awaiting instruction</p>
       </div>
     </aside>
-
   </main>
 
 </body>
