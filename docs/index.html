@@ -48,7 +48,21 @@
     }
 
     main {
-      padding: 36px 40px;
+      padding: 28px 40px 36px;
+    }
+
+    /* LOGO */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .brand img {
+      height: 42px;
+      width: auto;
+      border-radius: 6px;
     }
 
     .title {
@@ -119,7 +133,7 @@
       font-weight: 600;
     }
 
-    /* TELEMETRY STRIP */
+    /* TELEMETRY */
     .telemetry {
       background: linear-gradient(90deg, #f8fafc, #ffffff);
       border: 1px solid var(--border-soft);
@@ -184,6 +198,12 @@
   <div class="layout">
 
     <main>
+
+      <!-- BRAND / LOGO -->
+      <div class="brand">
+        <img src="otos-logo.png" alt="OTOS logo">
+      </div>
+
       <div class="title">OTOS Cockpit</div>
       <div class="subtitle">
         Enterprise execution surface. Human authority at the centre.
@@ -204,7 +224,6 @@
         <div class="stat"><h4>SYSTEM STATE</h4><span>STABLE</span></div>
       </section>
 
-      <!-- NEW VISUAL LAYER -->
       <section class="telemetry">
         <div class="pulse"></div>
         <strong>TELEMETRY:</strong>
