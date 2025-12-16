@@ -27,7 +27,7 @@
       color: #0f172a;
     }
 
-    /* SKYHAWK TICKER */
+    /* SKYHAWK */
     .ticker {
       height: 42px;
       background: #020617;
@@ -36,7 +36,6 @@
       align-items: center;
       padding: 0 16px;
       font-size: 13px;
-      letter-spacing: .2px;
     }
 
     /* HEADER */
@@ -48,7 +47,7 @@
     }
 
     header img {
-      height: 40px;
+      height: 42px;
       width: auto;
       display: block;
     }
@@ -73,7 +72,6 @@
       padding: 20px 28px 40px;
     }
 
-    /* MAIN */
     .card {
       background: var(--bg-card);
       border-radius: 14px;
@@ -97,7 +95,6 @@
       margin-top: 10px;
     }
 
-    /* STATS */
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -120,7 +117,6 @@
       margin-top: 4px;
     }
 
-    /* SIDEBAR */
     aside .panel {
       background: var(--bg-card);
       border-radius: 14px;
@@ -139,7 +135,6 @@
       color: var(--green-agent);
     }
 
-    /* TELEMETRY */
     .telemetry {
       border: 1px dashed var(--border-soft);
       background: #f1f5f9;
@@ -153,22 +148,19 @@
 
 <body>
 
-  <!-- SKYHAWK -->
   <div class="ticker">
     🛰️ SKYHAWK · Signals Nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
   </div>
 
-  <!-- HEADER -->
   <header>
-    <!-- IMPORTANT: correct relative path -->
-    <img src="../otos-logo.png" alt="OTOS logo" />
+    <!-- LOGO: same directory as index.html -->
+    <img src="./otos-logo.png" alt="OTOS logo" />
     <div>
       <h1>OTOS Cockpit</h1>
       <p>Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.</p>
     </div>
   </header>
 
-  <!-- BODY -->
   <div class="layout">
 
     <main>
