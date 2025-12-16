@@ -1,0 +1,46 @@
+{
+  "locks": [
+    {
+      "lock_id": "UI_BASELINE_9C",
+      "scope": "UI",
+      "value": "Layer 9C HTML locked",
+      "locked_by": "Dean",
+      "locked_at": "2025-12-16T00:00:00Z"
+    },
+    {
+      "lock_id": "MEMORY_SCHEMA_V1",
+      "scope": "MEMORY",
+      "value": "Parent Node Memory Schema v1.0",
+      "locked_by": "Dean",
+      "locked_at": "2025-12-16T00:00:00Z"
+    },
+    {
+      "lock_id": "EXPORT_REHYDRATE_V1",
+      "scope": "RUNTIME",
+      "value": "Export → Rehydrate Protocol v1.0",
+      "locked_by": "Dean",
+      "locked_at": "2025-12-16T00:00:00Z"
+    },
+    {
+      "lock_id": "FOCUS_LOGIC_V1",
+      "scope": "FOCUS",
+      "value": "Focus Stack → Action Card Logic v1.0",
+      "locked_by": "Dean",
+      "locked_at": "2025-12-16T00:00:00Z"
+    },
+    {
+      "lock_id": "REMINDER_BINDING_V1",
+      "scope": "REMINDERS",
+      "value": "Reminder Module Binding v1.0",
+      "locked_by": "Dean",
+      "locked_at": "2025-12-16T00:00:00Z"
+    },
+    {
+      "lock_id": "AGENT_BOUNDARIES_V1",
+      "scope": "AGENTS",
+      "value": "Agent Boundaries & Permissions v1.0 (Andy=Feeder)",
+      "locked_by": "Dean",
+      "locked_at": "2025-12-16T00:00:00Z"
+    }
+  ]
+}
