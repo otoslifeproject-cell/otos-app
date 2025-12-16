@@ -23,11 +23,13 @@
 
     body {
       margin: 0;
-      background: radial-gradient(circle at bottom right, var(--blue-soft) 0%, var(--bg-main) 55%);
+      background: radial-gradient(circle at bottom right, #dbeafe 0%, var(--bg-main) 55%);
       color: #0f172a;
     }
 
-    /* SKYHAWK */
+    /* ─────────────────────────────
+       SKYHAWK TICKER
+    ───────────────────────────── */
     .ticker {
       height: 42px;
       background: #020617;
@@ -36,110 +38,132 @@
       align-items: center;
       padding: 0 16px;
       font-size: 13px;
+      letter-spacing: 0.3px;
     }
 
-    /* HEADER */
+    /* ─────────────────────────────
+       HEADER / LOGO
+    ───────────────────────────── */
     header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      padding: 18px 28px 8px;
+      gap: 16px;
+      padding: 22px 28px;
     }
 
-    header img {
-      height: 42px;
-      width: auto;
+    .logo {
+      width: 64px;              /* ← MAIN SIZE CONTROL */
+      height: auto;
       display: block;
     }
 
-    header h1 {
+    .title-group h1 {
       margin: 0;
-      font-size: 28px;
-      font-weight: 600;
+      font-size: 26px;
+      font-weight: 700;
     }
 
-    header p {
+    .title-group p {
       margin: 4px 0 0;
       color: var(--grey-text);
-      max-width: 720px;
+      font-size: 14px;
+      max-width: 640px;
     }
 
-    /* LAYOUT */
+    /* ─────────────────────────────
+       LAYOUT
+    ───────────────────────────── */
     .layout {
       display: grid;
       grid-template-columns: 1fr 320px;
       gap: 24px;
-      padding: 20px 28px 40px;
+      padding: 0 28px 40px;
     }
 
     .card {
       background: var(--bg-card);
       border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
       border: 1px solid var(--border-soft);
-      padding: 20px;
-      margin-bottom: 18px;
     }
 
     .card h3 {
-      margin-top: 0;
+      margin: 0 0 12px;
       font-size: 14px;
-      letter-spacing: .04em;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       color: #334155;
     }
 
     .task {
-      padding: 12px 14px;
+      padding: 14px;
       border-radius: 10px;
-      border: 1px solid var(--border-soft);
       background: #f8fafc;
-      margin-top: 10px;
+      border: 1px solid var(--border-soft);
+      margin-bottom: 10px;
     }
 
+    .task strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ─────────────────────────────
+       STATS ROW
+    ───────────────────────────── */
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+      gap: 16px;
+      margin-top: 20px;
     }
 
     .stat {
       background: var(--bg-card);
-      border-radius: 12px;
-      border: 1px solid var(--border-soft);
+      border-radius: 14px;
       padding: 16px;
-      font-weight: 600;
+      border: 1px solid var(--border-soft);
+      text-align: left;
+    }
+
+    .stat strong {
+      font-size: 22px;
     }
 
     .stat span {
       display: block;
       font-size: 12px;
-      font-weight: 500;
       color: var(--grey-text);
       margin-top: 4px;
     }
 
+    /* ─────────────────────────────
+       SIDE PANELS
+    ───────────────────────────── */
     aside .panel {
-      background: var(--bg-card);
-      border-radius: 14px;
-      border: 1px solid var(--border-soft);
-      padding: 16px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .eye {
-      font-weight: 700;
       color: var(--blue-strong);
+      font-weight: 700;
     }
 
     .andy {
-      font-weight: 600;
       color: var(--green-agent);
+      font-weight: 700;
     }
 
+    /* ─────────────────────────────
+       TELEMETRY
+    ───────────────────────────── */
     .telemetry {
-      border: 1px dashed var(--border-soft);
-      background: #f1f5f9;
-      border-radius: 12px;
+      margin-top: 18px;
       padding: 14px;
+      border-radius: 12px;
+      background: #f1f5f9;
+      border: 1px dashed var(--border-soft);
       font-size: 13px;
       color: #334155;
     }
@@ -149,65 +173,82 @@
 <body>
 
   <div class="ticker">
-    🛰️ SKYHAWK · Signals Nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
+    🛰️ SKYHAWK · Signals Nominal &nbsp;&nbsp;|&nbsp;&nbsp; Latency: 14ms &nbsp;&nbsp;|&nbsp;&nbsp; Feeds: 6 active &nbsp;&nbsp;|&nbsp;&nbsp; No anomalies detected
   </div>
 
   <header>
-    <!-- LOGO: same directory as index.html -->
-    <img src="./otos-logo.png" alt="OTOS logo" />
-    <div>
+    <!-- LOGO (correct path + visible size) -->
+    <img src="otos-logo.png" alt="OTOS logo" class="logo" />
+
+    <div class="title-group">
       <h1>OTOS Cockpit</h1>
-      <p>Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.</p>
+      <p>
+        Enterprise execution surface. Human authority at the centre.
+        Agents operate within visible, bounded lanes.
+      </p>
     </div>
   </header>
 
   <div class="layout">
-
     <main>
+
       <div class="card">
-        <h3>TOP PRIORITY</h3>
+        <h3>Top Priority</h3>
 
         <div class="task">
-          <strong>Lock Parent Node Governance</strong><br />
+          <strong>Lock Parent Node Governance</strong>
           Confirm write-gates and authority boundaries.
         </div>
 
         <div class="task">
-          <strong>Prepare Demo Narrative</strong><br />
+          <strong>Prepare Demo Narrative</strong>
           Sequence system layers for stakeholder walkthrough.
         </div>
 
         <div class="task">
-          <strong>Stabilise Visual Frame</strong><br />
+          <strong>Stabilise Visual Frame</strong>
           Freeze layout before logic injection.
         </div>
       </div>
 
       <div class="stats">
-        <div class="stat">12<span>Active Tasks</span></div>
-        <div class="stat">1<span>Agents Online</span></div>
-        <div class="stat">37<span>Signals</span></div>
-        <div class="stat">STABLE<span>System State</span></div>
+        <div class="stat">
+          <strong>12</strong>
+          <span>Active Tasks</span>
+        </div>
+        <div class="stat">
+          <strong>1</strong>
+          <span>Agents Online</span>
+        </div>
+        <div class="stat">
+          <strong>37</strong>
+          <span>Signals</span>
+        </div>
+        <div class="stat">
+          <strong>STABLE</strong>
+          <span>System State</span>
+        </div>
       </div>
 
-      <div class="telemetry" style="margin-top:18px;">
-        <strong>TELEMETRY (PREVIEW)</strong><br />
-        System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
+      <div class="telemetry">
+        <strong>Telemetry (Preview)</strong><br />
+        System heartbeat nominal. Memory write-gates locked.
+        No autonomous execution detected.
       </div>
+
     </main>
 
     <aside>
-      <div class="panel">
+      <div class="card panel">
         <div class="eye">EYE20 — Parent Node</div>
         <p>Authoritative · Memory-anchored · Non-drifting</p>
       </div>
 
-      <div class="panel">
+      <div class="card panel">
         <div class="andy">● Andy — Execution Agent</div>
         <p>Scoped execution only · Read-only<br />Awaiting instruction</p>
       </div>
     </aside>
-
   </div>
 
 </body>
