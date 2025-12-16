@@ -1,5 +1,5 @@
 /* ================================
-   OTOS Cockpit — Base Styles (9C FIXED)
+   OTOS Cockpit — Base Styles (9C LOCKED)
    ================================ */
 
 /* RESET */
@@ -45,7 +45,7 @@ body {
   position: absolute;
   top: -8px;
   left: 36px;
-  height: 1200px;      /* ← BIG on purpose */
+  height: 800px;        /* ← tuned down from 1200px */
   width: auto;
   display: block;
   pointer-events: none;
