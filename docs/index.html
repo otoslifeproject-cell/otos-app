@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit — Enterprise Control Surface</title>
+  <title>OTOS Cockpit – Enterprise Control Surface</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -23,7 +23,7 @@
 
     body {
       margin: 0;
-      background: radial-gradient(circle at bottom right, #dbeafe 0%, var(--bg-main) 55%);
+      background: radial-gradient(circle at bottom right, var(--blue-soft) 0%, var(--bg-main) 55%);
       color: #0f172a;
     }
 
@@ -36,78 +36,65 @@
       align-items: center;
       padding: 0 16px;
       font-size: 13px;
-      letter-spacing: 0.04em;
-      gap: 28px;
+      letter-spacing: .2px;
     }
 
     /* HEADER */
-    .header {
+    header {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 28px 40px 0 40px;
+      padding: 18px 28px 8px;
     }
 
-    .logo {
-      height: 36px;
+    header img {
+      height: 40px;
       width: auto;
+      display: block;
     }
 
-    .header-title {
-      font-size: 14px;
+    header h1 {
+      margin: 0;
+      font-size: 28px;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      color: #0f172a;
     }
 
-    /* LAYOUT GRID */
+    header p {
+      margin: 4px 0 0;
+      color: var(--grey-text);
+      max-width: 720px;
+    }
+
+    /* LAYOUT */
     .layout {
       display: grid;
-      grid-template-columns: 1fr 340px;
-      min-height: calc(100vh - 42px);
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      padding: 20px 28px 40px;
     }
 
     /* MAIN */
-    .main {
-      padding: 28px 40px 40px;
-    }
-
-    .title {
-      font-size: 34px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .subtitle {
-      max-width: 640px;
-      font-size: 15px;
-      color: var(--grey-text);
-      margin-bottom: 28px;
-      line-height: 1.6;
-    }
-
-    /* PRIORITY STACK */
-    .priority-stack {
+    .card {
       background: var(--bg-card);
-      border-radius: 16px;
+      border-radius: 14px;
       border: 1px solid var(--border-soft);
-      padding: 22px;
-      margin-bottom: 26px;
+      padding: 20px;
+      margin-bottom: 18px;
     }
 
-    .priority-stack h3 {
-      margin: 0 0 14px;
-      font-size: 12px;
-      letter-spacing: 0.12em;
+    .card h3 {
+      margin-top: 0;
+      font-size: 14px;
+      letter-spacing: .04em;
+      color: #334155;
     }
 
     .task {
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: #f8fafc;
+      padding: 12px 14px;
+      border-radius: 10px;
       border: 1px solid var(--border-soft);
-      margin-bottom: 10px;
-      font-size: 14px;
+      background: #f8fafc;
+      margin-top: 10px;
     }
 
     /* STATS */
@@ -119,55 +106,47 @@
 
     .stat {
       background: var(--bg-card);
-      border-radius: 14px;
-      padding: 18px;
+      border-radius: 12px;
       border: 1px solid var(--border-soft);
-    }
-
-    .stat h4 {
-      margin: 0 0 6px;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      color: var(--grey-text);
-    }
-
-    .stat span {
-      font-size: 26px;
+      padding: 16px;
       font-weight: 600;
     }
 
-    /* TELEMETRY */
-    .telemetry {
-      margin-top: 22px;
-      padding: 16px 18px;
-      border-radius: 14px;
-      background: #f1f5f9;
-      border: 1px dashed var(--border-soft);
-      font-size: 13px;
+    .stat span {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
       color: var(--grey-text);
+      margin-top: 4px;
     }
 
     /* SIDEBAR */
-    .sidebar {
-      background: #f8fafc;
-      border-left: 1px solid var(--border-soft);
-    }
-
-    .panel {
-      padding: 22px;
-      border-bottom: 1px solid var(--border-soft);
+    aside .panel {
+      background: var(--bg-card);
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      padding: 16px;
+      margin-bottom: 14px;
     }
 
     .eye {
       font-weight: 700;
       color: var(--blue-strong);
-      margin-bottom: 6px;
     }
 
     .andy {
-      font-weight: 700;
+      font-weight: 600;
       color: var(--green-agent);
-      margin-bottom: 6px;
+    }
+
+    /* TELEMETRY */
+    .telemetry {
+      border: 1px dashed var(--border-soft);
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 13px;
+      color: #334155;
     }
   </style>
 </head>
@@ -176,56 +155,64 @@
 
   <!-- SKYHAWK -->
   <div class="ticker">
-    🛰️ SKYHAWK · Signals Nominal
-    <span>Latency: 14ms</span>
-    <span>Feeds: 6 active</span>
-    <span>No anomalies detected</span>
+    🛰️ SKYHAWK · Signals Nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
   </div>
 
-  <!-- HEADER WITH LOGO -->
-  <div class="header">
-    <img src="../otos-logo.png" alt="OTOS logo" class="logo" />
-    <div class="header-title">ENTERPRISE CONTROL SURFACE</div>
-  </div>
+  <!-- HEADER -->
+  <header>
+    <!-- IMPORTANT: correct relative path -->
+    <img src="../otos-logo.png" alt="OTOS logo" />
+    <div>
+      <h1>OTOS Cockpit</h1>
+      <p>Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.</p>
+    </div>
+  </header>
 
+  <!-- BODY -->
   <div class="layout">
 
-    <!-- MAIN -->
-    <main class="main">
-      <div class="title">OTOS Cockpit</div>
-      <div class="subtitle">
-        Enterprise execution surface. Human authority at the centre.
-        Agents operate within visible, bounded lanes.
+    <main>
+      <div class="card">
+        <h3>TOP PRIORITY</h3>
+
+        <div class="task">
+          <strong>Lock Parent Node Governance</strong><br />
+          Confirm write-gates and authority boundaries.
+        </div>
+
+        <div class="task">
+          <strong>Prepare Demo Narrative</strong><br />
+          Sequence system layers for stakeholder walkthrough.
+        </div>
+
+        <div class="task">
+          <strong>Stabilise Visual Frame</strong><br />
+          Freeze layout before logic injection.
+        </div>
       </div>
 
-      <section class="priority-stack">
-        <h3>TOP PRIORITY</h3>
-        <div class="task"><strong>Lock Parent Node Governance</strong><br/>Confirm write-gates and authority boundaries.</div>
-        <div class="task"><strong>Prepare Demo Narrative</strong><br/>Sequence system layers for walkthrough.</div>
-        <div class="task"><strong>Stabilise Visual Frame</strong><br/>Freeze layout before logic injection.</div>
-      </section>
+      <div class="stats">
+        <div class="stat">12<span>Active Tasks</span></div>
+        <div class="stat">1<span>Agents Online</span></div>
+        <div class="stat">37<span>Signals</span></div>
+        <div class="stat">STABLE<span>System State</span></div>
+      </div>
 
-      <section class="stats">
-        <div class="stat"><h4>ACTIVE TASKS</h4><span>12</span></div>
-        <div class="stat"><h4>AGENTS ONLINE</h4><span>1</span></div>
-        <div class="stat"><h4>SIGNALS</h4><span>37</span></div>
-        <div class="stat"><h4>SYSTEM STATE</h4><span>STABLE</span></div>
-      </section>
-
-      <div class="telemetry">
-        TELEMETRY (PREVIEW) · System heartbeat nominal · Memory write-gates locked · No autonomous execution detected
+      <div class="telemetry" style="margin-top:18px;">
+        <strong>TELEMETRY (PREVIEW)</strong><br />
+        System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
       </div>
     </main>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+    <aside>
       <div class="panel">
         <div class="eye">EYE20 — Parent Node</div>
-        Authoritative · Memory-anchored · Non-drifting
+        <p>Authoritative · Memory-anchored · Non-drifting</p>
       </div>
+
       <div class="panel">
-        <div class="andy">Andy — Execution Agent</div>
-        Scoped execution only · Read-only · Awaiting instruction
+        <div class="andy">● Andy — Execution Agent</div>
+        <p>Scoped execution only · Read-only<br />Awaiting instruction</p>
       </div>
     </aside>
 
