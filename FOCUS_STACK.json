@@ -1,0 +1,14 @@
+{
+  "radar_mode": "GUIDED",
+  "items": [
+    {
+      "focus_id": "FOCUS-NOW-001",
+      "level": "NOW",
+      "item_type": "TASK",
+      "linked_id": "TASK-LOCK-PARENT-NODE",
+      "manual_pin": true,
+      "priority": "NON_NEGOTIABLE",
+      "snoozed_until": null
+    }
+  ]
+}
