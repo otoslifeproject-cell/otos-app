@@ -1,5 +1,5 @@
 /* ================================
-   OTOS Cockpit — Base Styles (9C)
+   OTOS Cockpit — Base Styles (9C FIXED)
    ================================ */
 
 /* RESET */
@@ -27,26 +27,31 @@ body {
   overflow: hidden;
 }
 
-/* HEADER */
+/* HEADER (positioning context) */
 .app-header {
+  position: relative;
   padding: 28px 36px 8px 36px;
+  min-height: 140px;
 }
 
+/* BRAND WRAPPER (no layout influence) */
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  min-height: 78px;
+  position: relative;
+  height: 0;
 }
 
-/* LOGO — DOUBLED SIZE (400px → 800px) */
+/* LOGO — HERO SIZE, OUT OF FLOW */
 .otos-logo {
-  height: 800px;
+  position: absolute;
+  top: -8px;
+  left: 36px;
+  height: 1200px;      /* ← BIG on purpose */
   width: auto;
   display: block;
+  pointer-events: none;
 }
 
-/* PAGE LAYOUT */
+/* PAGE LAYOUT (UNCHANGED) */
 .page {
   padding: 10px 36px 42px 36px;
   display: grid;
