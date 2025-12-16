@@ -1,99 +1,53 @@
-/* OTOS Cockpit — Layer 9C Base (LOCKED) */
-/* Purpose: Restore ticker + layout + cards + sidebar. No drift. */
+/* ================================
+   OTOS Cockpit — Base Styles (9C)
+   ================================ */
 
-:root{
-  --bg1: #eaf2ff;
-  --bg2: #f6fbff;
-  --ink: #0f172a;
-  --muted: #475569;
-  --card: rgba(255,255,255,0.74);
-  --card2: rgba(255,255,255,0.90);
-  --stroke: rgba(15,23,42,0.10);
-  --stroke2: rgba(15,23,42,0.12);
-  --shadow: 0 12px 40px rgba(2,6,23,0.08);
-  --radius: 16px;
-  --radius2: 12px;
-  --accent: #2563eb;
-}
-
-*{ box-sizing: border-box; }
-html, body{
-  height: 100%;
+/* RESET */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  color: var(--ink);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
 }
 
-body{
-  background:
-    radial-gradient(1400px 700px at 20% 15%, #ffffff 0%, rgba(255,255,255,0.2) 55%, rgba(255,255,255,0) 70%),
-    linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 45%, #eef6ff 100%);
+/* BODY */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(180deg, #eef4fb 0%, #f7fbff 100%);
+  color: #0b1a2b;
 }
 
-/* SKYHAWK BAR */
-.skyhawk-bar{
-  position: sticky;
-  top: 0;
-  z-index: 50;
+/* SKYHAWK STATUS BAR */
+.skyhawk-bar {
   background: #0b1220;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  height: 34px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-
-.skyhawk-track{
-  width: 100%;
-  overflow: hidden;
-  padding: 0 14px;
-}
-
-.skyhawk-ticker{
-  display: inline-flex;
-  gap: 48px;
+  color: #cbd5e1;
+  font-size: 13px;
+  padding: 6px 14px;
   white-space: nowrap;
-  will-change: transform;
-  animation: ticker 18s linear infinite;
-  color: rgba(255,255,255,0.85);
-  font-size: 12px;
-  letter-spacing: 0.2px;
-}
-
-.skyhawk-ticker span{
-  display: inline-block;
-  padding-right: 48px;
-}
-
-@keyframes ticker{
-  0%{ transform: translateX(0); }
-  100%{ transform: translateX(-33.333%); }
+  overflow: hidden;
 }
 
 /* HEADER */
-.app-header{
+.app-header {
   padding: 28px 36px 8px 36px;
 }
 
-.brand{
+.brand {
   display: flex;
   align-items: center;
   gap: 16px;
   min-height: 78px;
 }
 
-/* Your PNG logo (no distortion) */
-.otos-logo{
-  height: 62px;
+/* LOGO — DOUBLED SIZE (400px → 800px) */
+.otos-logo {
+  height: 800px;
   width: auto;
-  max-width: min(560px, 88vw);
-  object-fit: contain;
   display: block;
 }
 
-/* LAYOUT */
-.page{
+/* PAGE LAYOUT */
+.page {
   padding: 10px 36px 42px 36px;
   display: grid;
   grid-template-columns: minmax(680px, 1fr) 360px;
@@ -101,170 +55,39 @@ body{
   align-items: start;
 }
 
-@media (max-width: 1120px){
-  .page{
+/* RESPONSIVE */
+@media (max-width: 1120px) {
+  .page {
     grid-template-columns: 1fr;
   }
-  .side{
-    order: -1;
-  }
 }
 
-/* MAIN */
-.title{
-  margin: 12px 0 6px 0;
-  font-size: 34px;
-  line-height: 1.12;
-  letter-spacing: -0.6px;
+/* CARDS */
+.card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  box-shadow: 0 10px 30px rgba(15, 30, 60, 0.06);
 }
 
-.subtitle{
-  margin: 0 0 16px 0;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.45;
-  max-width: 920px;
+/* TOP PRIORITY */
+.priority {
+  border: 2px solid #c7d2fe;
 }
 
-.panel{
-  border-radius: var(--radius);
-  background: var(--card);
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  padding: 16px;
-}
-
-.panel-hdr{
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.9px;
-  color: rgba(15,23,42,0.72);
-  margin-bottom: 12px;
-}
-
-.priority-list{
-  display: grid;
-  gap: 10px;
-}
-
-.priority-item{
-  border-radius: var(--radius2);
-  background: rgba(255,255,255,0.60);
-  border: 1px solid var(--stroke);
-  padding: 12px 14px;
-}
-
-.priority-item.is-active{
-  border-color: rgba(37,99,235,0.35);
-  box-shadow: 0 0 0 2px rgba(37,99,235,0.12) inset;
-  background: rgba(255,255,255,0.72);
-}
-
-.priority-title{
-  font-weight: 700;
-  font-size: 13px;
-  margin-bottom: 3px;
-}
-
-.priority-desc{
-  font-size: 13px;
-  color: rgba(15,23,42,0.72);
-}
-
-/* METRICS */
-.metrics{
-  margin-top: 14px;
+/* STATS */
+.stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
 
-@media (max-width: 900px){
-  .metrics{
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.metric{
-  border-radius: var(--radius);
-  background: var(--card2);
-  border: 1px solid var(--stroke2);
-  box-shadow: var(--shadow);
-  padding: 14px 16px;
-}
-
-.metric-label{
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.9px;
-  color: rgba(15,23,42,0.70);
-  margin-bottom: 8px;
-}
-
-.metric-value{
-  font-size: 26px;
-  font-weight: 900;
-  letter-spacing: -0.6px;
-}
-
 /* TELEMETRY */
-.telemetry{
-  margin-top: 14px;
-  border-radius: var(--radius);
-  background: rgba(255,255,255,0.45);
-  border: 1px dashed rgba(15,23,42,0.16);
-  padding: 14px 16px;
-}
-
-.telemetry-hdr{
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.9px;
-  color: rgba(15,23,42,0.70);
-  margin-bottom: 6px;
-}
-
-.telemetry-body{
+.telemetry {
+  margin-top: 18px;
+  padding: 14px 18px;
+  background: #f1f6fc;
+  border-radius: 12px;
   font-size: 13px;
-  color: rgba(15,23,42,0.72);
-}
-
-/* SIDEBAR */
-.side{
-  position: sticky;
-  top: 54px; /* below ticker */
-  display: grid;
-  gap: 12px;
-}
-
-.side-card{
-  border-radius: var(--radius);
-  background: rgba(255,255,255,0.72);
-  border: 1px solid var(--stroke);
-  box-shadow: var(--shadow);
-  padding: 14px 14px;
-}
-
-.side-title{
-  font-weight: 800;
-  font-size: 13px;
-  color: rgba(37,99,235,0.95);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.side-sub{
-  margin-top: 6px;
-  font-size: 12px;
-  color: rgba(15,23,42,0.70);
-  line-height: 1.35;
-}
-
-.dot{
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #16a34a;
-  box-shadow: 0 0 0 3px rgba(22,163,74,0.14);
+  color: #334155;
 }
