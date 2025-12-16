@@ -4,81 +4,114 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OTOS Cockpit</title>
-
-  <!-- Styles -->
   <link rel="stylesheet" href="./styles.css" />
-
 </head>
-<body>
 
-  <!-- SKYHAWK STATUS BAR -->
-  <div class="skyhawk-bar">
-    SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
+<body>
+  <!-- SKYHAWK STATUS BAR (ticker stays running) -->
+  <div class="skyhawk-bar" aria-label="Skyhawk status">
+    <div class="skyhawk-ticker">
+      <span>SKYHAWK</span>
+      <span>Signals nominal</span>
+      <span>Latency: 14ms</span>
+      <span>Feeds: 6 active</span>
+      <span>No anomalies detected</span>
+
+      <span class="sep">•</span>
+
+      <span>SKYHAWK</span>
+      <span>Signals nominal</span>
+      <span>Latency: 14ms</span>
+      <span>Feeds: 6 active</span>
+      <span>No anomalies detected</span>
+
+      <span class="sep">•</span>
+
+      <span>SKYHAWK</span>
+      <span>Signals nominal</span>
+      <span>Latency: 14ms</span>
+      <span>Feeds: 6 active</span>
+      <span>No anomalies detected</span>
+    </div>
   </div>
 
-  <!-- HEADER / BRAND -->
-  <header class="app-header">
-    <div class="brand-lockup">
-      <!-- BRAIN ONLY (modular logo) -->
+  <!-- HERO / BRAND (brain + OTOS letters split, brain can animate later) -->
+  <header class="hero">
+    <div class="brand">
+      <!-- IMPORTANT: GitHub Pages root IS /docs, so do NOT include /docs/ in this path -->
       <img
-        src="./brand/brain/OTOS_BRAIN_ORANGE.svg"
-        alt="OTOS Brain"
         class="brand-brain"
+        src="brand/brain/OTOS_BRAIN_ORANGE.svg"
+        alt="OTOS Brain"
+        draggable="false"
       />
-
-      <!-- WORDMARK (CSS text, unchanged) -->
-      <span class="brand-text">OTOS</span>
+      <div class="brand-word">OTOS</div>
     </div>
   </header>
 
-  <!-- MAIN -->
-  <main class="app-main">
-
-    <section class="intro">
+  <!-- MAIN LAYOUT -->
+  <main class="layout">
+    <section class="main">
       <h1>OTOS Cockpit</h1>
-      <p>Sovereign life-management surface. Human authority at the centre.</p>
-    </section>
+      <p class="sub">Sovereign life-management surface. Human authority at the centre.</p>
 
-    <section class="priority">
-      <h2>TOP PRIORITY</h2>
+      <div class="panel">
+        <div class="panel-title">TOP PRIORITY</div>
 
-      <div class="priority-item active">
-        <strong>Lock Parent Node Governance</strong>
-        <span>Confirm runtime, memory and authority boundaries.</span>
+        <div class="priority">
+          <div class="priority-item primary">
+            <div class="priority-head">Lock Parent Node Governance</div>
+            <div class="priority-sub">Confirm runtime, memory and authority boundaries.</div>
+          </div>
+
+          <div class="priority-item">
+            <div class="priority-head">Prepare Demo Narrative</div>
+            <div class="priority-sub">Sequence system layers for walkthrough.</div>
+          </div>
+
+          <div class="priority-item">
+            <div class="priority-head">Stabilise Visual Frame</div>
+            <div class="priority-sub">Freeze layout before logic injection.</div>
+          </div>
+        </div>
       </div>
 
-      <div class="priority-item">
-        <strong>Prepare Demo Narrative</strong>
-        <span>Sequence system layers for walkthrough.</span>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-num">12</div>
+          <div class="stat-label">Active Tasks</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">1</div>
+          <div class="stat-label">Agents Online</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">37</div>
+          <div class="stat-label">Signals</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">STABLE</div>
+          <div class="stat-label">System State</div>
+        </div>
       </div>
 
-      <div class="priority-item">
-        <strong>Stabilise Visual Frame</strong>
-        <span>Freeze layout before logic injection.</span>
+      <div class="telemetry">
+        <div class="telemetry-title">TELEMETRY (PREVIEW)</div>
+        <div class="telemetry-sub">System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.</div>
       </div>
     </section>
 
-    <section class="metrics">
-      <div class="metric"><strong>12</strong><span>Active Tasks</span></div>
-      <div class="metric"><strong>1</strong><span>Agents Online</span></div>
-      <div class="metric"><strong>37</strong><span>Signals</span></div>
-      <div class="metric stable"><strong>STABLE</strong><span>System State</span></div>
-    </section>
+    <aside class="side">
+      <div class="side-card">
+        <div class="side-title">EYE20 — Parent Node</div>
+        <div class="side-sub">Authoritative · Memory-anchored · Non-drifting</div>
+      </div>
 
+      <div class="side-card">
+        <div class="side-title green"><span class="dot"></span>Andy — Feeder</div>
+        <div class="side-sub">Intake · Orchestration · Execution routing</div>
+      </div>
+    </aside>
   </main>
-
-  <!-- SIDEBAR -->
-  <aside class="side-panel">
-    <div class="node parent">
-      <strong>EYE20 — Parent Node</strong>
-      <span>Authoritative · Memory-anchored · Non-drifting</span>
-    </div>
-
-    <div class="node feeder">
-      <strong>Andy — Feeder</strong>
-      <span>Intake · Orchestration · Execution routing</span>
-    </div>
-  </aside>
-
 </body>
 </html>
