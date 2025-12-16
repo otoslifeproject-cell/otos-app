@@ -1,117 +1,83 @@
-/* RESET */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OTOS Cockpit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: linear-gradient(180deg, #f4f8fc 0%, #eef3f9 100%);
-  color: #0f172a;
-}
+  <!-- styles.css is in the SAME FOLDER -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-/* SKYHAWK */
-.skyhawk-bar {
-  background: #020617;
-  color: #c7d2fe;
-  font-size: 12px;
-  padding: 6px 16px;
-  display: flex;
-  gap: 14px;
-}
+<body>
 
-/* HEADER */
-.top-header {
-  padding: 10px 20px 6px 20px;
-}
+  <!-- SKYHAWK BAR -->
+  <div class="skyhawk-bar">
+    <span>SKYHAWK</span>
+    <span>Signals nominal</span>
+    <span>Latency: 14ms</span>
+    <span>Feeds: 6 active</span>
+    <span>No anomalies detected</span>
+  </div>
 
-.logo {
-  height: 40px;
-  width: auto;
-  display: block;
-}
+  <!-- HEADER / LOGO -->
+  <header class="top-header">
+    <img
+      src="brand/logo/otos-logo.png"
+      alt="OTOS"
+      class="logo"
+    />
+  </header>
 
-/* LAYOUT */
-.layout {
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  min-height: calc(100vh - 80px);
-}
+  <!-- MAIN LAYOUT -->
+  <div class="layout">
 
-.main {
-  padding: 24px 32px;
-}
+    <main class="main">
+      <h1>OTOS Cockpit</h1>
+      <p class="subtitle">
+        Sovereign life-management surface. Human authority at the centre.
+      </p>
 
-.subtitle {
-  color: #475569;
-  margin-bottom: 24px;
-}
+      <section class="panel">
+        <h2>Top Priority</h2>
+        <div class="item">Lock Parent Node Governance</div>
+        <div class="item">Prepare Demo Narrative</div>
+        <div class="item">Stabilise Visual Frame</div>
+      </section>
 
-/* PANEL */
-.panel {
-  background: rgba(255,255,255,0.9);
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 24px;
-}
+      <section class="metrics">
+        <div class="metric">
+          <div class="value">12</div>
+          <div class="label">Active Tasks</div>
+        </div>
+        <div class="metric">
+          <div class="value">1</div>
+          <div class="label">Agents Online</div>
+        </div>
+        <div class="metric">
+          <div class="value">37</div>
+          <div class="label">Signals</div>
+        </div>
+        <div class="metric">
+          <div class="value">STABLE</div>
+          <div class="label">System State</div>
+        </div>
+      </section>
+    </main>
 
-.panel h2 {
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 12px;
-}
+    <aside class="side">
+      <div class="side-card">
+        <strong>EYE20 — Parent Node</strong>
+        <div>Authoritative · Memory-anchored · Non-drifting</div>
+      </div>
 
-.item {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-}
+      <div class="side-card agent">
+        <strong>Andy — Execution Agent</strong>
+        <div>Scoped execution · Read-only · Awaiting instruction</div>
+      </div>
+    </aside>
 
-/* METRICS */
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
+  </div>
 
-.metric {
-  background: rgba(255,255,255,0.9);
-  border-radius: 14px;
-  padding: 16px;
-}
-
-.metric .value {
-  font-size: 26px;
-  font-weight: 700;
-}
-
-.metric .label {
-  font-size: 12px;
-  color: #64748b;
-}
-
-/* SIDE */
-.side {
-  background: rgba(255,255,255,0.92);
-  border-left: 1px solid rgba(148,163,184,0.35);
-  padding: 16px;
-}
-
-.side-card {
-  margin-bottom: 16px;
-}
-
-.agent {
-  color: #16a34a;
-}
-
-/* MOBILE */
-@media (max-width: 1000px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
-  .side {
-    display: none;
-  }
-}
+</body>
+</html>
