@@ -27,7 +27,9 @@
       color: #0f172a;
     }
 
-    /* SKYHAWK */
+    /* =========================
+       SKYHAWK TICKER (LOCKED)
+       ========================= */
     .ticker {
       height: 42px;
       background: #020617;
@@ -36,40 +38,49 @@
       align-items: center;
       padding: 0 18px;
       font-size: 13px;
+      letter-spacing: 0.2px;
       gap: 18px;
       white-space: nowrap;
+      overflow: hidden;
     }
 
-    /* HEADER */
-    header.top-header {
-      position: relative;
-      height: 140px;
-      padding: 0;
-    }
-
-    .logo-wrap {
+    /* =========================
+       BRAND MARK (LOCKED BEHAVIOUR)
+       - Absolutely positioned so it DOES NOT push layout down
+       - 400px brain height without padding bleed
+       ========================= */
+    .brand-mark {
       position: absolute;
-      top: 16px;
-      left: 16px;
+      top: 56px;   /* just under ticker */
+      left: 28px;  /* tight to corner */
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
+      z-index: 2;
+      pointer-events: none;
     }
 
-    .brain {
-      height: 120px;
+    .brand-brain {
+      height: 400px; /* as requested */
       width: auto;
       display: block;
     }
 
     .brand-text {
-      font-size: 56px;
       font-weight: 800;
+      font-size: 92px; /* approx “2cm” on typical displays */
       letter-spacing: -0.02em;
+      line-height: 1;
+      color: #0b1220;
     }
 
+    /* =========================
+       MAIN LAYOUT (LOCKED)
+       ========================= */
     main {
       padding: 0 32px 40px 32px;
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
@@ -89,6 +100,13 @@
       border: 1px solid var(--border-soft);
       padding: 18px;
       margin-top: 18px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: #334155;
     }
 
     .task {
@@ -113,6 +131,13 @@
       border: 1px solid var(--border-soft);
     }
 
+    .stat strong {
+      font-size: 22px;
+    }
+
+    /* =========================
+       SIDEBAR (LOCKED)
+       ========================= */
     aside.sidebar {
       position: fixed;
       right: 24px;
@@ -127,6 +152,55 @@
       padding: 14px;
       margin-bottom: 14px;
     }
+
+    .eye {
+      font-weight: 600;
+      color: var(--blue-strong);
+      margin-bottom: 6px;
+    }
+
+    .andy {
+      font-weight: 600;
+      color: var(--green-agent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green-agent);
+      animation: dotPulse 1.8s infinite;
+    }
+
+    @keyframes dotPulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    /* =========================
+       TELEMETRY (LOCKED)
+       ========================= */
+    .telemetry {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px dashed var(--border-soft);
+      background: #f8fafc;
+      font-size: 13px;
+      color: #334155;
+    }
+
+    /* Small screens: keep it sane */
+    @media (max-width: 980px) {
+      aside.sidebar { position: static; width: auto; margin: 18px 32px 0 32px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .brand-text { font-size: 64px; }
+      .brand-brain { height: 260px; }
+    }
   </style>
 </head>
 
@@ -140,40 +214,69 @@
     <span>No anomalies detected</span>
   </div>
 
-  <header class="top-header">
-    <div class="logo-wrap">
-      <img
-        src="/otos-app/docs/brand/brain/OTOS_BRAIN_ORANGE.svg"
-        alt="OTOS Brain"
-        class="brain"
-      />
-      <div class="brand-text">OTOS</div>
-    </div>
-  </header>
+  <!-- BRAND MARK (brain + OTOS) -->
+  <!-- IMPORTANT: GitHub Pages serves /docs as site root, so DO NOT include /docs in the src -->
+  <div class="brand-mark" aria-hidden="true">
+    <img
+      src="brand/brain/OTOS_BRAIN_ORANGE.svg"
+      alt=""
+      class="brand-brain"
+    />
+    <div class="brand-text">OTOS</div>
+  </div>
 
   <main>
     <h1>OTOS Cockpit</h1>
     <p class="subtitle">
-      Sovereign life-management surface. Human authority at the centre.
+      Enterprise execution surface. Human authority at the centre.
+      Agents operate within visible, bounded lanes.
     </p>
 
     <div class="card">
+      <h3>TOP PRIORITY</h3>
+
       <div class="task">
         <strong>Lock Parent Node Governance</strong><br />
-        Confirm runtime, memory and authority boundaries.
+        Confirm write-gates and authority boundaries.
       </div>
+
+      <div class="task">
+        <strong>Prepare Demo Narrative</strong><br />
+        Sequence system layers for stakeholder walkthrough.
+      </div>
+
+      <div class="task">
+        <strong>Stabilise Visual Frame</strong><br />
+        Freeze layout before logic injection.
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><strong>12</strong><br />Active Tasks</div>
+      <div class="stat"><strong>1</strong><br />Agents Online</div>
+      <div class="stat"><strong>37</strong><br />Signals</div>
+      <div class="stat"><strong>STABLE</strong><br />System State</div>
+    </div>
+
+    <div class="telemetry">
+      <strong>TELEMETRY (PREVIEW)</strong><br />
+      System heartbeat nominal. Memory write-gates locked.
+      No autonomous execution detected.
     </div>
   </main>
 
   <aside class="sidebar">
     <div class="panel">
-      <strong>EYE20 — Parent Node</strong><br />
-      Authoritative · Memory-anchored
+      <div class="eye">EYE20 — Parent Node</div>
+      Authoritative · Memory-anchored · Non-drifting
     </div>
 
     <div class="panel">
-      <strong>Andy — Feeder</strong><br />
-      Intake · Orchestration · Routing
+      <div class="andy">
+        <span class="pulse-dot"></span>
+        Andy — Feeder
+      </div>
+      Intake · Orchestration · Execution routing
     </div>
   </aside>
 
