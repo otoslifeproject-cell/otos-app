@@ -10,7 +10,6 @@
       --bg-main: #eef4fb;
       --bg-card: #ffffff;
       --blue-soft: #dbeafe;
-      --blue-strong: #2563eb;
       --grey-text: #475569;
       --border-soft: rgba(0,0,0,0.08);
     }
@@ -41,46 +40,26 @@
     }
 
     /* =========================
-       HEADER BRAND BLOCK
+       BRAND HEADER (LOGO ONLY)
     ========================== */
     .brand-header {
       padding: 26px 28px 18px 28px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
     }
 
-    .brand-icon {
-      width: 56px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .brand-logo {
+      width: 180px;
+      max-width: 100%;
     }
 
-    .brand-icon img {
+    .brand-logo img {
       width: 100%;
       height: auto;
       display: block;
-      animation: brainPulse 6s ease-in-out infinite;
-      transform-origin: center;
+      /* animation placeholder – OFF for now */
     }
 
-    @keyframes brainPulse {
-      0%   { transform: scale(1); opacity: 1; }
-      50%  { transform: scale(1.06); opacity: 0.92; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .brand-text h1 {
-      margin: 0;
-      font-size: 34px;
-      font-weight: 700;
-      letter-spacing: -0.4px;
-    }
-
-    .brand-text p {
-      margin: 6px 0 0 0;
+    .brand-subtitle {
+      margin-top: 10px;
       max-width: 640px;
       font-size: 15px;
       color: var(--grey-text);
@@ -102,17 +81,6 @@
       border-radius: 14px;
       border: 1px solid var(--border-soft);
       padding: 16px 18px;
-    }
-
-    .card h3 {
-      margin: 0 0 6px 0;
-      font-size: 15px;
-    }
-
-    .card p {
-      margin: 0;
-      font-size: 14px;
-      color: var(--grey-text);
     }
 
     .priority h2 {
@@ -187,14 +155,13 @@
     🛰️ SKYHAWK · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
   </div>
 
-  <!-- BRAND HEADER -->
+  <!-- LOGO HEADER (NO TITLE TEXT) -->
   <header class="brand-header">
-    <div class="brand-icon">
-      <img src="otos long transparent logo.png" alt="OTOS brain mark">
+    <div class="brand-logo">
+      <img src="otos long transparent logo.png" alt="OTOS logo">
     </div>
-    <div class="brand-text">
-      <h1>OTOS</h1>
-      <p>Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.</p>
+    <div class="brand-subtitle">
+      Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.
     </div>
   </header>
 
@@ -240,7 +207,7 @@
 
       <div class="panel">
         <div class="agent">● Andy — Execution Agent</div>
-        <p>Scoped execution only · Read-only<br/>Awaiting instruction</p>
+        <p>Scoped execution only · Read-only<br>Awaiting instruction</p>
       </div>
     </aside>
 
