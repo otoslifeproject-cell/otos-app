@@ -14,7 +14,6 @@
       --green-agent: #16a34a;
       --grey-text: #475569;
       --border-soft: rgba(0,0,0,0.08);
-      --dark-bar: #020617;
     }
 
     * {
@@ -28,56 +27,49 @@
       color: #0f172a;
     }
 
-    /* ===== GLOBAL HEADER (LOGO) ===== */
-    .topbar {
-      height: 56px;
-      background: #ffffff;
-      border-bottom: 1px solid var(--border-soft);
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-      gap: 14px;
-    }
-
-    .topbar img {
-      height: 32px;
-      width: auto;
-      display: block;
-    }
-
-    .topbar span {
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      color: #020617;
-    }
-
     /* SKYHAWK TICKER */
     .ticker {
       height: 42px;
-      background: var(--dark-bar);
+      background: #020617;
       color: #e5e7eb;
       display: flex;
       align-items: center;
       padding: 0 16px;
       font-size: 13px;
       letter-spacing: 0.04em;
+      gap: 28px;
     }
 
-    .ticker span {
-      margin-right: 28px;
-      opacity: 0.85;
+    /* HEADER */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 28px 40px 0 40px;
+    }
+
+    .logo {
+      height: 36px;
+      width: auto;
+    }
+
+    .header-title {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #0f172a;
     }
 
     /* LAYOUT GRID */
     .layout {
       display: grid;
       grid-template-columns: 1fr 340px;
-      min-height: calc(100vh - 98px);
+      min-height: calc(100vh - 42px);
     }
 
-    /* MAIN EXECUTION */
+    /* MAIN */
     .main {
-      padding: 36px 40px;
+      padding: 28px 40px 40px;
     }
 
     .title {
@@ -105,9 +97,8 @@
 
     .priority-stack h3 {
       margin: 0 0 14px;
-      font-size: 14px;
-      letter-spacing: 0.08em;
-      color: #1e293b;
+      font-size: 12px;
+      letter-spacing: 0.12em;
     }
 
     .task {
@@ -119,17 +110,11 @@
       font-size: 14px;
     }
 
-    .task strong {
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    /* STATS PANEL */
+    /* STATS */
     .stats {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 14px;
-      margin-bottom: 22px;
     }
 
     .stat {
@@ -141,9 +126,9 @@
 
     .stat h4 {
       margin: 0 0 6px;
-      font-size: 12px;
+      font-size: 11px;
+      letter-spacing: 0.08em;
       color: var(--grey-text);
-      letter-spacing: 0.05em;
     }
 
     .stat span {
@@ -153,20 +138,19 @@
 
     /* TELEMETRY */
     .telemetry {
+      margin-top: 22px;
+      padding: 16px 18px;
+      border-radius: 14px;
       background: #f1f5f9;
       border: 1px dashed var(--border-soft);
-      border-radius: 14px;
-      padding: 18px;
       font-size: 13px;
       color: var(--grey-text);
     }
 
-    /* RIGHT SIDEBAR */
+    /* SIDEBAR */
     .sidebar {
       background: #f8fafc;
       border-left: 1px solid var(--border-soft);
-      display: flex;
-      flex-direction: column;
     }
 
     .panel {
@@ -174,65 +158,34 @@
       border-bottom: 1px solid var(--border-soft);
     }
 
-    .panel h3 {
-      margin: 0 0 6px;
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      color: #334155;
-    }
-
     .eye {
       font-weight: 700;
       color: var(--blue-strong);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .andy {
+      font-weight: 700;
       color: var(--green-agent);
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .pulse {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--green-agent);
-      box-shadow: 0 0 0 0 rgba(22,163,74,0.6);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(22,163,74,0.6); }
-      70% { box-shadow: 0 0 0 10px rgba(22,163,74,0); }
-      100% { box-shadow: 0 0 0 0 rgba(22,163,74,0); }
-    }
-
-    .panel p {
-      font-size: 13px;
-      color: var(--grey-text);
-      line-height: 1.5;
+      margin-bottom: 6px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- LOGO HEADER -->
-  <div class="topbar">
-    <!-- Robust path: works if logo is at repo root -->
-    <img src="../otos-logo.png" alt="OTOS logo">
-    <span>Enterprise Control Surface</span>
-  </div>
-
   <!-- SKYHAWK -->
   <div class="ticker">
-    <span>🛰️ SKYHAWK · Signals Nominal</span>
+    🛰️ SKYHAWK · Signals Nominal
     <span>Latency: 14ms</span>
     <span>Feeds: 6 active</span>
     <span>No anomalies detected</span>
+  </div>
+
+  <!-- HEADER WITH LOGO -->
+  <div class="header">
+    <img src="../otos-logo.png" alt="OTOS logo" class="logo" />
+    <div class="header-title">ENTERPRISE CONTROL SURFACE</div>
   </div>
 
   <div class="layout">
@@ -241,51 +194,26 @@
     <main class="main">
       <div class="title">OTOS Cockpit</div>
       <div class="subtitle">
-        Enterprise execution surface.  
-        Human authority at the centre. Agents operate within visible, bounded lanes.
+        Enterprise execution surface. Human authority at the centre.
+        Agents operate within visible, bounded lanes.
       </div>
 
       <section class="priority-stack">
         <h3>TOP PRIORITY</h3>
-
-        <div class="task">
-          <strong>Lock Parent Node Governance</strong>
-          Confirm write-gates and authority boundaries.
-        </div>
-
-        <div class="task">
-          <strong>Prepare Demo Narrative</strong>
-          Sequence system layers for stakeholder walkthrough.
-        </div>
-
-        <div class="task">
-          <strong>Stabilise Visual Frame</strong>
-          Freeze layout before logic injection.
-        </div>
+        <div class="task"><strong>Lock Parent Node Governance</strong><br/>Confirm write-gates and authority boundaries.</div>
+        <div class="task"><strong>Prepare Demo Narrative</strong><br/>Sequence system layers for walkthrough.</div>
+        <div class="task"><strong>Stabilise Visual Frame</strong><br/>Freeze layout before logic injection.</div>
       </section>
 
       <section class="stats">
-        <div class="stat">
-          <h4>ACTIVE TASKS</h4>
-          <span>12</span>
-        </div>
-        <div class="stat">
-          <h4>AGENTS ONLINE</h4>
-          <span>1</span>
-        </div>
-        <div class="stat">
-          <h4>SIGNALS</h4>
-          <span>37</span>
-        </div>
-        <div class="stat">
-          <h4>SYSTEM STATE</h4>
-          <span>STABLE</span>
-        </div>
+        <div class="stat"><h4>ACTIVE TASKS</h4><span>12</span></div>
+        <div class="stat"><h4>AGENTS ONLINE</h4><span>1</span></div>
+        <div class="stat"><h4>SIGNALS</h4><span>37</span></div>
+        <div class="stat"><h4>SYSTEM STATE</h4><span>STABLE</span></div>
       </section>
 
       <div class="telemetry">
-        <strong>TELEMETRY (PREVIEW)</strong><br>
-        System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
+        TELEMETRY (PREVIEW) · System heartbeat nominal · Memory write-gates locked · No autonomous execution detected
       </div>
     </main>
 
@@ -293,20 +221,11 @@
     <aside class="sidebar">
       <div class="panel">
         <div class="eye">EYE20 — Parent Node</div>
-        <p>
-          Authoritative · Memory-anchored · Non-drifting
-        </p>
+        Authoritative · Memory-anchored · Non-drifting
       </div>
-
       <div class="panel">
-        <div class="andy">
-          <div class="pulse"></div>
-          Andy — Execution Agent
-        </div>
-        <p>
-          Scoped execution only · Read-only<br>
-          Awaiting instruction
-        </p>
+        <div class="andy">Andy — Execution Agent</div>
+        Scoped execution only · Read-only · Awaiting instruction
       </div>
     </aside>
 
