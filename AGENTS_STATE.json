@@ -1,0 +1,14 @@
+{
+  "child_nodes": [
+    {
+      "node_id": "ANDY",
+      "role": "CHILD_NODE",
+      "alias": "FEEDER",
+      "status": "ACTIVE",
+      "permissions_profile": "ANDY_EXECUTION_V1",
+      "can_write_memory": false,
+      "can_autonomous_execute": false
+    }
+  ],
+  "sub_agents": []
+}
