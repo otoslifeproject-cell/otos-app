@@ -1,263 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>OTOS Cockpit — Layer 9C</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <title>OTOS Cockpit – Enterprise Control Surface</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root{
-  --bg-main:#eef4fb;
-  --bg-card:#ffffff;
-  --blue-soft:#dbeafe;
-  --blue-strong:#2563eb;
-  --green-agent:#16a34a;
-  --grey-text:#475569;
-  --border-soft:rgba(0,0,0,0.08);
-}
+  <style>
+    :root {
+      --bg-main: #eef4fb;
+      --bg-card: #ffffff;
+      --blue-soft: #dbeafe;
+      --blue-strong: #2563eb;
+      --green-agent: #16a34a;
+      --grey-text: #475569;
+      --border-soft: rgba(0,0,0,0.08);
+    }
 
-/* RESET */
-*{
-  box-sizing:border-box;
-  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-}
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
 
-body{
-  margin:0;
-  background:
-    radial-gradient(circle at bottom right,#dbeafe 0%,var(--bg-main) 55%);
-  color:#0f172a;
-  overflow-x:hidden;
-}
+    body {
+      margin: 0;
+      background: radial-gradient(circle at bottom right, #dbeafe 0%, var(--bg-main) 55%);
+      color: #0f172a;
+    }
 
-/* =========================
-   SKYHAWK — LOCKED
-   ========================= */
-.ticker{
-  height:42px;
-  background:#020617;
-  color:#e5e7eb;
-  display:flex;
-  align-items:center;
-  padding:0 18px;
-  font-size:13px;
-  gap:18px;
-  white-space:nowrap;
-}
+    /* SKYHAWK */
+    .ticker {
+      height: 42px;
+      background: #020617;
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      font-size: 13px;
+      gap: 18px;
+      white-space: nowrap;
+    }
 
-/* =========================
-   BRAND — HARD ANCHORED
-   ========================= */
-.brand-anchor{
-  position:absolute;
-  top:56px;          /* sits just under SKYHAWK */
-  left:32px;
-  z-index:10;
-  pointer-events:none;
-}
+    /* HEADER */
+    header.top-header {
+      position: relative;
+      height: 140px;
+      padding: 0;
+    }
 
-.brand-brain{
-  height:400px;      /* EXACT requirement */
-  width:auto;
-  display:block;
-}
+    .logo-wrap {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
 
-/* =========================
-   MAIN LAYOUT
-   ========================= */
-main{
-  padding:420px 40px 40px 40px; /* clears the 400px brain cleanly */
-}
+    .brain {
+      height: 120px;
+      width: auto;
+      display: block;
+    }
 
-h1{
-  font-size:26px;
-  margin:0 0 6px 0;
-}
+    .brand-text {
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
 
-.subtitle{
-  max-width:720px;
-  font-size:15px;
-  color:var(--grey-text);
-  margin-bottom:24px;
-}
+    main {
+      padding: 0 32px 40px 32px;
+    }
 
-/* =========================
-   CARDS
-   ========================= */
-.card{
-  background:var(--bg-card);
-  border-radius:14px;
-  border:1px solid var(--border-soft);
-  padding:18px;
-  margin-bottom:18px;
-}
+    h1 {
+      font-size: 26px;
+      margin: 12px 0 6px 0;
+    }
 
-.card h3{
-  margin:0 0 12px;
-  font-size:13px;
-  letter-spacing:.08em;
-  color:#334155;
-}
+    .subtitle {
+      color: var(--grey-text);
+      max-width: 720px;
+      font-size: 15px;
+    }
 
-.task{
-  background:#f8fafc;
-  border:1px solid var(--border-soft);
-  border-radius:10px;
-  padding:12px 14px;
-  margin-bottom:10px;
-}
+    .card {
+      background: var(--bg-card);
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      padding: 18px;
+      margin-top: 18px;
+    }
 
-.task.primary{
-  box-shadow:0 0 0 2px rgba(37,99,235,.35);
-}
+    .task {
+      background: #f8fafc;
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
 
-/* =========================
-   STATS
-   ========================= */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-  margin-bottom:18px;
-}
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
 
-.stat{
-  background:var(--bg-card);
-  border-radius:12px;
-  padding:14px;
-  border:1px solid var(--border-soft);
-}
+    .stat {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid var(--border-soft);
+    }
 
-.stat strong{
-  font-size:22px;
-}
+    aside.sidebar {
+      position: fixed;
+      right: 24px;
+      top: 96px;
+      width: 260px;
+    }
 
-/* =========================
-   TELEMETRY
-   ========================= */
-.telemetry{
-  padding:14px;
-  border-radius:12px;
-  border:1px dashed var(--border-soft);
-  background:#f8fafc;
-  font-size:13px;
-  color:#334155;
-}
-
-/* =========================
-   SIDEBAR — RIGHT
-   ========================= */
-aside.sidebar{
-  position:fixed;
-  right:24px;
-  top:120px;
-  width:260px;
-}
-
-.panel{
-  background:var(--bg-card);
-  border-radius:14px;
-  border:1px solid var(--border-soft);
-  padding:14px;
-  margin-bottom:14px;
-}
-
-.eye{
-  font-weight:600;
-  color:var(--blue-strong);
-  margin-bottom:6px;
-}
-
-.andy{
-  font-weight:600;
-  color:var(--green-agent);
-  display:flex;
-  align-items:center;
-  gap:6px;
-}
-
-.pulse-dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:var(--green-agent);
-}
-</style>
+    .panel {
+      background: var(--bg-card);
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- SKYHAWK -->
-<div class="ticker">
-  <strong>SKYHAWK</strong>
-  <span>Signals nominal</span>
-  <span>Latency: 14ms</span>
-  <span>Feeds: 6 active</span>
-  <span>No anomalies detected</span>
-</div>
+  <div class="ticker">
+    <strong>SKYHAWK</strong>
+    <span>Signals nominal</span>
+    <span>Latency: 14ms</span>
+    <span>Feeds: 6 active</span>
+    <span>No anomalies detected</span>
+  </div>
 
-<!-- BRAND (BRAIN ONLY) -->
-<div class="brand-anchor">
-  <img
-    src="docs/brand/brain/OTOS_BRAIN_ORANGE.svg"
-    alt="OTOS Brain"
-    class="brand-brain"
-  />
-</div>
+  <header class="top-header">
+    <div class="logo-wrap">
+      <img
+        src="/otos-app/docs/brand/brain/OTOS_BRAIN_ORANGE.svg"
+        alt="OTOS Brain"
+        class="brain"
+      />
+      <div class="brand-text">OTOS</div>
+    </div>
+  </header>
 
-<main>
-  <h1>OTOS Cockpit</h1>
-  <p class="subtitle">
-    Sovereign life-management surface. Human authority at the centre.
-  </p>
+  <main>
+    <h1>OTOS Cockpit</h1>
+    <p class="subtitle">
+      Sovereign life-management surface. Human authority at the centre.
+    </p>
 
-  <div class="card">
-    <h3>TOP PRIORITY</h3>
+    <div class="card">
+      <div class="task">
+        <strong>Lock Parent Node Governance</strong><br />
+        Confirm runtime, memory and authority boundaries.
+      </div>
+    </div>
+  </main>
 
-    <div class="task primary">
-      <strong>Lock Parent Node Governance</strong>
-      Confirm runtime, memory and authority boundaries.
+  <aside class="sidebar">
+    <div class="panel">
+      <strong>EYE20 — Parent Node</strong><br />
+      Authoritative · Memory-anchored
     </div>
 
-    <div class="task">
-      <strong>Prepare Demo Narrative</strong>
-      Sequence system layers for walkthrough.
+    <div class="panel">
+      <strong>Andy — Feeder</strong><br />
+      Intake · Orchestration · Routing
     </div>
-
-    <div class="task">
-      <strong>Stabilise Visual Frame</strong>
-      Freeze layout before logic injection.
-    </div>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><strong>12</strong><br/>Active Tasks</div>
-    <div class="stat"><strong>1</strong><br/>Agents Online</div>
-    <div class="stat"><strong>37</strong><br/>Signals</div>
-    <div class="stat"><strong>STABLE</strong><br/>System State</div>
-  </div>
-
-  <div class="telemetry">
-    <strong>TELEMETRY (PREVIEW)</strong><br/>
-    System heartbeat nominal. Memory write-gates locked.
-    No autonomous execution detected.
-  </div>
-</main>
-
-<aside class="sidebar">
-  <div class="panel">
-    <div class="eye">EYE20 — Parent Node</div>
-    Authoritative · Memory-anchored · Non-drifting
-  </div>
-
-  <div class="panel">
-    <div class="andy">
-      <span class="pulse-dot"></span>
-      Andy — Feeder
-    </div>
-    Intake · Orchestration · Execution routing
-  </div>
-</aside>
+  </aside>
 
 </body>
 </html>
