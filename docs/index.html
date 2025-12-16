@@ -2,116 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OTOS Cockpit</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- SKYHAWK STATUS BAR (ticker stays running) -->
-  <div class="skyhawk-bar" aria-label="Skyhawk status">
-    <div class="skyhawk-ticker">
-      <span>SKYHAWK</span>
-      <span>Signals nominal</span>
-      <span>Latency: 14ms</span>
-      <span>Feeds: 6 active</span>
-      <span>No anomalies detected</span>
 
-      <span class="sep">•</span>
-
-      <span>SKYHAWK</span>
-      <span>Signals nominal</span>
-      <span>Latency: 14ms</span>
-      <span>Feeds: 6 active</span>
-      <span>No anomalies detected</span>
-
-      <span class="sep">•</span>
-
-      <span>SKYHAWK</span>
-      <span>Signals nominal</span>
-      <span>Latency: 14ms</span>
-      <span>Feeds: 6 active</span>
-      <span>No anomalies detected</span>
-    </div>
-  </div>
-
-  <!-- HERO / BRAND (brain + OTOS letters split, brain can animate later) -->
-  <header class="hero">
+  <!-- FIXED TOP BAR -->
+  <header class="top-bar">
     <div class="brand">
-      <!-- IMPORTANT: GitHub Pages root IS /docs, so do NOT include /docs/ in this path -->
       <img
-        class="brand-brain"
-        src="brand/brain/OTOS_BRAIN_ORANGE.svg"
-        alt="OTOS Brain"
-        draggable="false"
+        src="brand/logo/otos-long-orange.png"
+        alt="OTOS"
+        class="otos-logo"
       />
-      <div class="brand-word">OTOS</div>
     </div>
   </header>
 
-  <!-- MAIN LAYOUT -->
-  <main class="layout">
-    <section class="main">
+  <!-- MAIN APP SURFACE -->
+  <main class="app">
+
+    <section class="hero">
       <h1>OTOS Cockpit</h1>
-      <p class="sub">Sovereign life-management surface. Human authority at the centre.</p>
-
-      <div class="panel">
-        <div class="panel-title">TOP PRIORITY</div>
-
-        <div class="priority">
-          <div class="priority-item primary">
-            <div class="priority-head">Lock Parent Node Governance</div>
-            <div class="priority-sub">Confirm runtime, memory and authority boundaries.</div>
-          </div>
-
-          <div class="priority-item">
-            <div class="priority-head">Prepare Demo Narrative</div>
-            <div class="priority-sub">Sequence system layers for walkthrough.</div>
-          </div>
-
-          <div class="priority-item">
-            <div class="priority-head">Stabilise Visual Frame</div>
-            <div class="priority-sub">Freeze layout before logic injection.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-num">12</div>
-          <div class="stat-label">Active Tasks</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">1</div>
-          <div class="stat-label">Agents Online</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">37</div>
-          <div class="stat-label">Signals</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">STABLE</div>
-          <div class="stat-label">System State</div>
-        </div>
-      </div>
-
-      <div class="telemetry">
-        <div class="telemetry-title">TELEMETRY (PREVIEW)</div>
-        <div class="telemetry-sub">System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.</div>
-      </div>
+      <p class="subtitle">
+        Sovereign life-management surface. Human authority at the centre.
+      </p>
     </section>
 
-    <aside class="side">
-      <div class="side-card">
-        <div class="side-title">EYE20 — Parent Node</div>
-        <div class="side-sub">Authoritative · Memory-anchored · Non-drifting</div>
-      </div>
+    <section class="priority">
+      <h2>Top Priority</h2>
+      <ul>
+        <li>Lock Parent Node Governance</li>
+        <li>Prepare Demo Narrative</li>
+        <li>Stabilise Visual Frame</li>
+      </ul>
+    </section>
 
-      <div class="side-card">
-        <div class="side-title green"><span class="dot"></span>Andy — Feeder</div>
-        <div class="side-sub">Intake · Orchestration · Execution routing</div>
-      </div>
-    </aside>
   </main>
+
 </body>
 </html>
