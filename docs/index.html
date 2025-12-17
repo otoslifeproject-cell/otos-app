@@ -2,121 +2,369 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit</title>
+  <title>OTOS Cockpit — V1 (Locked Baseline)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
+  <!-- SKYHAWK (restored ticker + motion) -->
+  <header class="skyhawk" aria-label="Skyhawk Ticker">
+    <div class="ticker">
+      <div class="ticker-track" role="marquee" aria-live="off">
+        <span>🛰️ SKYHAWK · Signals Nominal</span>
+        <span>Latency: 14ms</span>
+        <span>Feeds: 6 active</span>
+        <span>No anomalies detected</span>
+        <span>🧠 Focus: 1 task</span>
+        <span>🔒 Inside: Active</span>
 
-  <!-- SKYHAWK TICKER -->
-  <div class="skyhawk-bar">
-    <div class="skyhawk-left">
-      <span class="skyhawk-dot"></span>
-      <strong>SKYHAWK</strong>
-      <span class="muted">Signals nominal</span>
+        <span>🛰️ SKYHAWK · Signals Nominal</span>
+        <span>Latency: 14ms</span>
+        <span>Feeds: 6 active</span>
+        <span>No anomalies detected</span>
+        <span>🧠 Focus: 1 task</span>
+        <span>🔒 Inside: Active</span>
+      </div>
     </div>
-    <div class="skyhawk-right">
-      <span>Latency: 14ms</span>
-      <span>Feeds: 6 active</span>
-      <span>No anomalies detected</span>
+
+    <div class="signal-strip" aria-hidden="true">
+      <span class="signal"></span><span class="signal"></span><span class="signal"></span>
+      <span class="signal"></span><span class="signal"></span><span class="signal"></span>
+      <span class="signal"></span><span class="signal"></span>
     </div>
+  </header>
+
+  <!-- LOGO (LOCKED path) -->
+  <div class="logo-anchor" aria-label="OTOS Brand">
+    <img
+      class="otos-logo"
+      src="brand/logo/otos-logo-400.png"
+      alt="OTOS logo"
+      loading="eager"
+      decoding="async"
+    />
   </div>
 
-  <!-- APP -->
-  <main class="app">
-
-    <!-- HEADER -->
-    <header class="app-header">
-      <img
-        src="./brand/otos-logo.svg"
-        alt="OTOS"
-        class="otos-logo"
-      />
-
-      <div class="hero">
-        <h1>OTOS Cockpit</h1>
-        <p>
-          Enterprise execution surface. Human authority at the centre.
-          Agents operate within visible, bounded lanes.
-        </p>
-      </div>
-    </header>
-
-    <!-- TOP PRIORITY -->
-    <section class="card priority">
-      <h3>Top Priority</h3>
-      <ul>
-        <li class="priority-item active">
-          <strong>Lock Parent Node Governance</strong>
-          <span>Confirm write-gates and authority boundaries.</span>
-        </li>
-        <li class="priority-item">
-          <strong>Prepare Demo Narrative</strong>
-          <span>Sequence system layers for stakeholder walkthrough.</span>
-        </li>
-        <li class="priority-item">
-          <strong>Stabilise Visual Frame</strong>
-          <span>Freeze layout before logic injection.</span>
-        </li>
-      </ul>
-    </section>
-
-    <!-- CORE LANES -->
-    <section class="lanes">
-
-      <!-- PARENT NODE (LEFT — AUTHORITATIVE) -->
-      <div class="card lane parent-lane">
-        <span class="lane-label">PARENT NODE</span>
-        <h2>EYE20 — Parent Node</h2>
-        <p class="lane-desc">
-          Authoritative · Memory-anchored · Non-drifting
-        </p>
+  <!-- MAIN SPLIT LAYOUT -->
+  <div class="workspace">
+    <!-- LEFT: PARENT NODE -->
+    <section class="lane lane-parent" aria-label="Parent Node Lane">
+      <div class="lane-head">
+        <div class="lane-title">
+          <span class="pill parent-pill">EYE22 · Parent Node</span>
+          <span class="subpill">Governance only · Truth · Locks</span>
+        </div>
+        <div class="lane-actions">
+          <button class="btn btn-ghost" id="btnSnapshot" title="Creates a local snapshot object (no upload).">Snapshot now</button>
+          <button class="btn" id="btnExport" title="Exports your current session bundle as JSON for archiving.">Export bundle</button>
+        </div>
       </div>
 
-      <!-- EXECUTION AGENT (RIGHT — SUBORDINATE) -->
-      <div class="card lane agent-lane">
-        <span class="lane-label agent">EXECUTION AGENT</span>
-        <h2>Andy — Execution Agent</h2>
-        <p class="lane-desc">
-          Scoped execution · Read-only · Awaiting instruction
-        </p>
+      <div class="panel card">
+        <div class="panel-title">TOP PRIORITY (Focus Deck)</div>
+        <div class="focus-deck" id="focusDeck">
+          <div class="focus-card">
+            <div class="focus-label">NOW</div>
+            <div class="focus-title">Finish V1 UI wiring</div>
+            <div class="focus-meta">Locked baseline · Parent + Andy lanes · Exportable intake</div>
+          </div>
+          <div class="focus-stack">
+            <div class="stack-item">Next: Start NHS Project node (inside)</div>
+            <div class="stack-item">Next: Andy ingest pipeline (Tier 3 archive)</div>
+            <div class="stack-item">Next: Promote canonical rules (Tier 1)</div>
+          </div>
+        </div>
       </div>
 
-    </section>
+      <div class="panel card chat-shell">
+        <div class="panel-title">PARENT CHAT (V1 Shell)</div>
 
-    <!-- METRICS -->
-    <section class="metrics">
-      <div class="card metric">
-        <span class="metric-val">12</span>
-        <span class="metric-label">Active Tasks</span>
+        <div class="chat-log" id="parentChatLog" aria-live="polite">
+          <div class="msg sys">
+            <div class="msg-role">SYSTEM</div>
+            <div class="msg-text">
+              Inside status: <strong>ACTIVE</strong>. Parent is governance-only. No execution without explicit instruction.
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-compose">
+          <input
+            id="parentInput"
+            class="input"
+            type="text"
+            placeholder='Type governance notes… e.g. "LOCK: UI baseline v1"'
+            autocomplete="off"
+          />
+          <button class="btn" id="parentSend">Add note</button>
+        </div>
+
+        <div class="hint">
+          This is a V1 governance log inside the UI. It does not connect to ChatGPT automatically yet.
+        </div>
       </div>
-      <div class="card metric">
-        <span class="metric-val">1</span>
-        <span class="metric-label">Agents Online</span>
-      </div>
-      <div class="card metric">
-        <span class="metric-val">37</span>
-        <span class="metric-label">Signals</span>
-      </div>
-      <div class="card metric state">
-        <span class="metric-val stable">STABLE</span>
-        <span class="metric-label">System State</span>
+
+      <div class="panel card telemetry">
+        <div class="panel-title">TELEMETRY (PREVIEW)</div>
+        <div class="telemetry-grid">
+          <div class="telemetry-item">
+            <div class="k">Window mode</div><div class="v">Operational Idle</div>
+          </div>
+          <div class="telemetry-item">
+            <div class="k">Guardrails</div><div class="v ok">HARD-LOCKED</div>
+          </div>
+          <div class="telemetry-item">
+            <div class="k">Andy</div><div class="v warn">Installed · Idle</div>
+          </div>
+          <div class="telemetry-item">
+            <div class="k">Reminders</div><div class="v mute">OFF</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- TELEMETRY -->
-    <section class="card telemetry">
-      <h4>Telemetry (Preview)</h4>
-      <p>
-        System heartbeat nominal. Memory write-gates locked.
-        No autonomous execution detected.
-      </p>
-    </section>
+    <!-- RIGHT: ANDY (EXECUTION / INTAKE) -->
+    <aside class="lane lane-andy" aria-label="Andy Lane">
+      <div class="lane-head">
+        <div class="lane-title">
+          <span class="pill andy-pill">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            Andy · Execution Agent
+          </span>
+          <span class="subpill">Ingest → Archive (Tier 3) · No writes</span>
+        </div>
+        <div class="lane-actions">
+          <button class="btn btn-ghost" id="btnClear" title="Clears local lists (does not delete files).">Clear list</button>
+        </div>
+      </div>
 
-  </main>
+      <div class="panel card dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop files here">
+        <div class="dz-title">Drop files here</div>
+        <div class="dz-sub">PDF · DOCX · TXT · PNG · ZIP (local capture only)</div>
+        <div class="dz-mini">Nothing uploads from this page. You export a JSON bundle to ingest later.</div>
+      </div>
 
+      <div class="panel card">
+        <div class="panel-title">INTAKE QUEUE</div>
+        <div class="queue" id="queue"></div>
+      </div>
+
+      <div class="panel card">
+        <div class="panel-title">TASK CAPTURE (V1)</div>
+        <div class="task-capture">
+          <input
+            id="taskInput"
+            class="input"
+            type="text"
+            placeholder='Quick task… e.g. "Dedup docs + promote canon pack"'
+            autocomplete="off"
+          />
+          <button class="btn" id="taskAdd">Add</button>
+        </div>
+        <div class="task-list" id="taskList"></div>
+      </div>
+
+      <div class="panel card andy-notes">
+        <div class="panel-title">ANDY STATUS</div>
+        <div class="note-line"><span class="dot ok"></span> Envelope: token-gated</div>
+        <div class="note-line"><span class="dot ok"></span> Memory writes: blocked</div>
+        <div class="note-line"><span class="dot warn"></span> Ingest: local-only (V1)</div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="footer">
+    <div class="foot-left">
+      <span class="foot-pill">LOCKED BASELINE</span>
+      <span class="foot-text">Logo path: <code>docs/brand/logo/otos-logo-400.png</code></span>
+    </div>
+    <div class="foot-right">
+      <span class="foot-text">OTOS Cockpit V1 · UI-only scaffold</span>
+    </div>
+  </footer>
+
+  <script>
+    // ---------------------------
+    // V1: Local-only state (no uploads, no API)
+    // ---------------------------
+    const state = {
+      version: "V1-LOCKED",
+      timestamp: () => new Date().toISOString(),
+      parentNotes: [],
+      intake: [],
+      tasks: [],
+      snapshots: []
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function renderQueue() {
+      const el = $("queue");
+      if (!state.intake.length) {
+        el.innerHTML = '<div class="empty">No files yet. Drop something into Andy.</div>';
+        return;
+      }
+      el.innerHTML = state.intake.map((f, i) => `
+        <div class="q-item">
+          <div class="q-name">${escapeHtml(f.name)}</div>
+          <div class="q-meta">${escapeHtml(f.type || "unknown")} · ${formatBytes(f.size)} · ${escapeHtml(f.addedAt)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderTasks() {
+      const el = $("taskList");
+      if (!state.tasks.length) {
+        el.innerHTML = '<div class="empty">No tasks yet. Add one.</div>';
+        return;
+      }
+      el.innerHTML = state.tasks.map((t, i) => `
+        <div class="t-item">
+          <div class="t-title">${escapeHtml(t.text)}</div>
+          <div class="t-meta">${escapeHtml(t.addedAt)}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderParentChat() {
+      const el = $("parentChatLog");
+      const base = el.querySelector(".msg.sys") ? el.querySelector(".msg.sys").outerHTML : "";
+      const notes = state.parentNotes.map(n => `
+        <div class="msg parent">
+          <div class="msg-role">PARENT</div>
+          <div class="msg-text">${escapeHtml(n.text)}</div>
+          <div class="msg-time">${escapeHtml(n.addedAt)}</div>
+        </div>
+      `).join("");
+      el.innerHTML = base + notes;
+      el.scrollTop = el.scrollHeight;
+    }
+
+    function addFiles(fileList) {
+      const now = state.timestamp();
+      for (const f of fileList) {
+        state.intake.push({
+          name: f.name,
+          size: f.size,
+          type: f.type,
+          addedAt: now
+        });
+      }
+      renderQueue();
+    }
+
+    function exportBundle() {
+      const payload = {
+        exportedAt: state.timestamp(),
+        system: "OTOS Cockpit V1",
+        memoryModel: "Locked (Tier 0-3) — Promotion only",
+        version: state.version,
+        parentNotes: state.parentNotes,
+        intake: state.intake,
+        tasks: state.tasks,
+        snapshots: state.snapshots
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `OTOS_V1_BUNDLE_${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 500);
+    }
+
+    function snapshotNow() {
+      state.snapshots.push({
+        at: state.timestamp(),
+        counts: { notes: state.parentNotes.length, intake: state.intake.length, tasks: state.tasks.length }
+      });
+    }
+
+    function formatBytes(bytes) {
+      if (bytes === 0) return "0 B";
+      const k = 1024;
+      const sizes = ["B","KB","MB","GB","TB"];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return (bytes / Math.pow(k, i)).toFixed(i ? 1 : 0) + " " + sizes[i];
+    }
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, (m) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    // ---------------------------
+    // Wire: Parent notes
+    // ---------------------------
+    $("parentSend").addEventListener("click", () => {
+      const v = $("parentInput").value.trim();
+      if (!v) return;
+      state.parentNotes.push({ text: v, addedAt: state.timestamp() });
+      $("parentInput").value = "";
+      renderParentChat();
+    });
+    $("parentInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") $("parentSend").click();
+    });
+
+    // ---------------------------
+    // Wire: Tasks
+    // ---------------------------
+    $("taskAdd").addEventListener("click", () => {
+      const v = $("taskInput").value.trim();
+      if (!v) return;
+      state.tasks.push({ text: v, addedAt: state.timestamp() });
+      $("taskInput").value = "";
+      renderTasks();
+    });
+    $("taskInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") $("taskAdd").click();
+    });
+
+    // ---------------------------
+    // Wire: Dropzone
+    // ---------------------------
+    const dz = $("dropzone");
+    dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("drag"); });
+    dz.addEventListener("dragleave", () => dz.classList.remove("drag"));
+    dz.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dz.classList.remove("drag");
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+        addFiles(e.dataTransfer.files);
+      }
+    });
+
+    // Optional click-to-open file picker
+    dz.addEventListener("click", () => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.multiple = true;
+      input.onchange = () => {
+        if (input.files && input.files.length) addFiles(input.files);
+      };
+      input.click();
+    });
+
+    // ---------------------------
+    // Buttons
+    // ---------------------------
+    $("btnExport").addEventListener("click", () => exportBundle());
+    $("btnSnapshot").addEventListener("click", () => { snapshotNow(); });
+    $("btnClear").addEventListener("click", () => {
+      state.intake = [];
+      state.tasks = [];
+      renderQueue();
+      renderTasks();
+    });
+
+    // Initial render
+    renderQueue();
+    renderTasks();
+    renderParentChat();
+  </script>
 </body>
 </html>
