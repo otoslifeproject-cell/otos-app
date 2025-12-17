@@ -33,13 +33,23 @@
 ================================ */
 .otos-logo {
   position: absolute;
-  top: -152px;   /* moved UP 2cm */
-  left: -76px;   /* moved LEFT 1cm */
+
+  /* REAL-WORLD MICRO ADJUSTMENT */
+  top: -76px;    /* ≈ 2cm UP */
+  left: -38px;   /* ≈ 1cm LEFT */
+
+  /* SIZE — LOCKED */
   height: 260px;
   width: auto;
+
+  /* SCALE — LOCKED */
+  transform: scale(1);
+  transform-origin: top left;
+
   display: block;
   pointer-events: none;
 }
+
 
 /* ================================
    PAGE LAYOUT
