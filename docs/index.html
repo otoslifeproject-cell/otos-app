@@ -2,45 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OTOS Cockpit — V1 (Locked)</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="docs/styles.css" />
 </head>
 
 <body>
 
-  <!-- SKYHAWK BAR -->
+  <!-- SKYHAWK -->
   <div class="skyhawk-bar">
-    <span>SKYHAWK</span>
+    <strong>SKYHAWK</strong>
     <span>Signals nominal</span>
     <span>Latency: 14ms</span>
     <span>Feeds: 6 active</span>
     <span>No anomalies detected</span>
   </div>
 
-  <!-- HEADER -->
+  <!-- HEADER (ABSOLUTE, LOCKED) -->
   <header class="app-header">
-    <div class="logo-wrap">
-      <img
-        src="brand/logo/otos-logo-400.png"
-        alt="OTOS"
-        class="logo"
-      />
+    <div class="logo-block">
+      <div class="logo-row">
+        <img
+          src="docs/brand/logo/otos-logo-400.png"
+          alt="OTOS Brain Logo"
+          class="logo-brain"
+        />
+        <div class="logo-text">OTOS</div>
+      </div>
+      <div class="cockpit-text">Cockpit</div>
     </div>
 
-    <div class="title-wrap">
-      <h1>OTOS Cockpit</h1>
-      <p class="subtitle">
-        Enterprise execution surface. Human authority at the centre.
-        Agents operate within visible, bounded lanes.
-      </p>
+    <div class="subtitle">
+      Enterprise execution surface. Human authority at the centre.
+      Agents operate within visible, bounded lanes.
     </div>
   </header>
 
   <!-- MAIN -->
   <main class="workspace">
 
-    <!-- TOP PRIORITY -->
     <section class="card focus-card">
       <h3>Top Priority</h3>
       <ul>
@@ -50,38 +50,31 @@
       </ul>
     </section>
 
-    <!-- LANES -->
     <section class="lane-grid">
-
-      <!-- PARENT NODE -->
-      <div class="card lane parent-lane">
-        <span class="lane-label">PARENT NODE</span>
+      <div class="card lane">
+        <div class="lane-label">PARENT NODE</div>
         <h2>EYE22 — Parent Node</h2>
         <p class="lane-desc">
           Authoritative · Memory-anchored · Non-drifting
         </p>
-        <p class="lane-foot">
+        <div class="lane-foot">
           This node defines truth. No execution occurs here.
-        </p>
+        </div>
       </div>
 
-      <!-- EXECUTION AGENT -->
-      <div class="card lane agent-lane">
-        <span class="lane-label">EXECUTION AGENT</span>
+      <div class="card lane">
+        <div class="lane-label">EXECUTION AGENT</div>
         <h2>Andy — Execution Agent</h2>
         <p class="lane-desc">
           Scoped execution · Read-only · Awaiting instruction
         </p>
-
         <div class="agent-actions">
           <button disabled>No instruction loaded</button>
           <button>Preview execution path</button>
         </div>
       </div>
-
     </section>
 
-    <!-- METRICS -->
     <section class="metrics-grid">
       <div class="metric">
         <strong>12</strong>
@@ -101,7 +94,6 @@
       </div>
     </section>
 
-    <!-- TELEMETRY -->
     <section class="card telemetry">
       <h3>Telemetry (Preview)</h3>
       <p>
@@ -112,7 +104,6 @@
 
   </main>
 
-  <!-- FOOTER -->
   <footer class="app-footer">
     EYE22 · Parent Node Governance only · Truth · Locks
   </footer>
