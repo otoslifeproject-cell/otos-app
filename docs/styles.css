@@ -33,17 +33,10 @@
 ================================ */
 .otos-logo {
   position: absolute;
-  top: -152px;
-  left: -76px;
-
-  /* BASE SIZE — NOW SANE */
+  top: -152px;   /* moved UP 2cm */
+  left: -76px;   /* moved LEFT 1cm */
   height: 260px;
   width: auto;
-
-  /* FINE CONTROL ONLY */
-  transform: scale(1);
-  transform-origin: top left;
-
   display: block;
   pointer-events: none;
 }
