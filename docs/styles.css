@@ -1,291 +1,144 @@
-/* ============================================================================
-   OTOS Cockpit — Layer 9C BASE (RESTORED) + Ticker polish
-   LOCKS: logo size + logo position + title position (no layout snapping)
-   ============================================================================ */
+/* ==========================================================================
+   HERO BASE — LOCKED ANCHOR CONTEXT
+   ========================================================================== */
 
-:root{
-  --bg0: #f7fbff;
-  --bg1: #eaf4ff;
-  --bg2: #d6e9ff;
-
-  --ink: #0b1220;
-  --ink2: rgba(11,18,32,0.72);
-
-  --card: rgba(255,255,255,0.72);
-  --card2: rgba(255,255,255,0.62);
-
-  --stroke: rgba(11,18,32,0.10);
-  --stroke2: rgba(11,18,32,0.08);
-
-  --shadow: 0 18px 42px rgba(11,18,32,0.12);
-  --shadow2: 0 10px 26px rgba(11,18,32,0.10);
-
-  --radius: 18px;
-  --radius2: 14px;
-}
-
-/* Base reset */
-*{ box-sizing: border-box; }
-html, body{ height: 100%; }
-body{
-  margin: 0;
-  color: var(--ink);
-  background:
-    radial-gradient(1200px 520px at 12% 14%, rgba(214,233,255,0.85) 0%, rgba(214,233,255,0) 60%),
-    radial-gradient(900px 520px at 70% 18%, rgba(234,244,255,0.92) 0%, rgba(234,244,255,0) 62%),
-    linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 44%, var(--bg2) 100%);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-}
-
-/* ============================================================================
-   SKYHAWK TICKER (TOP BAR) — polished, lock-safe (no reflow impact)
-   ============================================================================ */
-.skyhawk-bar{
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  font-size: 13px;
-  letter-spacing: 0.2px;
-  color: rgba(255,255,255,0.92);
-  background:
-    linear-gradient(180deg, rgba(11,18,32,0.98) 0%, rgba(11,18,32,0.92) 100%);
-  box-shadow: 0 10px 22px rgba(0,0,0,0.22);
-  white-space: nowrap;
+.hero {
+  position: relative; /* CRITICAL: restores logo anchoring */
+  min-height: 420px;
+  padding: 96px 64px 48px 64px;
+  background: radial-gradient(
+      1200px 600px at 20% -10%,
+      rgba(96,165,250,0.35),
+      transparent 60%
+    ),
+    linear-gradient(
+      180deg,
+      #eef6ff 0%,
+      #f7fbff 40%,
+      #ffffff 100%
+    );
   overflow: hidden;
 }
-.skyhawk-label{
-  font-weight: 700;
-  letter-spacing: 0.6px;
-}
-.sep{ opacity: 0.55; }
 
-.skyhawk-dot{
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #22c55e;
-  box-shadow: 0 0 0 6px rgba(34,197,94,0.16);
-  animation: skyhawkPulse 1.8s ease-in-out infinite;
-}
-@keyframes skyhawkPulse{
-  0%{ transform: scale(1); opacity: 1; }
-  50%{ transform: scale(1.18); opacity: 0.55; }
-  100%{ transform: scale(1); opacity: 1; }
-}
+/* ==========================================================================
+   OTOS LOGO — LOCKED (RESTORED)
+   ========================================================================== */
 
-/* ============================================================================
-   PAGE LAYOUT (Layer 9C base)
-   ============================================================================ */
-.page{
-  padding: 28px 36px 44px 36px;
-  max-width: 1300px;
-  margin: 0 auto;
-}
-
-/* HEADER / HERO */
-.app-header{
-  position: relative; /* anchor for absolute logo */
-  display: grid;
-  grid-template-columns: minmax(720px, 1fr) 340px;
-  gap: 22px;
-  align-items: start;
-
-  /* Keep title where it is; do NOT shift it down */
-  padding: 18px 0 0 0;
-  min-height: 220px;
-}
-
-/* Brand wrapper does not affect layout flow */
-.brand{
-  position: relative;
-  height: 0;
-}
-
-/* ============================================================================
-   LOGO — HERO MARK (LOCKED)
-   Size ✔ locked
-   Position ✔ controlled
-   ============================================================================ */
-.otos-logo{
+.otos-logo {
   position: absolute;
-  top: -266px;   /* LOCKED */
-  left: -38px;   /* LOCKED */
-  height: 260px; /* LOCKED */
+  top: -266px;          /* LOCKED */
+  left: -38px;          /* LOCKED */
+  height: 260px;        /* LOCKED */
   width: auto;
-  display: block;
+  z-index: 2;
   pointer-events: none;
-  user-select: none;
-  image-rendering: auto;
 }
 
-/* LEFT SIDE HERO */
-.hero-left{
+/* ==========================================================================
+   HERO TITLE BLOCK (UNCHANGED POSITION)
+   ========================================================================== */
+
+.hero-title {
   position: relative;
-  padding-top: 0;
+  z-index: 3;
+  max-width: 520px;
 }
 
-.title{
-  margin: 0 0 8px 0;
-  font-size: 34px;
-  line-height: 1.08;
-  letter-spacing: -0.4px;
-}
-.subtitle{
-  margin: 0 0 18px 0;
-  color: var(--ink2);
-  font-size: 14px;
-  line-height: 1.6;
-  max-width: 760px;
-}
-
-/* RIGHT SIDE CARDS */
-.hero-right{
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 6px;
-}
-
-.aside-title{
+.hero-title h1 {
+  font-size: 32px;
   font-weight: 700;
-  font-size: 13px;
-  line-height: 1.3;
-}
-.aside-accent{
-  color: #2563eb;
-}
-.aside-sub{
-  margin-top: 6px;
-  font-size: 12px;
-  color: rgba(11,18,32,0.70);
-  line-height: 1.4;
+  margin-bottom: 8px;
 }
 
-.status-dot{
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  margin-right: 8px;
-  background: #22c55e;
-  box-shadow: 0 0 0 6px rgba(34,197,94,0.14);
-}
-
-/* Cards */
-.card{
-  background: linear-gradient(180deg, var(--card) 0%, var(--card2) 100%);
-  border: 1px solid var(--stroke);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow2);
-  backdrop-filter: blur(10px);
-}
-
-.card-lg{ padding: 16px 16px 14px 16px; }
-.card:not(.card-lg){ padding: 14px 14px 12px 14px; }
-
-.card-title{
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: rgba(11,18,32,0.68);
-  margin-bottom: 10px;
-}
-
-/* Priority list */
-.priority-list{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.priority-item{
-  background: rgba(255,255,255,0.78);
-  border: 1px solid var(--stroke2);
-  border-radius: var(--radius2);
-  padding: 12px 12px 10px 12px;
-  box-shadow: 0 10px 20px rgba(11,18,32,0.06);
-}
-
-.priority-item.is-active{
-  border-color: rgba(37,99,235,0.35);
-  box-shadow: 0 12px 24px rgba(37,99,235,0.10);
-}
-
-.priority-name{
-  font-weight: 800;
-  font-size: 13px;
-  margin-bottom: 2px;
-}
-.priority-desc{
-  font-size: 12px;
-  color: rgba(11,18,32,0.72);
-}
-
-/* Metrics row */
-.metrics{
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
-  margin-top: 18px;
-}
-
-.metric{
-  padding: 14px 14px 12px 14px;
-}
-.metric-top{
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.7px;
-  color: rgba(11,18,32,0.62);
-  margin-bottom: 6px;
-}
-.metric-val{
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: -0.2px;
-}
-.metric-val-strong{
-  font-size: 18px;
-  letter-spacing: 0.6px;
-}
-
-/* Telemetry */
-.telemetry{
-  margin-top: 14px;
-  padding: 14px;
-  border-style: dashed;
-}
-.telemetry-line{
-  font-size: 12px;
-  color: rgba(11,18,32,0.72);
+.hero-title p {
+  color: #475569;
   line-height: 1.5;
 }
 
-/* Responsive */
-@media (max-width: 1120px){
-  .app-header{
-    grid-template-columns: 1fr;
-  }
-  .hero-right{
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-  .metrics{
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* ==========================================================================
+   AUTHORITY LANES — HARD SEPARATION
+   ========================================================================== */
+
+.authority-lanes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 56px;
 }
 
-@media (max-width: 640px){
-  .page{ padding: 18px 16px 34px 16px; }
-  .title{ font-size: 28px; }
-  .metrics{ grid-template-columns: 1fr; }
+/* ------------------------------
+   PARENT NODE — LEFT / AUTHORITATIVE
+   ------------------------------ */
+
+.parent-node {
+  background: linear-gradient(
+    180deg,
+    rgba(37,99,235,0.08),
+    rgba(37,99,235,0.02)
+  );
+  border: 1px solid rgba(37,99,235,0.25);
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 12px 32px rgba(37,99,235,0.12);
 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .skyhawk-dot{ animation: none; }
+.parent-node .label {
+  color: #1d4ed8;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.parent-node .desc {
+  color: #334155;
+  margin-top: 4px;
+}
+
+/* ------------------------------
+   ANDY — RIGHT / OPERATIONAL
+   ------------------------------ */
+
+.execution-agent {
+  background: linear-gradient(
+    180deg,
+    rgba(16,185,129,0.08),
+    rgba(16,185,129,0.02)
+  );
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 12px 32px rgba(16,185,129,0.12);
+}
+
+.execution-agent .label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #047857;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.execution-agent .status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34,197,94,0.8);
+}
+
+.execution-agent .desc {
+  color: #334155;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   REDUCED MOTION SAFETY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }
