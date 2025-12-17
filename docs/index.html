@@ -5,155 +5,154 @@
   <title>OTOS Cockpit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Existing stylesheet (already in repo) -->
-  <link rel="stylesheet" href="./styles.css" />
-
   <style>
-    /* =========================================================
-       OTOS COCKPIT — STRUCTURAL UI LAYER
-       File: otos-app/docs/index.html
-       Mode: FULL REPLACE (structure only)
-       Uses: docs/styles.css
-    ========================================================= */
+    :root {
+      --bg: #0b0e13;
+      --panel: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.14);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.7);
+      --accent: #f59e0b;
+    }
 
-    /* ---- Layout frame ---- */
-    .otos-shell {
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Inter, Roboto, system-ui, sans-serif;
+    }
+
+    /* SKYHAWK BAR */
+    .status {
+      background: #0e1218;
+      padding: 10px 16px;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    /* SHELL */
+    .shell {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 32px;
     }
 
-    /* ---- Live status bar (top) ---- */
-    .otos-status {
-      background: #0e1218;
-      color: #e6e8ec;
-      font-size: 13px;
-      padding: 10px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      letter-spacing: 0.2px;
-    }
-
-    /* ---- Header ---- */
-    .otos-header {
+    /* HEADER */
+    .header {
       display: grid;
       grid-template-columns: 1fr 320px;
       gap: 32px;
-      margin-top: 28px;
-      margin-bottom: 36px;
+      margin-bottom: 40px;
     }
 
-    .otos-header h1 {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .brand img {
+      height: 48px;
+    }
+
+    h1 {
       margin: 0 0 12px 0;
-      font-size: 32px;
-      font-weight: 700;
+      font-size: 36px;
     }
 
-    .otos-header p {
+    p {
       margin: 0;
-      max-width: 720px;
-      line-height: 1.55;
-      opacity: 0.9;
-    }
-
-    .otos-meta {
-      font-size: 14px;
+      color: var(--muted);
       line-height: 1.6;
     }
 
-    .otos-meta strong {
+    .meta {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .meta strong {
+      color: var(--text);
       display: block;
       margin-bottom: 6px;
     }
 
-    /* ---- Ticker ---- */
-    .otos-ticker {
-      margin: 28px 0 36px 0;
-      padding: 12px 16px;
+    /* TICKER */
+    .ticker {
+      margin: 32px 0 40px;
+      padding: 14px 22px;
       border-radius: 999px;
-      background: rgba(0,0,0,0.45);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.12);
+      border: 1px solid var(--border);
       overflow: hidden;
       white-space: nowrap;
     }
 
-    .otos-ticker-track {
-      display: inline-flex;
-      gap: 36px;
-      animation: ticker-scroll 32s linear infinite;
+    .ticker span {
+      margin-right: 36px;
+      color: #0b0e13;
+      font-weight: 500;
     }
 
-    @keyframes ticker-scroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* ---- Module grid ---- */
-    .otos-grid {
+    /* MODULE GRID */
+    .grid {
       display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
       margin-bottom: 48px;
     }
 
-    .otos-module {
-      grid-column: span 4;
-      padding: 18px;
-      min-height: 180px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
+    .module {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px;
+      min-height: 200px;
     }
 
-    @media (max-width: 1100px) {
-      .otos-module { grid-column: span 6; }
-      .otos-header { grid-template-columns: 1fr; }
+    .tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      display: inline-block;
+      margin-bottom: 10px;
     }
 
-    @media (max-width: 720px) {
-      .otos-module { grid-column: span 12; }
-    }
-
-    .otos-module h3 {
+    .module h3 {
       margin: 0 0 12px 0;
       font-size: 18px;
     }
 
-    .otos-tag {
-      display: inline-block;
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.15);
-      opacity: 0.8;
-      margin-bottom: 12px;
-    }
-
-    /* ---- Skeleton blocks ---- */
-    .skel {
-      height: 12px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-
-    .skel.block {
-      height: 64px;
+    /* FOOT */
+    .telemetry {
+      color: var(--muted);
+      font-size: 14px;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- SKYHAWK STATUS BAR -->
-  <div class="otos-status">
+  <div class="status">
     <strong>SKYHAWK</strong> · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
   </div>
 
-  <main class="otos-shell">
+  <main class="shell">
 
-    <!-- HEADER -->
-    <section class="otos-header">
+    <section class="header">
       <div>
+        <div class="brand">
+          <img src="./brand/logo/otos-logo-400.png" alt="OTOS" />
+        </div>
+
         <h1>OTOS Cockpit</h1>
         <p>
           Enterprise execution surface. Human authority at the centre.
@@ -161,7 +160,7 @@
         </p>
       </div>
 
-      <div class="otos-meta">
+      <div class="meta">
         <strong>EYE20 — Parent Node</strong>
         Authoritative · Memory-anchored · Non-drifting
         <br><br>
@@ -170,56 +169,36 @@
       </div>
     </section>
 
-    <!-- LIVE TICKER -->
-    <div class="otos-ticker">
-      <div class="otos-ticker-track">
-        <div>Admissions detected</div>
-        <div>Continuity chain stable</div>
-        <div>Shared-care friction flagged</div>
-        <div>Memory write-gates locked</div>
-        <div>No autonomous execution</div>
-        <div>Admissions detected</div>
-        <div>Continuity chain stable</div>
-      </div>
+    <div class="ticker">
+      <span>Continuity chain stable</span>
+      <span>Shared-care friction flagged</span>
+      <span>Memory write-gates locked</span>
+      <span>No autonomous execution</span>
+      <span>Admissions detected</span>
     </div>
 
-    <!-- MODULE GRID -->
-    <section class="otos-grid">
-
-      <div class="otos-module">
-        <span class="otos-tag">PLACEHOLDER</span>
+    <section class="grid">
+      <div class="module">
+        <span class="tag">PLACEHOLDER</span>
         <h3>Andy Feeder</h3>
-        <div class="skel block"></div>
-        <div class="skel" style="width:70%"></div>
-        <div class="skel" style="width:45%"></div>
       </div>
 
-      <div class="otos-module">
-        <span class="otos-tag">PLACEHOLDER</span>
+      <div class="module">
+        <span class="tag">PLACEHOLDER</span>
         <h3>SkyHawk Radar</h3>
-        <div class="skel block"></div>
-        <div class="skel" style="width:60%"></div>
-        <div class="skel" style="width:52%"></div>
       </div>
 
-      <div class="otos-module">
-        <span class="otos-tag">PLACEHOLDER</span>
+      <div class="module">
+        <span class="tag">PLACEHOLDER</span>
         <h3>Opportunity Generator</h3>
-        <div class="skel block"></div>
-        <div class="skel" style="width:68%"></div>
-        <div class="skel" style="width:38%"></div>
       </div>
-
     </section>
 
-    <!-- TELEMETRY -->
-    <section>
-      <strong>Telemetry (Preview)</strong>
-      <p>
-        System heartbeat nominal. Memory write-gates locked.
-        No autonomous execution detected.
-      </p>
-    </section>
+    <div class="telemetry">
+      <strong>Telemetry (Preview)</strong><br>
+      System heartbeat nominal. Memory write-gates locked.
+      No autonomous execution detected.
+    </div>
 
   </main>
 
