@@ -1,5 +1,6 @@
 /* =========================================================
    OTOS COCKPIT — V1 LOCKED
+   HEADER ORIGIN HARD-ANCHORED (TOP-LEFT)
    ========================================================= */
 
 /* ---------- ROOT ---------- */
@@ -45,46 +46,63 @@ body {
   font-size: 12px;
 }
 
-/* ---------- HEADER ---------- */
+/* =========================================================
+   HEADER — HARD ANCHOR
+   ========================================================= */
+
 .app-header {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 28px 40px 18px;
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 14px;
+
+  /* 🔒 TRUE ORIGIN */
+  padding-top: 18px;
+  padding-left: 24px;
+  padding-right: 40px;
+  padding-bottom: 18px;
+
+  align-items: start;
 }
 
-/* LOGO HARD LOCK */
+/* LOGO — OWNS THE CORNER */
 .logo-wrap {
-  display: flex;
-  align-items: center;
+  position: relative;
 }
 
 .logo {
-  height: 60px;       /* 🔒 FINAL LOCK */
+  height: 40px;              /* FINAL AGREED SIZE */
   width: auto;
-  max-height: 48px;
-  object-fit: contain;
+  display: block;
 }
 
-/* TITLE */
+/* TITLE STACK — LOCKED UNDER SAME ORIGIN */
+.title-wrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
 .title-wrap h1 {
   margin: 0;
   font-size: 32px;
+  line-height: 1.1;
 }
 
 .subtitle {
-  margin: 6px 0 0;
+  margin-top: 6px;
   color: var(--ink-2);
   max-width: 640px;
 }
 
-/* ---------- LAYOUT ---------- */
+/* ---------- MAIN LAYOUT ---------- */
 .workspace {
   padding: 24px 40px 80px;
   display: grid;
   gap: 24px;
 }
 
+/* ---------- CARDS ---------- */
 .card {
   background: var(--card);
   border-radius: var(--radius);
@@ -129,7 +147,7 @@ body {
   color: var(--ink-2);
 }
 
-/* Agent buttons */
+/* ---------- AGENT BUTTONS ---------- */
 .agent-actions {
   margin-top: 16px;
   display: flex;
@@ -141,12 +159,10 @@ body {
   border-radius: 999px;
   border: 1px solid var(--stroke);
   background: white;
-  cursor: pointer;
 }
 
 .agent-actions button[disabled] {
   opacity: .5;
-  cursor: default;
 }
 
 /* ---------- METRICS ---------- */
@@ -189,7 +205,7 @@ body {
   color: var(--ink-2);
 }
 
-/* ---------- RESPONSIVE ---------- */
+/* ---------- RESPONSIVE (SAFE ONLY) ---------- */
 @media (max-width: 980px) {
   .lane-grid { grid-template-columns: 1fr; }
   .metrics-grid { grid-template-columns: repeat(2,1fr); }
