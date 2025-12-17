@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit — V1 (Locked Baseline)</title>
+  <title>OTOS Cockpit — V1.1 (Locked Baseline)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- SKYHAWK (restored ticker + motion) -->
+  <!-- SKYHAWK (ticker + motion) -->
   <header class="skyhawk" aria-label="Skyhawk Ticker">
     <div class="ticker">
       <div class="ticker-track" role="marquee" aria-live="off">
@@ -35,7 +35,7 @@
     </div>
   </header>
 
-  <!-- LOGO (LOCKED path) -->
+  <!-- LOGO (LOCKED path + LOCKED placement model) -->
   <div class="logo-anchor" aria-label="OTOS Brand">
     <img
       class="otos-logo"
@@ -48,6 +48,7 @@
 
   <!-- MAIN SPLIT LAYOUT -->
   <div class="workspace">
+
     <!-- LEFT: PARENT NODE -->
     <section class="lane lane-parent" aria-label="Parent Node Lane">
       <div class="lane-head">
@@ -55,70 +56,96 @@
           <span class="pill parent-pill">EYE22 · Parent Node</span>
           <span class="subpill">Governance only · Truth · Locks</span>
         </div>
+
         <div class="lane-actions">
-          <button class="btn btn-ghost" id="btnSnapshot" title="Creates a local snapshot object (no upload).">Snapshot now</button>
-          <button class="btn" id="btnExport" title="Exports your current session bundle as JSON for archiving.">Export bundle</button>
+          <button class="btn btn-ghost" id="btnOpenParentChat" title="Open your Parent Chat thread in a new tab (set URL in Settings).">Open Parent Chat</button>
+          <button class="btn btn-ghost" id="btnSnapshot" title="Creates a local snapshot object (no upload).">Snapshot</button>
+          <button class="btn" id="btnExport" title="Exports your current session bundle as JSON for archiving.">Export</button>
+          <button class="btn btn-ghost" id="btnImport" title="Import a previously exported JSON bundle (hydrates this UI).">Import</button>
+          <button class="btn btn-ghost" id="btnSettings" title="Configure Chat links + local settings.">Settings</button>
         </div>
       </div>
 
-      <div class="panel card">
-        <div class="panel-title">TOP PRIORITY (Focus Deck)</div>
-        <div class="focus-deck" id="focusDeck">
-          <div class="focus-card">
-            <div class="focus-label">NOW</div>
-            <div class="focus-title">Finish V1 UI wiring</div>
-            <div class="focus-meta">Locked baseline · Parent + Andy lanes · Exportable intake</div>
-          </div>
-          <div class="focus-stack">
-            <div class="stack-item">Next: Start NHS Project node (inside)</div>
-            <div class="stack-item">Next: Andy ingest pipeline (Tier 3 archive)</div>
-            <div class="stack-item">Next: Promote canonical rules (Tier 1)</div>
-          </div>
-        </div>
+      <!-- Parent Tabs -->
+      <div class="tabs" role="tablist" aria-label="Parent Tabs">
+        <button class="tab active" data-tab="parent-notes" role="tab" aria-selected="true">Notes</button>
+        <button class="tab" data-tab="parent-log" role="tab" aria-selected="false">Log</button>
+        <button class="tab" data-tab="parent-telemetry" role="tab" aria-selected="false">Telemetry</button>
       </div>
 
-      <div class="panel card chat-shell">
-        <div class="panel-title">PARENT CHAT (V1 Shell)</div>
-
-        <div class="chat-log" id="parentChatLog" aria-live="polite">
-          <div class="msg sys">
-            <div class="msg-role">SYSTEM</div>
-            <div class="msg-text">
-              Inside status: <strong>ACTIVE</strong>. Parent is governance-only. No execution without explicit instruction.
+      <!-- Notes -->
+      <div class="tab-panel active" id="parent-notes" role="tabpanel">
+        <div class="panel card">
+          <div class="panel-title">TOP PRIORITY (Focus Deck)</div>
+          <div class="focus-deck" id="focusDeck">
+            <div class="focus-card">
+              <div class="focus-label">NOW</div>
+              <div class="focus-title">Finish V1 UI wiring</div>
+              <div class="focus-meta">Locked baseline · Parent + Andy lanes · Exportable intake</div>
+            </div>
+            <div class="focus-stack">
+              <div class="stack-item">Next: Start NHS Project node (inside)</div>
+              <div class="stack-item">Next: Andy ingest pipeline (Tier 3 archive)</div>
+              <div class="stack-item">Next: Promote canonical rules (Tier 1)</div>
             </div>
           </div>
         </div>
 
-        <div class="chat-compose">
-          <input
-            id="parentInput"
-            class="input"
-            type="text"
-            placeholder='Type governance notes… e.g. "LOCK: UI baseline v1"'
-            autocomplete="off"
-          />
-          <button class="btn" id="parentSend">Add note</button>
-        </div>
+        <div class="panel card chat-shell">
+          <div class="panel-title">PARENT CHAT (V1 Shell)</div>
 
-        <div class="hint">
-          This is a V1 governance log inside the UI. It does not connect to ChatGPT automatically yet.
+          <div class="chat-log" id="parentChatLog" aria-live="polite">
+            <div class="msg sys">
+              <div class="msg-role">SYSTEM</div>
+              <div class="msg-text">
+                Inside status: <strong>ACTIVE</strong>. Parent is governance-only. No execution without explicit instruction.
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-compose">
+            <input
+              id="parentInput"
+              class="input"
+              type="text"
+              placeholder='Type governance notes… e.g. "LOCK: UI baseline v1.1"'
+              autocomplete="off"
+            />
+            <button class="btn" id="parentSend">Add note</button>
+          </div>
+
+          <div class="hint">
+            Notes persist locally in your browser. Export to archive. Import to restore.
+          </div>
         </div>
       </div>
 
-      <div class="panel card telemetry">
-        <div class="panel-title">TELEMETRY (PREVIEW)</div>
-        <div class="telemetry-grid">
-          <div class="telemetry-item">
-            <div class="k">Window mode</div><div class="v">Operational Idle</div>
-          </div>
-          <div class="telemetry-item">
-            <div class="k">Guardrails</div><div class="v ok">HARD-LOCKED</div>
-          </div>
-          <div class="telemetry-item">
-            <div class="k">Andy</div><div class="v warn">Installed · Idle</div>
-          </div>
-          <div class="telemetry-item">
-            <div class="k">Reminders</div><div class="v mute">OFF</div>
+      <!-- Log -->
+      <div class="tab-panel" id="parent-log" role="tabpanel">
+        <div class="panel card">
+          <div class="panel-title">GOVERNANCE LOG</div>
+          <div class="logbox" id="governanceLog"></div>
+          <div class="hint">This is an auto-generated audit view of notes/snapshots/exports (local-only).</div>
+        </div>
+      </div>
+
+      <!-- Telemetry -->
+      <div class="tab-panel" id="parent-telemetry" role="tabpanel">
+        <div class="panel card telemetry">
+          <div class="panel-title">TELEMETRY (PREVIEW)</div>
+          <div class="telemetry-grid">
+            <div class="telemetry-item">
+              <div class="k">Window mode</div><div class="v">Operational</div>
+            </div>
+            <div class="telemetry-item">
+              <div class="k">Guardrails</div><div class="v ok">HARD-LOCKED</div>
+            </div>
+            <div class="telemetry-item">
+              <div class="k">Andy</div><div class="v warn" id="teleAndy">Installed · Idle</div>
+            </div>
+            <div class="telemetry-item">
+              <div class="k">Persistence</div><div class="v ok" id="telePersist">ON</div>
+            </div>
           </div>
         </div>
       </div>
@@ -135,41 +162,59 @@
           <span class="subpill">Ingest → Archive (Tier 3) · No writes</span>
         </div>
         <div class="lane-actions">
-          <button class="btn btn-ghost" id="btnClear" title="Clears local lists (does not delete files).">Clear list</button>
+          <button class="btn btn-ghost" id="btnOpenAndyChat" title="Open your Andy Chat thread in a new tab (set URL in Settings).">Open Andy Chat</button>
+          <button class="btn btn-ghost" id="btnClear" title="Clears local lists (does not delete files).">Clear</button>
         </div>
       </div>
 
-      <div class="panel card dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop files here">
-        <div class="dz-title">Drop files here</div>
-        <div class="dz-sub">PDF · DOCX · TXT · PNG · ZIP (local capture only)</div>
-        <div class="dz-mini">Nothing uploads from this page. You export a JSON bundle to ingest later.</div>
+      <!-- Andy Tabs -->
+      <div class="tabs" role="tablist" aria-label="Andy Tabs">
+        <button class="tab active" data-tab="andy-intake" role="tab" aria-selected="true">Intake</button>
+        <button class="tab" data-tab="andy-tasks" role="tab" aria-selected="false">Tasks</button>
+        <button class="tab" data-tab="andy-status" role="tab" aria-selected="false">Status</button>
       </div>
 
-      <div class="panel card">
-        <div class="panel-title">INTAKE QUEUE</div>
-        <div class="queue" id="queue"></div>
-      </div>
-
-      <div class="panel card">
-        <div class="panel-title">TASK CAPTURE (V1)</div>
-        <div class="task-capture">
-          <input
-            id="taskInput"
-            class="input"
-            type="text"
-            placeholder='Quick task… e.g. "Dedup docs + promote canon pack"'
-            autocomplete="off"
-          />
-          <button class="btn" id="taskAdd">Add</button>
+      <!-- Intake -->
+      <div class="tab-panel active" id="andy-intake" role="tabpanel">
+        <div class="panel card dropzone" id="dropzone" tabindex="0" role="button" aria-label="Drop files here">
+          <div class="dz-title">Drop files here</div>
+          <div class="dz-sub">PDF · DOCX · TXT · PNG · ZIP (local capture only)</div>
+          <div class="dz-mini">Nothing uploads from this page. Export a JSON bundle to ingest later.</div>
         </div>
-        <div class="task-list" id="taskList"></div>
+
+        <div class="panel card">
+          <div class="panel-title">INTAKE QUEUE</div>
+          <div class="queue" id="queue"></div>
+        </div>
       </div>
 
-      <div class="panel card andy-notes">
-        <div class="panel-title">ANDY STATUS</div>
-        <div class="note-line"><span class="dot ok"></span> Envelope: token-gated</div>
-        <div class="note-line"><span class="dot ok"></span> Memory writes: blocked</div>
-        <div class="note-line"><span class="dot warn"></span> Ingest: local-only (V1)</div>
+      <!-- Tasks -->
+      <div class="tab-panel" id="andy-tasks" role="tabpanel">
+        <div class="panel card">
+          <div class="panel-title">TASK CAPTURE (V1)</div>
+          <div class="task-capture">
+            <input
+              id="taskInput"
+              class="input"
+              type="text"
+              placeholder='Quick task… e.g. "Dedup docs + promote canon pack"'
+              autocomplete="off"
+            />
+            <button class="btn" id="taskAdd">Add</button>
+          </div>
+          <div class="task-list" id="taskList"></div>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="tab-panel" id="andy-status" role="tabpanel">
+        <div class="panel card andy-notes">
+          <div class="panel-title">ANDY STATUS</div>
+          <div class="note-line"><span class="dot ok"></span> Envelope: token-gated</div>
+          <div class="note-line"><span class="dot ok"></span> Memory writes: blocked</div>
+          <div class="note-line"><span class="dot warn"></span> Ingest: local-only (V1)</div>
+          <div class="note-line"><span class="dot ok"></span> Persistence: enabled</div>
+        </div>
       </div>
     </aside>
   </div>
@@ -180,32 +225,138 @@
       <span class="foot-text">Logo path: <code>docs/brand/logo/otos-logo-400.png</code></span>
     </div>
     <div class="foot-right">
-      <span class="foot-text">OTOS Cockpit V1 · UI-only scaffold</span>
+      <span class="foot-text">OTOS Cockpit V1.1 · Local persistence + import/export</span>
     </div>
   </footer>
 
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Settings">
+      <div class="modal-head">
+        <div class="modal-title">Settings (Local Only)</div>
+        <button class="btn btn-ghost" id="btnCloseSettings">Close</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-row">
+          <label class="label">Parent Chat URL (EYE22 thread)</label>
+          <input id="parentChatUrl" class="input" type="text" placeholder="Paste ChatGPT thread URL…" autocomplete="off" />
+        </div>
+
+        <div class="form-row">
+          <label class="label">Andy Chat URL (Andy thread)</label>
+          <input id="andyChatUrl" class="input" type="text" placeholder="Paste ChatGPT thread URL…" autocomplete="off" />
+        </div>
+
+        <div class="form-row">
+          <label class="label">Autosave</label>
+          <div class="toggle-row">
+            <button class="btn" id="btnToggleAutosave">Autosave: ON</button>
+            <span class="hint">Stored in your browser only. Export to archive.</span>
+          </div>
+        </div>
+
+        <div class="hint">
+          Tip: After setting URLs once, the “Open Parent Chat” / “Open Andy Chat” buttons become your real “windows”.
+        </div>
+      </div>
+
+      <div class="modal-foot">
+        <button class="btn" id="btnSaveSettings">Save settings</button>
+      </div>
+    </div>
+  </div>
+
+  <input id="importFile" type="file" accept="application/json" style="display:none" />
+
   <script>
-    // ---------------------------
-    // V1: Local-only state (no uploads, no API)
-    // ---------------------------
-    const state = {
-      version: "V1-LOCKED",
-      timestamp: () => new Date().toISOString(),
+    // ------------------------------------------
+    // OTOS Cockpit V1.1 — Local-only operational layer
+    // Persistence: localStorage
+    // Import: hydrate from exported JSON
+    // Export: JSON bundle download
+    // ------------------------------------------
+
+    const STORAGE_KEY = "OTOS_COCKPIT_V1_LOCKED_STATE";
+    const SETTINGS_KEY = "OTOS_COCKPIT_V1_SETTINGS";
+
+    const defaults = {
+      version: "V1.1-LOCKED",
+      createdAt: new Date().toISOString(),
       parentNotes: [],
       intake: [],
       tasks: [],
-      snapshots: []
+      snapshots: [],
+      audit: []
     };
+
+    const settingsDefaults = {
+      parentChatUrl: "",
+      andyChatUrl: "",
+      autosave: true
+    };
+
+    let state = loadState();
+    let settings = loadSettings();
 
     const $ = (id) => document.getElementById(id);
 
+    // ---------------------------
+    // Persistence
+    // ---------------------------
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(defaults);
+        const parsed = JSON.parse(raw);
+        return { ...structuredClone(defaults), ...parsed };
+      } catch (e) {
+        return structuredClone(defaults);
+      }
+    }
+
+    function saveState(reason = "autosave") {
+      if (!settings.autosave) return;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        audit(`STATE_SAVE · ${reason}`);
+      } catch (e) {}
+    }
+
+    function loadSettings() {
+      try {
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if (!raw) return structuredClone(settingsDefaults);
+        const parsed = JSON.parse(raw);
+        return { ...structuredClone(settingsDefaults), ...parsed };
+      } catch (e) {
+        return structuredClone(settingsDefaults);
+      }
+    }
+
+    function saveSettings() {
+      try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      } catch (e) {}
+    }
+
+    function audit(msg) {
+      const entry = { at: new Date().toISOString(), msg };
+      state.audit.push(entry);
+      // keep audit bounded
+      if (state.audit.length > 200) state.audit = state.audit.slice(-200);
+    }
+
+    // ---------------------------
+    // Renderers
+    // ---------------------------
     function renderQueue() {
       const el = $("queue");
       if (!state.intake.length) {
         el.innerHTML = '<div class="empty">No files yet. Drop something into Andy.</div>';
         return;
       }
-      el.innerHTML = state.intake.map((f, i) => `
+      el.innerHTML = state.intake.map((f) => `
         <div class="q-item">
           <div class="q-name">${escapeHtml(f.name)}</div>
           <div class="q-meta">${escapeHtml(f.type || "unknown")} · ${formatBytes(f.size)} · ${escapeHtml(f.addedAt)}</div>
@@ -219,7 +370,7 @@
         el.innerHTML = '<div class="empty">No tasks yet. Add one.</div>';
         return;
       }
-      el.innerHTML = state.tasks.map((t, i) => `
+      el.innerHTML = state.tasks.map((t) => `
         <div class="t-item">
           <div class="t-title">${escapeHtml(t.text)}</div>
           <div class="t-meta">${escapeHtml(t.addedAt)}</div>
@@ -241,30 +392,65 @@
       el.scrollTop = el.scrollHeight;
     }
 
+    function renderGovernanceLog() {
+      const el = $("governanceLog");
+      const lines = [
+        `VERSION · ${state.version}`,
+        `CREATED · ${state.createdAt}`,
+        `NOTES · ${state.parentNotes.length}`,
+        `INTAKE · ${state.intake.length}`,
+        `TASKS · ${state.tasks.length}`,
+        `SNAPSHOTS · ${state.snapshots.length}`,
+        `AUDIT · ${state.audit.length}`
+      ];
+
+      const auditLines = state.audit.slice().reverse().map(a =>
+        `<div class="logline"><span class="logtime">${escapeHtml(a.at)}</span> <span class="logmsg">${escapeHtml(a.msg)}</span></div>`
+      ).join("");
+
+      el.innerHTML = `
+        <div class="logstats">
+          ${lines.map(x => `<div class="logpill">${escapeHtml(x)}</div>`).join("")}
+        </div>
+        <div class="logsep"></div>
+        <div class="logscroll">${auditLines || '<div class="empty">No audit lines yet.</div>'}</div>
+      `;
+    }
+
+    function refreshTelemetry() {
+      $("teleAndy").textContent = state.intake.length || state.tasks.length ? "Installed · Active" : "Installed · Idle";
+      $("telePersist").textContent = settings.autosave ? "ON" : "OFF";
+    }
+
+    // ---------------------------
+    // Actions
+    // ---------------------------
     function addFiles(fileList) {
-      const now = state.timestamp();
+      const now = new Date().toISOString();
       for (const f of fileList) {
-        state.intake.push({
-          name: f.name,
-          size: f.size,
-          type: f.type,
-          addedAt: now
-        });
+        state.intake.push({ name: f.name, size: f.size, type: f.type, addedAt: now });
       }
+      audit(`INTAKE_ADD · ${fileList.length} file(s)`);
+      saveState("intake");
       renderQueue();
+      renderGovernanceLog();
+      refreshTelemetry();
     }
 
     function exportBundle() {
+      audit("EXPORT_BEGIN");
       const payload = {
-        exportedAt: state.timestamp(),
+        exportedAt: new Date().toISOString(),
         system: "OTOS Cockpit V1",
-        memoryModel: "Locked (Tier 0-3) — Promotion only",
         version: state.version,
+        memoryModel: "Locked (Tier 0-3) — Promotion only",
         parentNotes: state.parentNotes,
         intake: state.intake,
         tasks: state.tasks,
-        snapshots: state.snapshots
+        snapshots: state.snapshots,
+        audit: state.audit
       };
+
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -273,16 +459,92 @@
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(a.href), 500);
+
+      audit("EXPORT_DONE");
+      saveState("export");
+      renderGovernanceLog();
     }
 
     function snapshotNow() {
       state.snapshots.push({
-        at: state.timestamp(),
+        at: new Date().toISOString(),
         counts: { notes: state.parentNotes.length, intake: state.intake.length, tasks: state.tasks.length }
+      });
+      audit("SNAPSHOT");
+      saveState("snapshot");
+      renderGovernanceLog();
+    }
+
+    function importBundleFromFile(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          // hydrate only known fields
+          state.version = parsed.version || state.version;
+          state.parentNotes = Array.isArray(parsed.parentNotes) ? parsed.parentNotes : state.parentNotes;
+          state.intake = Array.isArray(parsed.intake) ? parsed.intake : state.intake;
+          state.tasks = Array.isArray(parsed.tasks) ? parsed.tasks : state.tasks;
+          state.snapshots = Array.isArray(parsed.snapshots) ? parsed.snapshots : state.snapshots;
+          state.audit = Array.isArray(parsed.audit) ? parsed.audit : state.audit;
+
+          audit("IMPORT_DONE");
+          // force-save regardless of autosave (import is explicit)
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+
+          renderAll();
+        } catch (e) {
+          alert("Import failed: invalid JSON.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // ---------------------------
+    // Tabs
+    // ---------------------------
+    function setupTabs(scopeSelector) {
+      const scope = document.querySelector(scopeSelector);
+      if (!scope) return;
+
+      const tabs = scope.querySelectorAll(".tab");
+      const panels = scope.querySelectorAll(".tab-panel");
+
+      tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          const id = tab.getAttribute("data-tab");
+
+          tabs.forEach(t => t.classList.remove("active"));
+          panels.forEach(p => p.classList.remove("active"));
+
+          tab.classList.add("active");
+          const panel = document.getElementById(id);
+          if (panel) panel.classList.add("active");
+        });
       });
     }
 
+    // ---------------------------
+    // Settings modal
+    // ---------------------------
+    function openSettings() {
+      $("parentChatUrl").value = settings.parentChatUrl || "";
+      $("andyChatUrl").value = settings.andyChatUrl || "";
+      $("btnToggleAutosave").textContent = `Autosave: ${settings.autosave ? "ON" : "OFF"}`;
+      $("settingsModal").classList.add("open");
+      $("settingsModal").setAttribute("aria-hidden", "false");
+    }
+
+    function closeSettings() {
+      $("settingsModal").classList.remove("open");
+      $("settingsModal").setAttribute("aria-hidden", "true");
+    }
+
+    // ---------------------------
+    // Helpers
+    // ---------------------------
     function formatBytes(bytes) {
+      if (!bytes && bytes !== 0) return "—";
       if (bytes === 0) return "0 B";
       const k = 1024;
       const sizes = ["B","KB","MB","GB","TB"];
@@ -296,16 +558,28 @@
       }[m]));
     }
 
+    function renderAll() {
+      renderQueue();
+      renderTasks();
+      renderParentChat();
+      renderGovernanceLog();
+      refreshTelemetry();
+    }
+
     // ---------------------------
     // Wire: Parent notes
     // ---------------------------
     $("parentSend").addEventListener("click", () => {
       const v = $("parentInput").value.trim();
       if (!v) return;
-      state.parentNotes.push({ text: v, addedAt: state.timestamp() });
+      state.parentNotes.push({ text: v, addedAt: new Date().toISOString() });
       $("parentInput").value = "";
+      audit("PARENT_NOTE");
+      saveState("note");
       renderParentChat();
+      renderGovernanceLog();
     });
+
     $("parentInput").addEventListener("keydown", (e) => {
       if (e.key === "Enter") $("parentSend").click();
     });
@@ -316,10 +590,15 @@
     $("taskAdd").addEventListener("click", () => {
       const v = $("taskInput").value.trim();
       if (!v) return;
-      state.tasks.push({ text: v, addedAt: state.timestamp() });
+      state.tasks.push({ text: v, addedAt: new Date().toISOString() });
       $("taskInput").value = "";
+      audit("TASK_ADD");
+      saveState("task");
       renderTasks();
+      renderGovernanceLog();
+      refreshTelemetry();
     });
+
     $("taskInput").addEventListener("keydown", (e) => {
       if (e.key === "Enter") $("taskAdd").click();
     });
@@ -338,7 +617,6 @@
       }
     });
 
-    // Optional click-to-open file picker
     dz.addEventListener("click", () => {
       const input = document.createElement("input");
       input.type = "file";
@@ -353,18 +631,81 @@
     // Buttons
     // ---------------------------
     $("btnExport").addEventListener("click", () => exportBundle());
-    $("btnSnapshot").addEventListener("click", () => { snapshotNow(); });
+    $("btnSnapshot").addEventListener("click", () => snapshotNow());
+
     $("btnClear").addEventListener("click", () => {
       state.intake = [];
       state.tasks = [];
+      audit("CLEAR_LISTS");
+      saveState("clear");
       renderQueue();
       renderTasks();
+      renderGovernanceLog();
+      refreshTelemetry();
     });
 
+    $("btnImport").addEventListener("click", () => $("importFile").click());
+    $("importFile").addEventListener("change", (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (f) importBundleFromFile(f);
+      e.target.value = "";
+    });
+
+    $("btnSettings").addEventListener("click", () => openSettings());
+    $("btnCloseSettings").addEventListener("click", () => closeSettings());
+    $("settingsModal").addEventListener("click", (e) => {
+      if (e.target && e.target.id === "settingsModal") closeSettings();
+    });
+
+    $("btnToggleAutosave").addEventListener("click", () => {
+      settings.autosave = !settings.autosave;
+      $("btnToggleAutosave").textContent = `Autosave: ${settings.autosave ? "ON" : "OFF"}`;
+      refreshTelemetry();
+    });
+
+    $("btnSaveSettings").addEventListener("click", () => {
+      settings.parentChatUrl = $("parentChatUrl").value.trim();
+      settings.andyChatUrl = $("andyChatUrl").value.trim();
+      saveSettings();
+      audit("SETTINGS_SAVE");
+      saveState("settings");
+      closeSettings();
+      renderGovernanceLog();
+    });
+
+    $("btnOpenParentChat").addEventListener("click", () => {
+      if (!settings.parentChatUrl) {
+        openSettings();
+        return;
+      }
+      window.open(settings.parentChatUrl, "_blank", "noopener,noreferrer");
+      audit("OPEN_PARENT_CHAT");
+      saveState("open-parent");
+      renderGovernanceLog();
+    });
+
+    $("btnOpenAndyChat").addEventListener("click", () => {
+      if (!settings.andyChatUrl) {
+        openSettings();
+        return;
+      }
+      window.open(settings.andyChatUrl, "_blank", "noopener,noreferrer");
+      audit("OPEN_ANDY_CHAT");
+      saveState("open-andy");
+      renderGovernanceLog();
+    });
+
+    // ---------------------------
+    // Tabs init
+    // ---------------------------
+    setupTabs(".lane-parent");
+    setupTabs(".lane-andy");
+
     // Initial render
-    renderQueue();
-    renderTasks();
-    renderParentChat();
+    audit("BOOT");
+    // force one save on boot to establish baseline snapshot (even if autosave off)
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+    renderAll();
   </script>
 </body>
 </html>
