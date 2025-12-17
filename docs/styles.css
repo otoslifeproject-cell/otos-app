@@ -1,224 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>OTOS Cockpit — EYE20</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+/* ============================================================
+   OTOS COCKPIT — CORE STYLES (LOCKED BASE)
+   ============================================================ */
 
-  <style>
-    :root {
-      --bg-main: radial-gradient(circle at top left, #f5fbff, #eaf4ff);
-      --panel-bg: rgba(255,255,255,0.82);
-      --border-soft: rgba(148,163,184,0.35);
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --accent: #38bdf8;
-    }
+/* =========================
+   SKYHAWK STATUS BAR
+   ========================= */
+.skyhawk-bar {
+  background: #0b1220;
+  color: #cbd5e1;
+  font-size: 13px;
+  padding: 6px 14px;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-    * { box-sizing: border-box; }
+/* =========================
+   PAGE BASE
+   ========================= */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+  color: #0f172a;
 
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-main);
-      color: var(--text-main);
-      height: 100vh;
-      overflow: hidden;
-    }
+  /* 🔵 DEPTH + GRADIENT (LOCK SAFE) */
+  background:
+    radial-gradient(
+      1200px 600px at 20% -10%,
+      rgba(99, 179, 237, 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 500px at 80% 0%,
+      rgba(59, 130, 246, 0.18),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      #f8fbff 0%,
+      #eef5ff 40%,
+      #e6f0ff 100%
+    );
+  background-attachment: fixed;
+}
 
-    /* ===== LAYOUT ===== */
-    .layout {
-      display: grid;
-      grid-template-columns: 320px 1fr 360px;
-      height: 100vh;
-      width: 100vw;
-    }
+/* =========================
+   HEADER (POSITIONING CONTEXT)
+   ========================= */
+.app-header {
+  position: relative;
+  padding: 28px 36px 8px 36px;
+  min-height: 140px;
 
-    .zone {
-      border-right: 1px solid var(--border-soft);
-      overflow: hidden;
-    }
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.9) 0%,
+    rgba(255,255,255,0.7) 100%
+  );
 
-    .zone:last-child {
-      border-right: none;
-    }
+  box-shadow:
+    0 12px 40px rgba(30, 64, 175, 0.08);
+}
 
-    /* ===== ZONE BASE ===== */
-    .zone-inner {
-      height: 100%;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+/* =========================
+   BRAND WRAPPER
+   ========================= */
+.brand {
+  position: relative;
+  height: 0;
+}
 
-    .panel {
-      background: var(--panel-bg);
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--border-soft);
-      border-radius: 14px;
-      padding: 14px 16px 16px 16px;
-      position: relative;
-    }
+/* ============================================================
+   LOGO — HERO MARK (🔒 LOCKED — DO NOT TOUCH)
+   ============================================================ */
+.otos-logo {
+  position: absolute;
 
-    .panel h3 {
-      margin: 0 0 6px 0;
-      font-size: 14px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
+  /* FINAL LOCKED POSITION */
+  top: -266px;
+  left: -38px;
 
-    .panel p {
-      margin: 0;
-      font-size: 13px;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
+  /* FINAL LOCKED SIZE */
+  height: 260px;
+  width: auto;
 
-    /* ===== DRAG HANDLE (VISUAL ONLY) ===== */
-    .handle {
-      position: absolute;
-      top: 10px;
-      right: 12px;
-      font-size: 16px;
-      letter-spacing: 2px;
-      color: var(--text-muted);
-      opacity: 0.6;
-      cursor: grab;
-      user-select: none;
-    }
+  display: block;
+  pointer-events: none;
+}
 
-    /* ===== LEFT — PARENT NODE ===== */
-    .parent-node {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
+/* =========================
+   PAGE LAYOUT
+   ========================= */
+.page {
+  padding: 10px 36px 42px 36px;
+  display: grid;
+  grid-template-columns: minmax(680px, 1fr) 360px;
+  gap: 22px;
+  align-items: start;
+}
 
-    .parent-node strong {
-      display: block;
-      font-size: 18px;
-      margin-bottom: 6px;
-    }
+/* =========================
+   CARDS (BASE MODULE STYLE)
+   ========================= */
+.card,
+.top-priority-card,
+.telemetry-card {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: saturate(140%) blur(6px);
 
-    /* ===== CENTRE — TASK TILING ===== */
-    .tasks {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+  border-radius: 14px;
+  border: 1px solid rgba(203, 213, 225, 0.6);
 
-    .task-card {
-      height: 120px;
-      border: 1px dashed var(--border-soft);
-      border-radius: 12px;
-      background: rgba(255,255,255,0.55);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      color: var(--text-muted);
-    }
+  padding: 18px 20px;
 
-    .task-primary {
-      height: 160px;
-      border-style: solid;
-      font-weight: 600;
-      background: rgba(255,255,255,0.9);
-    }
+  box-shadow:
+    0 8px 30px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
 
-    /* ===== RIGHT — ANDY + TICKER ===== */
-    .ticker {
-      height: 56px;
-      border-radius: 12px;
-      background: linear-gradient(90deg, rgba(56,189,248,0.15), rgba(56,189,248,0.05));
-      border: 1px solid var(--border-soft);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
+/* =========================
+   TYPOGRAPHY
+   ========================= */
+h1 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 700;
+}
 
-    .andy {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      text-align: center;
-    }
-  </style>
-</head>
+h2 {
+  margin: 24px 0 12px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
 
-<body>
+p {
+  margin: 0 0 10px 0;
+  color: #334155;
+  line-height: 1.5;
+}
 
-  <div class="layout">
+/* =========================
+   METRICS ROW
+   ========================= */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
 
-    <!-- LEFT ZONE — PARENT NODE -->
-    <div class="zone">
-      <div class="zone-inner">
-        <div class="panel parent-node">
-          <div class="handle">⋮⋮</div>
-          <h3>Parent Node</h3>
-          <strong>ChatGPT — EYE20</strong>
-          <p>
-            Authoritative system presence.<br>
-            Memory-anchored. Non-autonomous.<br>
-            Locked spatial identity.
-          </p>
-        </div>
-      </div>
-    </div>
+.metric {
+  background: rgba(255,255,255,0.85);
+  border-radius: 12px;
+  padding: 14px 16px;
 
-    <!-- CENTRE ZONE — TASK TILING -->
-    <div class="zone">
-      <div class="zone-inner tasks">
-        <div class="panel task-card task-primary">
-          <div class="handle">⋮⋮</div>
-          TOP PRIORITY — ONE THING
-        </div>
+  box-shadow:
+    0 6px 22px rgba(15, 23, 42, 0.08);
+}
 
-        <div class="panel task-card">
-          <div class="handle">⋮⋮</div>
-          Secondary Task (Parked)
-        </div>
+.metric strong {
+  font-size: 22px;
+  display: block;
+}
 
-        <div class="panel task-card">
-          <div class="handle">⋮⋮</div>
-          Secondary Task (Parked)
-        </div>
+/* =========================
+   TELEMETRY
+   ========================= */
+.telemetry {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #475569;
+}
 
-        <div class="panel task-card">
-          <div class="handle">⋮⋮</div>
-          Secondary Task (Parked)
-        </div>
-      </div>
-    </div>
-
-    <!-- RIGHT ZONE — TICKER + ANDY -->
-    <div class="zone">
-      <div class="zone-inner">
-        <div class="ticker">
-          SkyHawk Ticker — Placeholder
-        </div>
-
-        <div class="panel andy">
-          <div class="handle">⋮⋮</div>
-          <h3>Andy</h3>
-          <strong>Feeder Agent</strong>
-          <p>
-            Deterministic ingestion only.<br>
-            Non-authoritative.<br>
-            Human-confirmed outputs.
-          </p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</body>
-</html>
+/* =========================
+   RESPONSIVE (SAFE)
+   ========================= */
+@media (max-width: 1120px) {
+  .page {
+    grid-template-columns: 1fr;
+  }
+}
