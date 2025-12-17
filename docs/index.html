@@ -4,16 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OTOS Cockpit — V1 (Locked)</title>
-
-  <!-- HARD-LOCKED STYLES -->
-  <link rel="stylesheet" href="./styles.css?v=1.0" />
-
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
 
   <!-- SKYHAWK BAR -->
   <div class="skyhawk-bar">
-    <strong>SKYHAWK</strong>
+    <span>SKYHAWK</span>
     <span>Signals nominal</span>
     <span>Latency: 14ms</span>
     <span>Feeds: 6 active</span>
@@ -24,15 +22,15 @@
   <header class="app-header">
     <div class="logo-wrap">
       <img
-        src="./brand/logo/otos-logo-square.png"
+        src="brand/logo/otos-logo-400.png"
         alt="OTOS"
         class="logo"
       />
     </div>
 
-    <div class="header-text">
+    <div class="title-wrap">
       <h1>OTOS Cockpit</h1>
-      <p>
+      <p class="subtitle">
         Enterprise execution surface. Human authority at the centre.
         Agents operate within visible, bounded lanes.
       </p>
@@ -44,7 +42,7 @@
 
     <!-- TOP PRIORITY -->
     <section class="card focus-card">
-      <h2>Top Priority</h2>
+      <h3>Top Priority</h3>
       <ul>
         <li><strong>Lock Parent Node Governance</strong> — Confirm write-gates and authority boundaries.</li>
         <li><strong>Prepare Demo Narrative</strong> — Sequence system layers for stakeholder walkthrough.</li>
@@ -55,20 +53,29 @@
     <!-- LANES -->
     <section class="lane-grid">
 
+      <!-- PARENT NODE -->
       <div class="card lane parent-lane">
-        <h3>PARENT NODE</h3>
+        <span class="lane-label">PARENT NODE</span>
         <h2>EYE22 — Parent Node</h2>
-        <p>Authoritative · Memory-anchored · Non-drifting</p>
-        <p class="muted">This node defines truth. No execution occurs here.</p>
+        <p class="lane-desc">
+          Authoritative · Memory-anchored · Non-drifting
+        </p>
+        <p class="lane-foot">
+          This node defines truth. No execution occurs here.
+        </p>
       </div>
 
-      <div class="card lane andy-lane">
-        <h3>EXECUTION AGENT</h3>
+      <!-- EXECUTION AGENT -->
+      <div class="card lane agent-lane">
+        <span class="lane-label">EXECUTION AGENT</span>
         <h2>Andy — Execution Agent</h2>
-        <p>Scoped execution · Read-only · Awaiting instruction</p>
-        <div class="pill-row">
-          <span class="pill">No instruction loaded</span>
-          <span class="pill outline">Preview execution path</span>
+        <p class="lane-desc">
+          Scoped execution · Read-only · Awaiting instruction
+        </p>
+
+        <div class="agent-actions">
+          <button disabled>No instruction loaded</button>
+          <button>Preview execution path</button>
         </div>
       </div>
 
@@ -76,10 +83,22 @@
 
     <!-- METRICS -->
     <section class="metrics-grid">
-      <div class="metric card"><strong>12</strong><span>Active Tasks</span></div>
-      <div class="metric card"><strong>1</strong><span>Agents Online</span></div>
-      <div class="metric card"><strong>37</strong><span>Signals</span></div>
-      <div class="metric card stable"><strong>STABLE</strong><span>System State</span></div>
+      <div class="metric">
+        <strong>12</strong>
+        <span>Active Tasks</span>
+      </div>
+      <div class="metric">
+        <strong>1</strong>
+        <span>Agents Online</span>
+      </div>
+      <div class="metric">
+        <strong>37</strong>
+        <span>Signals</span>
+      </div>
+      <div class="metric stable">
+        <strong>STABLE</strong>
+        <span>System State</span>
+      </div>
     </section>
 
     <!-- TELEMETRY -->
@@ -93,7 +112,8 @@
 
   </main>
 
-  <footer class="footer">
+  <!-- FOOTER -->
+  <footer class="app-footer">
     EYE22 · Parent Node Governance only · Truth · Locks
   </footer>
 
