@@ -36,13 +36,12 @@
   top: -8px;
   left: 36px;
 
-  /* BASE SIZE */
-  height: 400px;
+  /* BASE SIZE — NOW SANE */
+  height: 260px;
   width: auto;
 
-  /* SMOOTH CONTROL */
-  max-height: 480px;
-  transform: scale(0.9);
+  /* FINE CONTROL ONLY */
+  transform: scale(1);
   transform-origin: top left;
 
   display: block;
