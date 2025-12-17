@@ -2,29 +2,22 @@
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>OTOS Cockpit</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 
 <body>
 
-  <!-- SKYHAWK TICKER -->
+  <!-- SKYHAWK -->
   <div class="skyhawk-bar">
     SKYHAWK • Signals nominal • Latency: 14ms • Feeds: 6 active • No anomalies detected
   </div>
 
-  <!-- HEADER / HERO -->
+  <!-- HEADER -->
   <header class="app-header">
+    <img src="brand/logo/otos-logo-400.png" alt="OTOS" class="otos-logo"/>
 
-    <!-- LOGO (LOCKED) -->
-    <img
-      src="brand/logo/otos-logo-400.png"
-      alt="OTOS"
-      class="otos-logo"
-    />
-
-    <!-- HERO TEXT -->
     <div class="hero-text">
       <h1 class="title">OTOS Cockpit</h1>
       <p class="subtitle">
@@ -32,13 +25,12 @@
         Agents operate within visible, bounded lanes.
       </p>
     </div>
-
   </header>
 
   <!-- MAIN -->
   <main class="page">
 
-    <!-- TOP PRIORITY -->
+    <!-- PRIORITY -->
     <section class="card priority">
       <h2 class="section-title">Top Priority</h2>
 
@@ -58,50 +50,52 @@
       </div>
     </section>
 
-    <!-- NODE LANES -->
+    <!-- NODES -->
     <section class="node-lane">
 
-      <!-- PARENT NODE -->
+      <!-- PARENT -->
       <div class="card parent-node">
         <h3>EYE20 — Parent Node</h3>
-        <p class="muted">
-          Authoritative · Memory-anchored · Non-drifting
-        </p>
+        <p class="muted">Authoritative · Memory-anchored · Non-drifting</p>
+
+        <div class="parent-note">
+          This node defines truth.  
+          No execution occurs here.
+        </div>
       </div>
 
       <!-- ANDY -->
       <div class="card agent-node">
         <h3>Andy — Execution Agent</h3>
-        <p class="muted">
-          Scoped execution · Read-only · Awaiting instruction
-        </p>
+        <p class="muted">Scoped execution · Read-only · Awaiting instruction</p>
+
+        <!-- EXECUTION RAIL -->
+        <div class="execution-rail">
+          <button class="exec-btn disabled">No instruction loaded</button>
+          <button class="exec-btn ghost">Preview execution path</button>
+        </div>
       </div>
 
     </section>
 
     <!-- METRICS -->
     <section class="metrics">
-
       <div class="card metric">
         <span class="metric-val">12</span>
         <span class="metric-label">Active Tasks</span>
       </div>
-
       <div class="card metric">
         <span class="metric-val">1</span>
         <span class="metric-label">Agents Online</span>
       </div>
-
       <div class="card metric">
         <span class="metric-val">37</span>
         <span class="metric-label">Signals</span>
       </div>
-
       <div class="card metric">
         <span class="metric-val">STABLE</span>
         <span class="metric-label">System State</span>
       </div>
-
     </section>
 
     <!-- TELEMETRY -->
