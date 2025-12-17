@@ -60,7 +60,7 @@ body {
 }
 
 .logo {
-  height: 48px;       /* 🔒 FINAL LOCK */
+  height: 60px;       /* 🔒 FINAL LOCK */
   width: auto;
   max-height: 48px;
   object-fit: contain;
