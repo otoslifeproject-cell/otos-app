@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit — V1 Locked</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OTOS Cockpit — V1 (Locked)</title>
 
   <!-- FORCE correct CSS load on GitHub Pages -->
   <link rel="stylesheet" href="./docs/styles.css" />
-
 </head>
+
 <body>
 
   <!-- SKYHAWK BAR -->
@@ -20,20 +20,22 @@
     <span>No anomalies detected</span>
   </div>
 
- <header class="header">
-  <div class="brand">
-    <img
-      src="docs/brand/logo/otos-logo-400.png"
-      alt="OTOS Brain Logo"
-      class="logo"
-    />
-    <div class="product">Cockpit</div>
-  </div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="brand">
+      <img
+        src="docs/brand/logo/otos-logo-400.png"
+        alt="OTOS Brain Logo"
+        class="logo"
+      />
+      <div class="product">Cockpit</div>
+    </div>
 
-  <p class="subtitle">
-    Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.
-  </p>
-</header>
+    <p class="subtitle">
+      Enterprise execution surface. Human authority at the centre.
+      Agents operate within visible, bounded lanes.
+    </p>
+  </header>
 
   <!-- MAIN -->
   <main class="container">
@@ -49,36 +51,39 @@
 
     <section class="grid">
       <div class="card">
-        <small class="eyebrow">PARENT NODE</small>
+        <small class="label">PARENT NODE</small>
         <h3>EYE22 — Parent Node</h3>
         <p class="muted">Authoritative · Memory-anchored · Non-drifting</p>
         <p>This node defines truth. No execution occurs here.</p>
       </div>
 
       <div class="card accent">
-        <small class="eyebrow">EXECUTION AGENT</small>
+        <small class="label">EXECUTION AGENT</small>
         <h3>Andy — Execution Agent</h3>
         <p class="muted">Scoped execution · Read-only · Awaiting instruction</p>
         <button disabled>No instruction loaded</button>
-        <button>Preview execution path</button>
+        <button class="ghost">Preview execution path</button>
       </div>
     </section>
 
     <section class="metrics">
-      <div class="metric">12<br><span>Active Tasks</span></div>
-      <div class="metric">1<br><span>Agents Online</span></div>
-      <div class="metric">37<br><span>Signals</span></div>
-      <div class="metric stable">STABLE<br><span>System State</span></div>
+      <div class="metric"><strong>12</strong><span>Active Tasks</span></div>
+      <div class="metric"><strong>1</strong><span>Agents Online</span></div>
+      <div class="metric"><strong>37</strong><span>Signals</span></div>
+      <div class="metric ok"><strong>STABLE</strong><span>System State</span></div>
     </section>
 
-    <section class="card telemetry">
+    <section class="telemetry card dashed">
       <h4>Telemetry (Preview)</h4>
-      <p>System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.</p>
+      <p>
+        System heartbeat nominal. Memory write-gates locked.
+        No autonomous execution detected.
+      </p>
     </section>
 
   </main>
 
-  <footer>
+  <footer class="footer">
     EYE22 · Parent Node Governance only · Truth · Locks
   </footer>
 
