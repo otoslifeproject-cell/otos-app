@@ -1,50 +1,115 @@
-/* ============================================================
-   SKYHAWK TICKER — VISUAL POLISH LAYER (LOCK-SAFE)
-   ============================================================ */
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OTOS Cockpit</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
 
-/* Base ticker enhancement — NO size or position change */
-.skyhawk-bar {
-  position: relative;
-  background: linear-gradient(
-    180deg,
-    #020617 0%,
-    #020617 60%,
-    #030a1f 100%
-  );
-  box-shadow:
-    inset 0 -1px 0 rgba(255,255,255,0.04),
-    0 2px 12px rgba(0,0,0,0.35);
-}
+<body>
+  <!-- SKYHAWK TICKER (TOP BAR) -->
+  <div class="skyhawk-bar" role="status" aria-live="polite">
+    <span class="skyhawk-label">SKYHAWK</span>
+    <span class="skyhawk-dot" aria-hidden="true"></span>
+    <span>Signals nominal</span>
+    <span class="sep">·</span>
+    <span>Latency: 14ms</span>
+    <span class="sep">·</span>
+    <span>Feeds: 6 active</span>
+    <span class="sep">·</span>
+    <span>No anomalies detected</span>
+  </div>
 
-/* Subtle signal shimmer (purely cosmetic) */
-.skyhawk-bar::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(255,255,255,0.06) 45%,
-    transparent 60%
-  );
-  opacity: 0.35;
-  pointer-events: none;
-}
+  <main class="page">
+    <header class="app-header">
+      <!-- BRAND / LOGO (LOCKED) -->
+      <div class="brand" aria-hidden="true">
+        <img
+          class="otos-logo"
+          src="./brand/logo/otos-logo-400.png"
+          alt="OTOS"
+        />
+      </div>
 
-/* Status dot pulse — no reflow */
-.skyhawk-status-dot {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin-right: 6px;
-  border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 6px rgba(34,197,94,0.8);
-  animation: skyhawkPulse 1.8s ease-in-out infinite;
-}
+      <!-- LEFT: TITLE -->
+      <div class="hero-left">
+        <h1 class="title">OTOS Cockpit</h1>
+        <p class="subtitle">
+          Enterprise execution surface. Human authority at the centre. Agents operate within visible, bounded lanes.
+        </p>
 
-@keyframes skyhawkPulse {
-  0%   { opacity: 1; }
-  50%  { opacity: 0.35; }
-  100% { opacity: 1; }
-}
+        <section class="card card-lg">
+          <div class="card-title">TOP PRIORITY</div>
+
+          <div class="priority-list">
+            <div class="priority-item is-active">
+              <div class="priority-name">Lock Parent Node Governance</div>
+              <div class="priority-desc">Confirm write-gates and authority boundaries.</div>
+            </div>
+
+            <div class="priority-item">
+              <div class="priority-name">Prepare Demo Narrative</div>
+              <div class="priority-desc">Sequence system layers for stakeholder walkthrough.</div>
+            </div>
+
+            <div class="priority-item">
+              <div class="priority-name">Stabilise Visual Frame</div>
+              <div class="priority-desc">Freeze layout before logic injection.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT: PARENT NODE / AGENT -->
+      <aside class="hero-right">
+        <div class="card">
+          <div class="aside-title">
+            <span class="aside-accent">EYE20</span> — Parent Node
+          </div>
+          <div class="aside-sub">Authoritative · Memory-anchored · Non-drifting</div>
+        </div>
+
+        <div class="card">
+          <div class="aside-title">
+            <span class="status-dot" aria-hidden="true"></span>
+            Andy — Execution Agent
+          </div>
+          <div class="aside-sub">Scoped execution · Read-only · Awaiting instruction</div>
+        </div>
+      </aside>
+    </header>
+
+    <!-- METRICS ROW -->
+    <section class="metrics">
+      <div class="metric card">
+        <div class="metric-top">Active Tasks</div>
+        <div class="metric-val">12</div>
+      </div>
+
+      <div class="metric card">
+        <div class="metric-top">Agents Online</div>
+        <div class="metric-val">1</div>
+      </div>
+
+      <div class="metric card">
+        <div class="metric-top">Signals</div>
+        <div class="metric-val">37</div>
+      </div>
+
+      <div class="metric card">
+        <div class="metric-top">System State</div>
+        <div class="metric-val metric-val-strong">STABLE</div>
+      </div>
+    </section>
+
+    <!-- TELEMETRY -->
+    <section class="card telemetry">
+      <div class="card-title">TELEMETRY (PREVIEW)</div>
+      <div class="telemetry-line">
+        System heartbeat nominal. Memory write-gates locked. No autonomous execution detected.
+      </div>
+    </section>
+  </main>
+</body>
+</html>
