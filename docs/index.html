@@ -1,233 +1,119 @@
-/* ============================================================================
-   OTOS Cockpit — Layer 9D VISUAL POLISH (LOCK-SAFE)
-   Adds depth, glow, motion — NO layout movement
-   ============================================================================ */
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OTOS Cockpit</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-:root{
-  --bg0: #f7fbff;
-  --bg1: #eaf4ff;
-  --bg2: #d6e9ff;
+<body>
 
-  --ink: #0b1220;
-  --ink2: rgba(11,18,32,0.72);
+  <!-- SKYHAWK TICKER -->
+  <div class="skyhawk-bar">
+    SKYHAWK • Signals nominal • Latency: 14ms • Feeds: 6 active • No anomalies detected
+  </div>
 
-  --card: rgba(255,255,255,0.78);
-  --card2: rgba(255,255,255,0.62);
+  <!-- HEADER / HERO -->
+  <header class="app-header">
 
-  --stroke: rgba(11,18,32,0.10);
-  --stroke2: rgba(11,18,32,0.08);
+    <!-- LOGO (LOCKED) -->
+    <img
+      src="brand/logo/otos-logo-400.png"
+      alt="OTOS"
+      class="otos-logo"
+    />
 
-  --shadow: 0 22px 48px rgba(11,18,32,0.14);
-  --shadow-soft: 0 12px 28px rgba(11,18,32,0.10);
+    <!-- HERO TEXT -->
+    <div class="hero-text">
+      <h1 class="title">OTOS Cockpit</h1>
+      <p class="subtitle">
+        Enterprise execution surface. Human authority at the centre.
+        Agents operate within visible, bounded lanes.
+      </p>
+    </div>
 
-  --radius: 18px;
-  --radius2: 14px;
+  </header>
 
-  --accent: #2563eb;
-  --ok: #22c55e;
-}
+  <!-- MAIN -->
+  <main class="page">
 
-/* RESET */
-*{ box-sizing: border-box; }
-html, body{ height: 100%; }
+    <!-- TOP PRIORITY -->
+    <section class="card priority">
+      <h2 class="section-title">Top Priority</h2>
 
-body{
-  margin: 0;
-  color: var(--ink);
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background:
-    radial-gradient(1200px 520px at 12% 14%, rgba(214,233,255,0.9) 0%, rgba(214,233,255,0) 60%),
-    radial-gradient(900px 520px at 70% 18%, rgba(234,244,255,0.95) 0%, rgba(234,244,255,0) 62%),
-    linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 44%, var(--bg2) 100%);
-  animation: bgDrift 28s ease-in-out infinite alternate;
-}
+      <div class="priority-item active">
+        <strong>Lock Parent Node Governance</strong>
+        <span>Confirm write-gates and authority boundaries.</span>
+      </div>
 
-@keyframes bgDrift{
-  0%{ background-position: 0% 0%, 100% 0%, 0% 0%; }
-  100%{ background-position: 8% 4%, 92% 6%, 0% 0%; }
-}
+      <div class="priority-item">
+        <strong>Prepare Demo Narrative</strong>
+        <span>Sequence system layers for stakeholder walkthrough.</span>
+      </div>
 
-/* ============================================================================
-   SKYHAWK TICKER — subtle shimmer (NO reflow)
-   ============================================================================ */
-.skyhawk-bar{
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.92);
-  background: linear-gradient(180deg,#0b1220 0%,#0b1220f2 100%);
-  box-shadow: 0 12px 26px rgba(0,0,0,0.28);
-}
+      <div class="priority-item">
+        <strong>Stabilise Visual Frame</strong>
+        <span>Freeze layout before logic injection.</span>
+      </div>
+    </section>
 
-.skyhawk-dot{
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--ok);
-  box-shadow: 0 0 0 6px rgba(34,197,94,0.18);
-  animation: skyhawkPulse 1.8s ease-in-out infinite;
-}
+    <!-- NODE LANES -->
+    <section class="node-lane">
 
-@keyframes skyhawkPulse{
-  0%{ transform: scale(1); opacity: 1; }
-  50%{ transform: scale(1.2); opacity: 0.55; }
-  100%{ transform: scale(1); opacity: 1; }
-}
+      <!-- PARENT NODE -->
+      <div class="card parent-node">
+        <h3>EYE20 — Parent Node</h3>
+        <p class="muted">
+          Authoritative · Memory-anchored · Non-drifting
+        </p>
+      </div>
 
-/* ============================================================================
-   PAGE + HEADER (STRUCTURE LOCKED)
-   ============================================================================ */
-.page{
-  padding: 28px 36px 44px 36px;
-  max-width: 1300px;
-  margin: 0 auto;
-}
+      <!-- ANDY -->
+      <div class="card agent-node">
+        <h3>Andy — Execution Agent</h3>
+        <p class="muted">
+          Scoped execution · Read-only · Awaiting instruction
+        </p>
+      </div>
 
-.app-header{
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(720px,1fr) 340px;
-  gap: 22px;
-  align-items: start;
-  min-height: 220px;
-}
+    </section>
 
-/* ============================================================================
-   LOGO — LOCKED (DO NOT TOUCH)
-   ============================================================================ */
-.otos-logo{
-  position: absolute;
-  top: -266px;
-  left: -38px;
-  height: 260px;
-  width: auto;
-  pointer-events: none;
-  user-select: none;
-}
+    <!-- METRICS -->
+    <section class="metrics">
 
-/* ============================================================================
-   HERO TEXT
-   ============================================================================ */
-.title{
-  margin: 0 0 8px 0;
-  font-size: 34px;
-  letter-spacing: -0.4px;
-}
+      <div class="card metric">
+        <span class="metric-val">12</span>
+        <span class="metric-label">Active Tasks</span>
+      </div>
 
-.subtitle{
-  margin: 0 0 18px 0;
-  color: var(--ink2);
-  max-width: 760px;
-}
+      <div class="card metric">
+        <span class="metric-val">1</span>
+        <span class="metric-label">Agents Online</span>
+      </div>
 
-/* ============================================================================
-   GLASS CARDS — Apple-style depth
-   ============================================================================ */
-.card{
-  background: linear-gradient(180deg,var(--card),var(--card2));
-  border: 1px solid var(--stroke);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(12px);
-  transition: box-shadow .25s ease, transform .25s ease;
-}
+      <div class="card metric">
+        <span class="metric-val">37</span>
+        <span class="metric-label">Signals</span>
+      </div>
 
-.card:hover{
-  box-shadow: var(--shadow);
-  transform: translateY(-1px);
-}
+      <div class="card metric">
+        <span class="metric-val">STABLE</span>
+        <span class="metric-label">System State</span>
+      </div>
 
-.card-lg{ padding: 16px; }
-.card:not(.card-lg){ padding: 14px; }
+    </section>
 
-.card-title{
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: rgba(11,18,32,0.65);
-  margin-bottom: 10px;
-}
+    <!-- TELEMETRY -->
+    <section class="card telemetry">
+      <strong>Telemetry (Preview)</strong>
+      <p>
+        System heartbeat nominal. Memory write-gates locked.
+        No autonomous execution detected.
+      </p>
+    </section>
 
-/* ============================================================================
-   PRIORITY LIST — gentle life pulse
-   ============================================================================ */
-.priority-item{
-  background: rgba(255,255,255,0.82);
-  border: 1px solid var(--stroke2);
-  border-radius: var(--radius2);
-  padding: 12px;
-  box-shadow: 0 10px 20px rgba(11,18,32,0.06);
-}
+  </main>
 
-.priority-item.is-active{
-  border-color: rgba(37,99,235,0.45);
-  animation: focusGlow 2.4s ease-in-out infinite;
-}
-
-@keyframes focusGlow{
-  0%{ box-shadow: 0 0 0 rgba(37,99,235,0.0); }
-  50%{ box-shadow: 0 0 0 6px rgba(37,99,235,0.10); }
-  100%{ box-shadow: 0 0 0 rgba(37,99,235,0.0); }
-}
-
-/* ============================================================================
-   METRICS — clarity + confidence
-   ============================================================================ */
-.metrics{
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 18px;
-  margin-top: 18px;
-}
-
-.metric-val{
-  font-size: 22px;
-  font-weight: 900;
-}
-
-.metric-val-strong{
-  letter-spacing: 0.6px;
-  color: var(--accent);
-}
-
-/* ============================================================================
-   TELEMETRY — shimmer line
-   ============================================================================ */
-.telemetry{
-  margin-top: 14px;
-  border-style: dashed;
-  position: relative;
-  overflow: hidden;
-}
-
-.telemetry::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: linear-gradient(120deg,transparent 30%,rgba(255,255,255,0.35),transparent 70%);
-  transform: translateX(-100%);
-  animation: telemetrySweep 6s ease-in-out infinite;
-}
-
-@keyframes telemetrySweep{
-  0%{ transform: translateX(-100%); }
-  60%{ transform: translateX(120%); }
-  100%{ transform: translateX(120%); }
-}
-
-/* ============================================================================
-   RESPONSIVE
-   ============================================================================ */
-@media (max-width:1120px){
-  .app-header{ grid-template-columns: 1fr; }
-  .metrics{ grid-template-columns: repeat(2,1fr); }
-}
-
-@media (prefers-reduced-motion: reduce){
-  *{ animation: none !important; }
-}
+</body>
+</html>
