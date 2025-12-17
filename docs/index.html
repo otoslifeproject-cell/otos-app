@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OTOS Cockpit — V1 (Locked)</title>
 
-  <!-- FORCE correct CSS load on GitHub Pages -->
-  <link rel="stylesheet" href="./docs/styles.css" />
-</head>
+  <!-- HARD-LOCKED STYLES -->
+  <link rel="stylesheet" href="./styles.css?v=1.0" />
 
+</head>
 <body>
 
   <!-- SKYHAWK BAR -->
-  <div class="skyhawk">
+  <div class="skyhawk-bar">
     <strong>SKYHAWK</strong>
     <span>Signals nominal</span>
     <span>Latency: 14ms</span>
@@ -21,27 +21,30 @@
   </div>
 
   <!-- HEADER -->
-  <header class="header">
-    <div class="brand">
+  <header class="app-header">
+    <div class="logo-wrap">
       <img
-        src="docs/brand/logo/otos-logo-400.png"
-        alt="OTOS Brain Logo"
+        src="./brand/logo/otos-logo-400.png"
+        alt="OTOS"
         class="logo"
       />
-      <div class="product">Cockpit</div>
     </div>
 
-    <p class="subtitle">
-      Enterprise execution surface. Human authority at the centre.
-      Agents operate within visible, bounded lanes.
-    </p>
+    <div class="header-text">
+      <h1>OTOS Cockpit</h1>
+      <p>
+        Enterprise execution surface. Human authority at the centre.
+        Agents operate within visible, bounded lanes.
+      </p>
+    </div>
   </header>
 
   <!-- MAIN -->
-  <main class="container">
+  <main class="workspace">
 
-    <section class="card">
-      <h3>Top Priority</h3>
+    <!-- TOP PRIORITY -->
+    <section class="card focus-card">
+      <h2>Top Priority</h2>
       <ul>
         <li><strong>Lock Parent Node Governance</strong> — Confirm write-gates and authority boundaries.</li>
         <li><strong>Prepare Demo Narrative</strong> — Sequence system layers for stakeholder walkthrough.</li>
@@ -49,32 +52,39 @@
       </ul>
     </section>
 
-    <section class="grid">
-      <div class="card">
-        <small class="label">PARENT NODE</small>
-        <h3>EYE22 — Parent Node</h3>
-        <p class="muted">Authoritative · Memory-anchored · Non-drifting</p>
-        <p>This node defines truth. No execution occurs here.</p>
+    <!-- LANES -->
+    <section class="lane-grid">
+
+      <div class="card lane parent-lane">
+        <h3>PARENT NODE</h3>
+        <h2>EYE22 — Parent Node</h2>
+        <p>Authoritative · Memory-anchored · Non-drifting</p>
+        <p class="muted">This node defines truth. No execution occurs here.</p>
       </div>
 
-      <div class="card accent">
-        <small class="label">EXECUTION AGENT</small>
-        <h3>Andy — Execution Agent</h3>
-        <p class="muted">Scoped execution · Read-only · Awaiting instruction</p>
-        <button disabled>No instruction loaded</button>
-        <button class="ghost">Preview execution path</button>
+      <div class="card lane andy-lane">
+        <h3>EXECUTION AGENT</h3>
+        <h2>Andy — Execution Agent</h2>
+        <p>Scoped execution · Read-only · Awaiting instruction</p>
+        <div class="pill-row">
+          <span class="pill">No instruction loaded</span>
+          <span class="pill outline">Preview execution path</span>
+        </div>
       </div>
+
     </section>
 
-    <section class="metrics">
-      <div class="metric"><strong>12</strong><span>Active Tasks</span></div>
-      <div class="metric"><strong>1</strong><span>Agents Online</span></div>
-      <div class="metric"><strong>37</strong><span>Signals</span></div>
-      <div class="metric ok"><strong>STABLE</strong><span>System State</span></div>
+    <!-- METRICS -->
+    <section class="metrics-grid">
+      <div class="metric card"><strong>12</strong><span>Active Tasks</span></div>
+      <div class="metric card"><strong>1</strong><span>Agents Online</span></div>
+      <div class="metric card"><strong>37</strong><span>Signals</span></div>
+      <div class="metric card stable"><strong>STABLE</strong><span>System State</span></div>
     </section>
 
-    <section class="telemetry card dashed">
-      <h4>Telemetry (Preview)</h4>
+    <!-- TELEMETRY -->
+    <section class="card telemetry">
+      <h3>Telemetry (Preview)</h3>
       <p>
         System heartbeat nominal. Memory write-gates locked.
         No autonomous execution detected.
