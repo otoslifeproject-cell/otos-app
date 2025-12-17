@@ -1,26 +1,20 @@
 /* =========================================================
    OTOS COCKPIT — V1 LOCKED
-   HEADER ORIGIN HARD-ANCHORED (TOP-LEFT)
+   HEADER MATCHES REFERENCE IMAGE (HARD SPEC)
    ========================================================= */
 
-/* ---------- ROOT ---------- */
 :root {
-  --ink-1: #0f172a;
+  --ink-1: #000000;
   --ink-2: #475569;
-
   --card: rgba(255,255,255,0.78);
   --card-soft: rgba(255,255,255,0.62);
   --stroke: rgba(15,23,42,0.12);
-
-  --blue: #2563eb;
   --green: #22c55e;
-
   --radius: 18px;
   --shadow-soft: 0 12px 32px rgba(15,23,42,0.12);
-  --shadow-strong: 0 22px 48px rgba(15,23,42,0.18);
 }
 
-/* ---------- RESET ---------- */
+/* RESET */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 
@@ -34,7 +28,7 @@ body {
     linear-gradient(180deg, #f7fbff, #dbeafe);
 }
 
-/* ---------- SKYHAWK ---------- */
+/* SKYHAWK */
 .skyhawk-bar {
   height: 42px;
   background: linear-gradient(180deg,#0b1220,#020617);
@@ -46,63 +40,62 @@ body {
   font-size: 12px;
 }
 
-/* =========================================================
-   HEADER — HARD ANCHOR
-   ========================================================= */
-
+/* HEADER — ABSOLUTE ORIGIN */
 .app-header {
-  position: relative;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 14px;
-
-  /* 🔒 TRUE ORIGIN */
-  padding-top: 18px;
-  padding-left: 24px;
-  padding-right: 40px;
-  padding-bottom: 18px;
-
-  align-items: start;
+  padding: 18px 40px 10px 24px;
 }
 
-/* LOGO — OWNS THE CORNER */
-.logo-wrap {
-  position: relative;
+/* LOGO BLOCK */
+.logo-block {
+  display: inline-block;
 }
 
-.logo {
-  height: 40px;              /* FINAL AGREED SIZE */
+/* TOP ROW */
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* 🧠 Brain — 2cm */
+.logo-brain {
+  height: 76px;
   width: auto;
   display: block;
 }
 
-/* TITLE STACK — LOCKED UNDER SAME ORIGIN */
-.title-wrap {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+/* OTOS WORDMARK */
+.logo-text {
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
 }
 
-.title-wrap h1 {
-  margin: 0;
-  font-size: 32px;
-  line-height: 1.1;
+/* COCKPIT (SECOND LINE) */
+.cockpit-text {
+  margin-top: 8px;
+  font-size: 72px;
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1;
 }
 
+/* SUBTITLE */
 .subtitle {
-  margin-top: 6px;
+  margin-top: 10px;
+  max-width: 720px;
   color: var(--ink-2);
-  max-width: 640px;
 }
 
-/* ---------- MAIN LAYOUT ---------- */
+/* MAIN */
 .workspace {
   padding: 24px 40px 80px;
   display: grid;
   gap: 24px;
 }
 
-/* ---------- CARDS ---------- */
+/* CARDS */
 .card {
   background: var(--card);
   border-radius: var(--radius);
@@ -110,17 +103,13 @@ body {
   padding: 22px 26px;
 }
 
-/* ---------- FOCUS ---------- */
+/* FOCUS */
 .focus-card ul {
   margin: 12px 0 0;
   padding-left: 20px;
 }
 
-.focus-card li {
-  margin: 8px 0;
-}
-
-/* ---------- LANES ---------- */
+/* LANES */
 .lane-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -133,21 +122,11 @@ body {
   color: var(--ink-2);
 }
 
-.lane h2 {
-  margin: 6px 0 8px;
-}
-
 .lane-desc {
   color: var(--ink-2);
 }
 
-.lane-foot {
-  margin-top: 10px;
-  font-size: 13px;
-  color: var(--ink-2);
-}
-
-/* ---------- AGENT BUTTONS ---------- */
+/* ACTIONS */
 .agent-actions {
   margin-top: 16px;
   display: flex;
@@ -165,7 +144,7 @@ body {
   opacity: .5;
 }
 
-/* ---------- METRICS ---------- */
+/* METRICS */
 .metrics-grid {
   display: grid;
   grid-template-columns: repeat(4,1fr);
@@ -193,19 +172,19 @@ body {
   color: var(--green);
 }
 
-/* ---------- TELEMETRY ---------- */
+/* TELEMETRY */
 .telemetry {
   border: 1px dashed var(--stroke);
 }
 
-/* ---------- FOOTER ---------- */
+/* FOOTER */
 .app-footer {
   padding: 16px 40px;
   font-size: 12px;
   color: var(--ink-2);
 }
 
-/* ---------- RESPONSIVE (SAFE ONLY) ---------- */
+/* RESPONSIVE (SAFE) */
 @media (max-width: 980px) {
   .lane-grid { grid-template-columns: 1fr; }
   .metrics-grid { grid-template-columns: repeat(2,1fr); }
