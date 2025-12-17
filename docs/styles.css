@@ -2,256 +2,223 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit</title>
+  <title>OTOS Cockpit — EYE20</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Base styles (existing) -->
-  <link rel="stylesheet" href="./styles.css" />
-
-  <!-- Cockpit hard overrides -->
   <style>
-    /* =========================================================
-       OTOS COCKPIT — HARD VISUAL ASSERTION
-       File: otos-app/docs/index.html
-       Purpose: Override document styling into cockpit UI
-    ========================================================= */
+    :root {
+      --bg-main: radial-gradient(circle at top left, #f5fbff, #eaf4ff);
+      --panel-bg: rgba(255,255,255,0.82);
+      --border-soft: rgba(148,163,184,0.35);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent: #38bdf8;
+    }
 
-    /* --- HARD RESET OVERRIDES --- */
+    * { box-sizing: border-box; }
+
     body {
-      margin: 0 !important;
-      background: #0b0e13 !important;
-      color: #ffffff !important;
-      font-family: -apple-system, BlinkMacSystemFont,
-                   "Segoe UI", Inter, Roboto, system-ui, sans-serif !important;
-    }
-
-    h1, h2, h3, p, div, span {
-      color: #ffffff;
-    }
-
-    /* --- SKYHAWK BAR --- */
-    .otos-status {
-      background: #0e1218;
-      color: #e6e8ec;
-      font-size: 13px;
-      padding: 10px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      letter-spacing: 0.2px;
-    }
-
-    /* --- MAIN SHELL --- */
-    .otos-shell {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 32px 28px 60px;
-    }
-
-    /* --- HEADER --- */
-    .otos-header {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 36px;
-      margin-top: 32px;
-      margin-bottom: 44px;
-    }
-
-    .otos-logo {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    .otos-logo img {
-      height: 42px;
-      width: auto;
-    }
-
-    .otos-header h1 {
-      margin: 0 0 12px 0;
-      font-size: 34px;
-      font-weight: 700;
-    }
-
-    .otos-header p {
       margin: 0;
-      max-width: 720px;
-      line-height: 1.6;
-      opacity: 0.9;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
     }
 
-    .otos-meta {
+    /* ===== LAYOUT ===== */
+    .layout {
+      display: grid;
+      grid-template-columns: 320px 1fr 360px;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    .zone {
+      border-right: 1px solid var(--border-soft);
+      overflow: hidden;
+    }
+
+    .zone:last-child {
+      border-right: none;
+    }
+
+    /* ===== ZONE BASE ===== */
+    .zone-inner {
+      height: 100%;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .panel {
+      background: var(--panel-bg);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      padding: 14px 16px 16px 16px;
+      position: relative;
+    }
+
+    .panel h3 {
+      margin: 0 0 6px 0;
       font-size: 14px;
-      line-height: 1.6;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
     }
 
-    .otos-meta strong {
+    .panel p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ===== DRAG HANDLE (VISUAL ONLY) ===== */
+    .handle {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 16px;
+      letter-spacing: 2px;
+      color: var(--text-muted);
+      opacity: 0.6;
+      cursor: grab;
+      user-select: none;
+    }
+
+    /* ===== LEFT — PARENT NODE ===== */
+    .parent-node {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .parent-node strong {
       display: block;
+      font-size: 18px;
       margin-bottom: 6px;
     }
 
-    /* --- TICKER --- */
-    .otos-ticker {
-      margin: 30px 0 40px;
-      padding: 12px 18px;
-      border-radius: 999px;
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(255,255,255,0.1);
-      overflow: hidden;
-      white-space: nowrap;
+    /* ===== CENTRE — TASK TILING ===== */
+    .tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    .otos-ticker-track {
-      display: inline-flex;
-      gap: 40px;
-      animation: ticker-scroll 34s linear infinite;
+    .task-card {
+      height: 120px;
+      border: 1px dashed var(--border-soft);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--text-muted);
     }
 
-    @keyframes ticker-scroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+    .task-primary {
+      height: 160px;
+      border-style: solid;
+      font-weight: 600;
+      background: rgba(255,255,255,0.9);
     }
 
-    /* --- MODULE GRID --- */
-    .otos-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 22px;
-      margin-bottom: 52px;
+    /* ===== RIGHT — ANDY + TICKER ===== */
+    .ticker {
+      height: 56px;
+      border-radius: 12px;
+      background: linear-gradient(90deg, rgba(56,189,248,0.15), rgba(56,189,248,0.05));
+      border: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--text-muted);
     }
 
-    .otos-module {
-      grid-column: span 4;
-      padding: 20px;
-      min-height: 190px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
-    }
-
-    .otos-module h3 {
-      margin: 0 0 10px 0;
-      font-size: 18px;
-    }
-
-    .otos-tag {
-      display: inline-block;
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.2);
-      opacity: 0.75;
-      margin-bottom: 10px;
-    }
-
-    /* --- SKELETON --- */
-    .skel {
-      height: 12px;
-      background: rgba(255,255,255,0.12);
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-
-    .skel.block {
-      height: 64px;
-    }
-
-    /* --- RESPONSIVE --- */
-    @media (max-width: 1100px) {
-      .otos-header { grid-template-columns: 1fr; }
-      .otos-module { grid-column: span 6; }
-    }
-
-    @media (max-width: 720px) {
-      .otos-module { grid-column: span 12; }
+    .andy {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- SKYHAWK STATUS -->
-  <div class="otos-status">
-    <strong>SKYHAWK</strong> · Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected
-  </div>
+  <div class="layout">
 
-  <main class="otos-shell">
-
-    <!-- HEADER -->
-    <section class="otos-header">
-      <div>
-        <div class="otos-logo">
-          <img src="./brand/logo/otos-logo-400.png" alt="OTOS Logo" />
+    <!-- LEFT ZONE — PARENT NODE -->
+    <div class="zone">
+      <div class="zone-inner">
+        <div class="panel parent-node">
+          <div class="handle">⋮⋮</div>
+          <h3>Parent Node</h3>
+          <strong>ChatGPT — EYE20</strong>
+          <p>
+            Authoritative system presence.<br>
+            Memory-anchored. Non-autonomous.<br>
+            Locked spatial identity.
+          </p>
         </div>
-
-        <h1>OTOS Cockpit</h1>
-        <p>
-          Enterprise execution surface. Human authority at the centre.
-          Agents operate within visible, bounded lanes.
-        </p>
-      </div>
-
-      <div class="otos-meta">
-        <strong>EYE20 — Parent Node</strong>
-        Authoritative · Memory-anchored · Non-drifting
-        <br><br>
-        <strong>Andy — Execution Agent</strong>
-        Scoped execution · Read-only · Awaiting instruction
-      </div>
-    </section>
-
-    <!-- LIVE TICKER -->
-    <div class="otos-ticker">
-      <div class="otos-ticker-track">
-        <div>Admissions detected</div>
-        <div>Continuity chain stable</div>
-        <div>Shared-care friction flagged</div>
-        <div>Memory write-gates locked</div>
-        <div>No autonomous execution</div>
-        <div>Admissions detected</div>
-        <div>Continuity chain stable</div>
       </div>
     </div>
 
-    <!-- MODULE GRID -->
-    <section class="otos-grid">
+    <!-- CENTRE ZONE — TASK TILING -->
+    <div class="zone">
+      <div class="zone-inner tasks">
+        <div class="panel task-card task-primary">
+          <div class="handle">⋮⋮</div>
+          TOP PRIORITY — ONE THING
+        </div>
 
-      <div class="otos-module">
-        <span class="otos-tag">PLACEHOLDER</span>
-        <h3>Andy Feeder</h3>
-        <div class="skel block"></div>
-        <div class="skel" style="width:70%"></div>
-        <div class="skel" style="width:45%"></div>
+        <div class="panel task-card">
+          <div class="handle">⋮⋮</div>
+          Secondary Task (Parked)
+        </div>
+
+        <div class="panel task-card">
+          <div class="handle">⋮⋮</div>
+          Secondary Task (Parked)
+        </div>
+
+        <div class="panel task-card">
+          <div class="handle">⋮⋮</div>
+          Secondary Task (Parked)
+        </div>
       </div>
+    </div>
 
-      <div class="otos-module">
-        <span class="otos-tag">PLACEHOLDER</span>
-        <h3>SkyHawk Radar</h3>
-        <div class="skel block"></div>
-        <div class="skel" style="width:60%"></div>
-        <div class="skel" style="width:52%"></div>
+    <!-- RIGHT ZONE — TICKER + ANDY -->
+    <div class="zone">
+      <div class="zone-inner">
+        <div class="ticker">
+          SkyHawk Ticker — Placeholder
+        </div>
+
+        <div class="panel andy">
+          <div class="handle">⋮⋮</div>
+          <h3>Andy</h3>
+          <strong>Feeder Agent</strong>
+          <p>
+            Deterministic ingestion only.<br>
+            Non-authoritative.<br>
+            Human-confirmed outputs.
+          </p>
+        </div>
       </div>
+    </div>
 
-      <div class="otos-module">
-        <span class="otos-tag">PLACEHOLDER</span>
-        <h3>Opportunity Generator</h3>
-        <div class="skel block"></div>
-        <div class="skel" style="width:68%"></div>
-        <div class="skel" style="width:38%"></div>
-      </div>
-
-    </section>
-
-    <!-- TELEMETRY -->
-    <section>
-      <strong>Telemetry (Preview)</strong>
-      <p>
-        System heartbeat nominal. Memory write-gates locked.
-        No autonomous execution detected.
-      </p>
-    </section>
-
-  </main>
+  </div>
 
 </body>
 </html>
