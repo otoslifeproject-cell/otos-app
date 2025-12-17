@@ -1,127 +1,178 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>OTOS Cockpit</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./styles.css" />
-</head>
+/* =========================================================
+   OTOS COCKPIT — V1 LOCKED
+   Visual + Layout + Authority Frame
+   ========================================================= */
 
-<body>
+:root {
+  --ink: #0b1220;
+  --muted: #5b6b82;
 
-<!-- SKYHAWK TICKER -->
-<header class="skyhawk-bar">
-  <span class="status-dot"></span>
-  <strong>SKYHAWK</strong>
-  <span>Signals nominal</span>
-  <span>Latency: 14ms</span>
-  <span>Feeds: 6 active</span>
-  <span>No anomalies detected</span>
-</header>
+  --blue: #2563eb;
+  --blue-soft: rgba(37,99,235,0.12);
 
-<!-- APP HEADER -->
-<header class="app-header">
-  <img
-    src="./brand/logo/otos-logo-400.png"
-    alt="OTOS"
-    class="otos-logo"
-  />
+  --card: rgba(255,255,255,0.78);
+  --stroke: rgba(11,18,32,0.12);
 
-  <div class="hero">
-    <h1>OTOS Cockpit</h1>
-    <p>
-      Enterprise execution surface. Human authority at the centre.
-      Agents operate within visible, bounded lanes.
-    </p>
-  </div>
-</header>
+  --radius: 18px;
+  --shadow-soft: 0 12px 32px rgba(11,18,32,0.12);
+  --shadow-strong: 0 22px 48px rgba(11,18,32,0.18);
+}
 
-<main class="container">
+/* RESET */
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--ink);
+  height: 100%;
+}
 
-  <!-- TOP PRIORITY -->
-  <section class="card priority">
-    <h2>Top Priority</h2>
+/* BACKGROUND */
+body {
+  background:
+    radial-gradient(1200px 520px at 15% 10%, rgba(214,233,255,0.9), transparent 60%),
+    radial-gradient(900px 520px at 75% 15%, rgba(234,244,255,0.9), transparent 60%),
+    linear-gradient(180deg, #f7fbff, #dbeafe);
+}
 
-    <div class="priority-item active">
-      <strong>Lock Parent Node Governance</strong>
-      <span>Confirm write-gates and authority boundaries.</span>
-    </div>
+/* SKYHAWK */
+.skyhawk-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #0b1220;
+  color: #e5e7eb;
+  font-size: 12px;
+  padding: 8px 16px;
+  display: flex;
+  gap: 14px;
+}
 
-    <div class="priority-item">
-      <strong>Prepare Demo Narrative</strong>
-      <span>Sequence system layers for stakeholder walkthrough.</span>
-    </div>
+/* HEADER */
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 32px 40px 20px;
+}
 
-    <div class="priority-item">
-      <strong>Stabilise Visual Frame</strong>
-      <span>Freeze layout before logic injection.</span>
-    </div>
-  </section>
+.logo-wrap {
+  flex-shrink: 0;
+}
 
-  <!-- AUTHORITY LANES -->
-  <section class="lanes">
+.logo {
+  height: 64px;
+  width: auto;
+  display: block;
+}
 
-    <!-- PARENT NODE -->
-    <div class="card lane parent-lane">
-      <div class="lane-label">PARENT NODE</div>
-      <h3>EYE20 — Parent Node</h3>
-      <p class="lane-desc">
-        Authoritative · Memory-anchored · Non-drifting
-      </p>
-      <p class="lane-note">
-        This node defines truth. No execution occurs here.
-      </p>
-    </div>
+.header-text h1 {
+  margin: 0;
+  font-size: 32px;
+}
 
-    <!-- EXECUTION AGENT -->
-    <div class="card lane agent-lane">
-      <div class="lane-label execution">EXECUTION LANE</div>
-      <h3>Andy — Execution Agent</h3>
-      <p class="lane-desc">
-        Scoped execution · Read-only · Awaiting instruction
-      </p>
+.header-text p {
+  margin: 6px 0 0;
+  color: var(--muted);
+  max-width: 640px;
+}
 
-      <div class="agent-controls">
-        <button disabled>No instruction loaded</button>
-        <button>Preview execution path</button>
-      </div>
-    </div>
+/* MAIN */
+.workspace {
+  padding: 20px 40px 60px;
+  display: grid;
+  gap: 24px;
+}
 
-  </section>
+/* CARDS */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  padding: 20px 24px;
+}
 
-  <!-- METRICS -->
-  <section class="metrics">
-    <div class="card metric">
-      <div class="metric-val">12</div>
-      <div class="metric-label">Active Tasks</div>
-    </div>
+/* FOCUS */
+.focus-card ul {
+  margin: 12px 0 0;
+  padding-left: 18px;
+}
 
-    <div class="card metric">
-      <div class="metric-val">1</div>
-      <div class="metric-label">Agents Online</div>
-    </div>
+/* LANES */
+.lane-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
 
-    <div class="card metric">
-      <div class="metric-val">37</div>
-      <div class="metric-label">Signals</div>
-    </div>
+.lane h3 {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
 
-    <div class="card metric stable">
-      <div class="metric-val">STABLE</div>
-      <div class="metric-label">System State</div>
-    </div>
-  </section>
+.parent-lane {
+  box-shadow: var(--shadow-soft);
+}
 
-  <!-- TELEMETRY -->
-  <section class="card telemetry">
-    <h4>Telemetry (Preview)</h4>
-    <p>
-      System heartbeat nominal. Memory write-gates locked.
-      No autonomous execution detected.
-    </p>
-  </section>
+.andy-lane {
+  border: 2px solid var(--blue-soft);
+  box-shadow: var(--shadow-strong);
+}
 
-</main>
+/* PILLS */
+.pill-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
 
-</body>
-</html>
+.pill {
+  background: var(--blue-soft);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.pill.outline {
+  background: transparent;
+  border: 1px solid var(--blue);
+}
+
+/* METRICS */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.metric {
+  text-align: center;
+}
+
+.metric strong {
+  font-size: 26px;
+  display: block;
+}
+
+.metric span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.metric.stable strong {
+  color: #059669;
+}
+
+/* TELEMETRY */
+.telemetry {
+  border: 2px dashed var(--stroke);
+}
+
+/* FOOTER */
+.footer {
+  padding: 16px 40px;
+  font-size: 12px;
+  color: var(--muted);
+}
