@@ -1,37 +1,265 @@
-<!-- SETTINGS PANEL (LOCAL ONLY) -->
-<div id="settingsPanel" class="settings-panel hidden" aria-hidden="true">
-  <div class="settings-card">
-    <div class="settings-head">
-      <div class="settings-title">Settings (Local Only)</div>
-      <button class="btn btn-ghost" id="settingsClose">Close</button>
-    </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>OTOS Cockpit — V1.1 (Locked)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-    <div class="settings-section">
-      <label class="setting-row">
-        <span>Autosave</span>
-        <input type="checkbox" id="settingAutosave" />
-      </label>
-      <div class="setting-hint">
-        Stored in your browser only. Export to archive.
+<body>
+
+<!-- SKYHAWK -->
+<header class="skyhawk">
+  <div class="ticker">
+    <div class="ticker-track">
+      <span>🛰️ SKYHAWK · Signals Nominal</span>
+      <span>Latency: 14ms</span>
+      <span>Feeds: 6 active</span>
+      <span>No anomalies detected</span>
+      <span>🧠 Focus: 1 task</span>
+      <span>🔒 Inside: Active</span>
+
+      <span>🛰️ SKYHAWK · Signals Nominal</span>
+      <span>Latency: 14ms</span>
+      <span>Feeds: 6 active</span>
+      <span>No anomalies detected</span>
+      <span>🧠 Focus: 1 task</span>
+      <span>🔒 Inside: Active</span>
+    </div>
+  </div>
+</header>
+
+<!-- LOGO (LOCKED BASELINE POSITION) -->
+<div class="logo-anchor">
+  <img
+    src="brand/logo/otos-logo-400.png"
+    class="otos-logo"
+    alt="OTOS Logo"
+  />
+</div>
+
+<!-- WORKSPACE -->
+<div class="workspace">
+
+  <!-- LEFT: PARENT -->
+  <section class="lane lane-parent">
+    <div class="lane-head">
+      <div class="lane-title">
+        <span class="pill parent-pill">EYE22 · Parent Node</span>
+        <span class="subpill">Governance only · Truth · Locks</span>
+      </div>
+      <div class="lane-actions">
+        <button class="btn btn-ghost" id="btnSnapshot">Snapshot</button>
+        <button class="btn" id="btnExport">Export</button>
+        <button class="btn btn-ghost" id="btnSettings">Settings</button>
       </div>
     </div>
 
-    <div class="settings-section">
-      <label class="setting-row">
-        <span>Show Telemetry</span>
-        <input type="checkbox" id="settingTelemetry" />
-      </label>
+    <div class="card panel">
+      <div class="panel-title">TOP PRIORITY (Focus Deck)</div>
+      <div class="focus-card">
+        <div class="focus-label">NOW</div>
+        <div class="focus-title">Finish V1 UI wiring</div>
+        <div class="focus-meta">
+          Locked baseline · Parent + Andy lanes · Exportable intake
+        </div>
+      </div>
     </div>
 
-    <div class="settings-section">
-      <label class="setting-row">
-        <span>Show Audit Log</span>
-        <input type="checkbox" id="settingAudit" />
-      </label>
+    <div class="card panel chat-shell">
+      <div class="panel-title">PARENT CHAT (V1)</div>
+
+      <div class="chat-log" id="parentChatLog">
+        <div class="msg sys">
+          <div class="msg-role">SYSTEM</div>
+          <div class="msg-text">
+            Inside status: <strong>ACTIVE</strong>. Parent is governance-only.
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-compose">
+        <input
+          id="parentInput"
+          class="input"
+          placeholder='Type governance note…'
+        />
+        <button class="btn" id="parentSend">Add note</button>
+      </div>
     </div>
 
-    <div class="settings-footer">
-      <span class="muted">No external connections. No execution.</span>
+    <div class="card panel telemetry">
+      <div class="panel-title">TELEMETRY</div>
+      <div class="telemetry-grid">
+        <div><strong>Window</strong><br>Operational</div>
+        <div><strong>Guardrails</strong><br>HARD-LOCKED</div>
+        <div><strong>Andy</strong><br>Installed · Idle</div>
+        <div><strong>Persistence</strong><br>ON</div>
+      </div>
     </div>
+  </section>
+
+  <!-- RIGHT: ANDY -->
+  <aside class="lane lane-andy">
+    <div class="lane-head">
+      <div class="lane-title">
+        <span class="pill andy-pill">Andy · Execution Agent</span>
+        <span class="subpill">Ingest → Archive (Tier 3)</span>
+      </div>
+      <div class="lane-actions">
+        <button class="btn btn-ghost" id="btnClear">Clear</button>
+      </div>
+    </div>
+
+    <div class="card panel dropzone" id="dropzone">
+      <div class="dz-title">Drop files here</div>
+      <div class="dz-sub">PDF · DOCX · TXT · PNG · ZIP</div>
+      <div class="dz-mini">Local capture only</div>
+    </div>
+
+    <div class="card panel">
+      <div class="panel-title">INTAKE QUEUE</div>
+      <div id="queue" class="queue"></div>
+    </div>
+
+    <div class="card panel">
+      <div class="panel-title">TASK CAPTURE</div>
+      <div class="task-capture">
+        <input id="taskInput" class="input" placeholder="Quick task…" />
+        <button class="btn" id="taskAdd">Add</button>
+      </div>
+      <div id="taskList" class="task-list"></div>
+    </div>
+  </aside>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div id="settingsPanel" class="settings-panel hidden">
+  <div class="settings-card">
+    <div class="settings-head">
+      <strong>Settings (Local Only)</strong>
+      <button class="btn btn-ghost" id="settingsClose">Close</button>
+    </div>
+
+    <label class="setting-row">
+      Autosave
+      <input type="checkbox" id="settingAutosave" />
+    </label>
+
+    <label class="setting-row">
+      Show Telemetry
+      <input type="checkbox" id="settingTelemetry" />
+    </label>
   </div>
 </div>
+
+<footer class="footer">
+  <span class="foot-pill">LOCKED BASELINE</span>
+  <span class="foot-text">OTOS Cockpit V1.1 · Local-only</span>
+</footer>
+
+<script>
+/* =============================
+   STATE (LOCAL ONLY)
+============================= */
+const state = {
+  notes: [],
+  tasks: [],
+  intake: [],
+  settings: {
+    autosave: true,
+    showTelemetry: true
+  }
+};
+
+const $ = id => document.getElementById(id);
+
+/* =============================
+   SETTINGS
+============================= */
+const saved = localStorage.getItem("otos_settings");
+if (saved) Object.assign(state.settings, JSON.parse(saved));
+
+function saveSettings(){
+  localStorage.setItem("otos_settings", JSON.stringify(state.settings));
+}
+
+$("btnSettings").onclick = () => {
+  $("settingsPanel").classList.remove("hidden");
+  $("settingAutosave").checked = state.settings.autosave;
+  $("settingTelemetry").checked = state.settings.showTelemetry;
+};
+
+$("settingsClose").onclick = () =>
+  $("settingsPanel").classList.add("hidden");
+
+$("settingAutosave").onchange = e => {
+  state.settings.autosave = e.target.checked;
+  saveSettings();
+};
+
+$("settingTelemetry").onchange = e => {
+  state.settings.showTelemetry = e.target.checked;
+  document.querySelector(".telemetry").style.display =
+    e.target.checked ? "" : "none";
+  saveSettings();
+};
+
+/* =============================
+   PARENT NOTES
+============================= */
+$("parentSend").onclick = () => {
+  const v = $("parentInput").value.trim();
+  if (!v) return;
+  state.notes.push(v);
+  $("parentInput").value = "";
+  renderNotes();
+};
+
+function renderNotes(){
+  const log = $("parentChatLog");
+  log.innerHTML = `
+    <div class="msg sys">
+      <div class="msg-role">SYSTEM</div>
+      <div class="msg-text">Parent governance log</div>
+    </div>
+  ` + state.notes.map(n =>
+    `<div class="msg parent"><div class="msg-text">${n}</div></div>`
+  ).join("");
+}
+
+/* =============================
+   TASKS
+============================= */
+$("taskAdd").onclick = () => {
+  const v = $("taskInput").value.trim();
+  if (!v) return;
+  state.tasks.push(v);
+  $("taskInput").value = "";
+  renderTasks();
+};
+
+function renderTasks(){
+  $("taskList").innerHTML = state.tasks.map(t =>
+    `<div class="t-item">${t}</div>`
+  ).join("");
+}
+
+/* =============================
+   EXPORT
+============================= */
+$("btnExport").onclick = () => {
+  const blob = new Blob(
+    [JSON.stringify(state, null, 2)],
+    { type: "application/json" }
+  );
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "OTOS_V1_EXPORT.json";
+  a.click();
+};
+</script>
+
+</body>
+</html>
