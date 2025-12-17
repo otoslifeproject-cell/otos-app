@@ -27,29 +27,19 @@
   height: 0;
 }
 
-/* ================================
-   LOGO — HERO MARK (CONTROLLED)
-   Smooth scaling. No jumps.
-================================ */
+/* ===============================
+   LOGO — HERO MARK (RESET CLEAN)
+   =============================== */
+
 .otos-logo {
   position: absolute;
-
-  /* REAL-WORLD MICRO ADJUSTMENT */
-  top: -76px;    /* ≈ 2cm UP */
-  left: -38px;   /* ≈ 1cm LEFT */
-
-  /* SIZE — LOCKED */
-  height: 260px;
+  top: -266px;      /* moved UP ~50mm from last good (-76px) */
+  left: -38px;      /* unchanged — known good */
+  height: 260px;    /* locked size */
   width: auto;
-
-  /* SCALE — LOCKED */
-  transform: scale(1);
-  transform-origin: top left;
-
   display: block;
   pointer-events: none;
 }
-
 
 /* ================================
    PAGE LAYOUT
