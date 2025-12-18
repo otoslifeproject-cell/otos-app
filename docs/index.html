@@ -10,7 +10,7 @@
 <body>
 
 <!-- SKYHAWK -->
-<header class="skyhawk">
+<header class="skyhawk" aria-label="SkyHawk ticker">
   <div class="ticker">
     <div class="ticker-track">
       <span>🛰️ SKYHAWK · Signals Nominal</span>
@@ -30,19 +30,19 @@
   </div>
 </header>
 
-<!-- LOGO (LOCKED BASELINE POSITION) -->
-<div class="logo-anchor">
+<!-- LOGO (LOCKED BASELINE POSITION + PATH) -->
+<div class="logo-anchor" aria-hidden="true">
   <img
     src="brand/logo/otos-logo-400.png"
     class="otos-logo"
-    alt="OTOS Logo"
+    alt=""
   />
 </div>
 
 <!-- WORKSPACE -->
 <div class="workspace">
 
-  <!-- LEFT: PARENT -->
+  <!-- LEFT: PARENT (Governance only) -->
   <section class="lane lane-parent">
     <div class="lane-head">
       <div class="lane-title">
@@ -83,13 +83,13 @@
         <input
           id="parentInput"
           class="input"
-          placeholder='Type governance note…'
+          placeholder="Type governance note…"
         />
         <button class="btn" id="parentSend">Add note</button>
       </div>
     </div>
 
-    <div class="card panel telemetry">
+    <div class="card panel telemetry" id="telemetryPanel">
       <div class="panel-title">TELEMETRY</div>
       <div class="telemetry-grid">
         <div><strong>Window</strong><br>Operational</div>
@@ -100,7 +100,94 @@
     </div>
   </section>
 
-  <!-- RIGHT: ANDY -->
+  <!-- MIDDLE: CORE (Tiles / Actions / Deck) -->
+  <main class="lane lane-core" aria-label="Core tiles and action deck">
+    <div class="lane-head">
+      <div class="lane-title">
+        <span class="pill core-pill">CORE · Tiles</span>
+        <span class="subpill">Centre lane · modular grid</span>
+      </div>
+      <div class="lane-actions">
+        <button class="btn btn-ghost small" id="btnCoreReset">Reset layout</button>
+      </div>
+    </div>
+
+    <div class="card panel">
+      <div class="panel-title">ACTIVE ACTION (Card)</div>
+      <div class="action-card" id="activeAction">
+        <div class="action-top">
+          <div class="action-pill">READY</div>
+          <div class="action-mini">No black box · deterministic ordering</div>
+        </div>
+        <div class="action-title">—</div>
+        <div class="action-meta">Pin an action / promote from deck (next step wiring)</div>
+        <div class="action-actions">
+          <button class="btn btn-ghost small" id="btnSnooze">Snooze</button>
+          <button class="btn small" id="btnComplete">Complete</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card panel">
+      <div class="panel-title">EXPANDABLE DECK (Next 3–5)</div>
+      <div class="deck" id="actionDeck"></div>
+    </div>
+
+    <div class="card panel">
+      <div class="panel-title">MODULE TILES (Locked frame · movable tiles)</div>
+      <div class="tiles" id="tileGrid">
+        <div class="tile" data-tile="reminder">
+          <div class="tile-head">
+            <strong>Reminder Module</strong>
+            <span class="tile-tag">locked</span>
+          </div>
+          <div class="tile-body">Capture → due → escalate (later wiring)</div>
+        </div>
+
+        <div class="tile" data-tile="radar">
+          <div class="tile-head">
+            <strong>Reality Radar™</strong>
+            <span class="tile-tag">locked</span>
+          </div>
+          <div class="tile-body">Quiet · Guided · Anchored (later wiring)</div>
+        </div>
+
+        <div class="tile" data-tile="projects">
+          <div class="tile-head">
+            <strong>Projects</strong>
+            <span class="tile-tag">data</span>
+          </div>
+          <div class="tile-body">Project → Task → Action schema (Notion-backed later)</div>
+        </div>
+
+        <div class="tile" data-tile="tasks">
+          <div class="tile-head">
+            <strong>Tasks</strong>
+            <span class="tile-tag">context</span>
+          </div>
+          <div class="tile-body">Tasks contextualise Actions (never on Action Card)</div>
+        </div>
+
+        <div class="tile" data-tile="system">
+          <div class="tile-head">
+            <strong>System</strong>
+            <span class="tile-tag">status</span>
+          </div>
+          <div class="tile-body">Export/Rehydrate · sessions · telemetry</div>
+        </div>
+
+        <div class="tile" data-tile="notes">
+          <div class="tile-head">
+            <strong>Notes</strong>
+            <span class="tile-tag">local</span>
+          </div>
+          <div class="tile-body">Fast capture, later routed to intake</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- RIGHT: ANDY (Execution Agent) -->
   <aside class="lane lane-andy">
     <div class="lane-head">
       <div class="lane-title">
@@ -135,7 +222,7 @@
 </div>
 
 <!-- SETTINGS PANEL -->
-<div id="settingsPanel" class="settings-panel hidden">
+<div id="settingsPanel" class="settings-panel hidden" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="settings-card">
     <div class="settings-head">
       <strong>Settings (Local Only)</strong>
@@ -167,9 +254,16 @@ const state = {
   notes: [],
   tasks: [],
   intake: [],
+  actions: {
+    active: null,
+    deck: []
+  },
   settings: {
     autosave: true,
     showTelemetry: true
+  },
+  ui: {
+    tileOrder: ["reminder","radar","projects","tasks","system","notes"]
   }
 };
 
@@ -178,21 +272,40 @@ const $ = id => document.getElementById(id);
 /* =============================
    SETTINGS
 ============================= */
-const saved = localStorage.getItem("otos_settings");
-if (saved) Object.assign(state.settings, JSON.parse(saved));
+const savedSettings = localStorage.getItem("otos_settings");
+if (savedSettings) {
+  try { Object.assign(state.settings, JSON.parse(savedSettings)); } catch {}
+}
+
+const savedUI = localStorage.getItem("otos_ui");
+if (savedUI) {
+  try { Object.assign(state.ui, JSON.parse(savedUI)); } catch {}
+}
 
 function saveSettings(){
   localStorage.setItem("otos_settings", JSON.stringify(state.settings));
 }
+function saveUI(){
+  localStorage.setItem("otos_ui", JSON.stringify(state.ui));
+}
+
+function applyTelemetryVisibility(){
+  const el = $("telemetryPanel");
+  if (!el) return;
+  el.style.display = state.settings.showTelemetry ? "" : "none";
+}
 
 $("btnSettings").onclick = () => {
   $("settingsPanel").classList.remove("hidden");
+  $("settingsPanel").setAttribute("aria-hidden","false");
   $("settingAutosave").checked = state.settings.autosave;
   $("settingTelemetry").checked = state.settings.showTelemetry;
 };
 
-$("settingsClose").onclick = () =>
+$("settingsClose").onclick = () => {
   $("settingsPanel").classList.add("hidden");
+  $("settingsPanel").setAttribute("aria-hidden","true");
+};
 
 $("settingAutosave").onchange = e => {
   state.settings.autosave = e.target.checked;
@@ -201,10 +314,11 @@ $("settingAutosave").onchange = e => {
 
 $("settingTelemetry").onchange = e => {
   state.settings.showTelemetry = e.target.checked;
-  document.querySelector(".telemetry").style.display =
-    e.target.checked ? "" : "none";
+  applyTelemetryVisibility();
   saveSettings();
 };
+
+applyTelemetryVisibility();
 
 /* =============================
    PARENT NOTES
@@ -212,9 +326,10 @@ $("settingTelemetry").onchange = e => {
 $("parentSend").onclick = () => {
   const v = $("parentInput").value.trim();
   if (!v) return;
-  state.notes.push(v);
+  state.notes.push({ t: Date.now(), text: v });
   $("parentInput").value = "";
   renderNotes();
+  if (state.settings.autosave) persist();
 };
 
 function renderNotes(){
@@ -225,40 +340,235 @@ function renderNotes(){
       <div class="msg-text">Parent governance log</div>
     </div>
   ` + state.notes.map(n =>
-    `<div class="msg parent"><div class="msg-text">${n}</div></div>`
+    `<div class="msg parent"><div class="msg-text">${escapeHTML(n.text)}</div></div>`
   ).join("");
 }
 
 /* =============================
-   TASKS
+   TASKS (local quick capture only)
 ============================= */
 $("taskAdd").onclick = () => {
   const v = $("taskInput").value.trim();
   if (!v) return;
-  state.tasks.push(v);
+  state.tasks.push({ t: Date.now(), text: v });
   $("taskInput").value = "";
   renderTasks();
+  if (state.settings.autosave) persist();
 };
 
 function renderTasks(){
   $("taskList").innerHTML = state.tasks.map(t =>
-    `<div class="t-item">${t}</div>`
+    `<div class="t-item">${escapeHTML(t.text)}</div>`
   ).join("");
 }
 
 /* =============================
-   EXPORT
+   INTAKE (drag/drop local capture)
+============================= */
+const dz = $("dropzone");
+
+dz.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dz.classList.add("dz-hover");
+});
+dz.addEventListener("dragleave", () => dz.classList.remove("dz-hover"));
+dz.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dz.classList.remove("dz-hover");
+  const files = Array.from(e.dataTransfer.files || []);
+  if (!files.length) return;
+
+  files.forEach(f => {
+    state.intake.push({
+      id: crypto.randomUUID(),
+      name: f.name,
+      type: f.type || "unknown",
+      size: f.size,
+      lastModified: f.lastModified || null,
+      capturedAt: Date.now(),
+      status: "queued"
+    });
+  });
+
+  renderQueue();
+  if (state.settings.autosave) persist();
+});
+
+$("btnClear").onclick = () => {
+  state.intake = [];
+  renderQueue();
+  if (state.settings.autosave) persist();
+};
+
+function renderQueue(){
+  const q = $("queue");
+  if (!state.intake.length) {
+    q.innerHTML = `<div class="q-empty">No files queued</div>`;
+    return;
+  }
+  q.innerHTML = state.intake.slice().reverse().map(item => {
+    return `
+      <div class="q-item">
+        <div class="q-name">${escapeHTML(item.name)}</div>
+        <div class="q-meta">
+          <span>${escapeHTML(item.type)}</span>
+          <span>${formatBytes(item.size)}</span>
+          <span class="q-status">${escapeHTML(item.status)}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+/* =============================
+   CORE: Tiles ordering (simple deterministic “moveable”)
+============================= */
+function renderTiles(){
+  const grid = $("tileGrid");
+  const map = {};
+  Array.from(grid.children).forEach(el => {
+    map[el.dataset.tile] = el;
+  });
+  grid.innerHTML = "";
+  state.ui.tileOrder.forEach(k => {
+    if (map[k]) grid.appendChild(map[k]);
+  });
+}
+
+$("btnCoreReset").onclick = () => {
+  state.ui.tileOrder = ["reminder","radar","projects","tasks","system","notes"];
+  renderTiles();
+  saveUI();
+};
+
+renderTiles();
+
+/* =============================
+   ACTION CARD / DECK (placeholders for wiring)
+============================= */
+function renderActions(){
+  const active = $("activeAction");
+  const titleEl = active.querySelector(".action-title");
+  const metaEl = active.querySelector(".action-meta");
+
+  if (!state.actions.active) {
+    titleEl.textContent = "No active action selected";
+    metaEl.textContent = "Promote from deck (next step wiring)";
+  } else {
+    titleEl.textContent = state.actions.active.title;
+    metaEl.textContent = state.actions.active.meta || "";
+  }
+
+  const deck = $("actionDeck");
+  if (!state.actions.deck.length) {
+    deck.innerHTML = `<div class="deck-empty">Deck empty (wiring next)</div>`;
+  } else {
+    deck.innerHTML = state.actions.deck.map(a => `
+      <div class="deck-item">
+        <div class="deck-top">
+          <strong>${escapeHTML(a.title)}</strong>
+          <button class="btn btn-ghost small" data-promote="${escapeHTML(a.id)}">Promote</button>
+        </div>
+        <div class="deck-meta">${escapeHTML(a.meta || "")}</div>
+      </div>
+    `).join("");
+
+    deck.querySelectorAll("[data-promote]").forEach(btn => {
+      btn.onclick = () => {
+        const id = btn.getAttribute("data-promote");
+        const found = state.actions.deck.find(x => x.id === id);
+        if (!found) return;
+        state.actions.active = found;
+        state.actions.deck = state.actions.deck.filter(x => x.id !== id);
+        renderActions();
+        if (state.settings.autosave) persist();
+      };
+    });
+  }
+}
+
+$("btnSnooze").onclick = () => {
+  // placeholder behaviour for now
+  alert("Snooze wiring comes after Notion schema/queries are connected.");
+};
+
+$("btnComplete").onclick = () => {
+  // placeholder behaviour for now
+  alert("Complete wiring comes after Notion schema/queries are connected.");
+};
+
+renderActions();
+
+/* =============================
+   EXPORT / SNAPSHOT (json)
 ============================= */
 $("btnExport").onclick = () => {
-  const blob = new Blob(
-    [JSON.stringify(state, null, 2)],
-    { type: "application/json" }
-  );
+  downloadJSON("OTOS_V1_EXPORT.json", state);
+};
+
+$("btnSnapshot").onclick = () => {
+  const stamp = new Date().toISOString().replace(/[:.]/g,"-");
+  downloadJSON(`OTOS_SNAPSHOT_${stamp}.json`, state);
+};
+
+/* =============================
+   PERSIST / REHYDRATE (localStorage)
+============================= */
+const savedState = localStorage.getItem("otos_state");
+if (savedState) {
+  try {
+    const parsed = JSON.parse(savedState);
+    // only hydrate safe keys
+    if (parsed.notes) state.notes = parsed.notes;
+    if (parsed.tasks) state.tasks = parsed.tasks;
+    if (parsed.intake) state.intake = parsed.intake;
+    if (parsed.actions) state.actions = parsed.actions;
+  } catch {}
+}
+
+function persist(){
+  localStorage.setItem("otos_state", JSON.stringify({
+    notes: state.notes,
+    tasks: state.tasks,
+    intake: state.intake,
+    actions: state.actions
+  }));
+}
+
+renderNotes();
+renderTasks();
+renderQueue();
+renderActions();
+
+/* =============================
+   UTILS
+============================= */
+function downloadJSON(filename, obj){
+  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "OTOS_V1_EXPORT.json";
+  a.download = filename;
   a.click();
-};
+  URL.revokeObjectURL(a.href);
+}
+
+function formatBytes(bytes){
+  if (!Number.isFinite(bytes)) return "—";
+  const units = ["B","KB","MB","GB"];
+  let i = 0;
+  let v = bytes;
+  while (v >= 1024 && i < units.length - 1) { v /= 1024; i++; }
+  return `${v.toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+}
+
+function escapeHTML(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 </script>
 
 </body>
