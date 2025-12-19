@@ -1,7 +1,7 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v4.8
-   LIVE ACTIVITY STREAM (AUDIT-FRIENDLY)
-   Purpose: Chronological, append-only activity log for Andy
+   OTOS — ANDY ENGINE v5.6
+   LIVE ACTIVITY STREAM (VISUAL)
+   Purpose: Surface Andy pipeline events in real time
    Location: otos-app/docs/andy-activity-stream.js
    FULL SCRIPT REPLACEMENT
    ========================================================= */
@@ -9,39 +9,57 @@
 (() => {
 
   /* ---------- GUARD ---------- */
-  if (localStorage.getItem("OTOS_ANDY_STATUS") !== "LIVE") return;
+  if (window.OTOS_ACTIVITY_STREAM_ACTIVE) return;
+  window.OTOS_ACTIVITY_STREAM_ACTIVE = true;
 
-  /* ---------- STATE ---------- */
   const KEY = "OTOS_ACTIVITY_STREAM";
-  const MAX = 50;
 
-  /* ---------- HELPERS ---------- */
-  const read = () => JSON.parse(localStorage.getItem(KEY) || "[]");
-  const write = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
+  /* ---------- HOST ---------- */
+  const host =
+    document.getElementById("right") ||
+    document.getElementById("center") ||
+    document.body;
 
-  const log = (msg) => {
-    const stream = read();
-    stream.push({
-      msg,
-      at: new Date().toISOString()
+  /* ---------- UI ---------- */
+  const wrap = document.createElement("div");
+  wrap.style.padding = "16px";
+  wrap.style.borderRadius = "16px";
+  wrap.style.background = "#020617";
+  wrap.style.color = "#e5e7eb";
+  wrap.style.boxShadow = "0 20px 40px rgba(0,0,0,.35)";
+  wrap.style.marginBottom = "14px";
+  wrap.style.maxHeight = "360px";
+  wrap.style.overflowY = "auto";
+
+  const title = document.createElement("div");
+  title.textContent = "Andy · Activity";
+  title.style.fontWeight = "700";
+  title.style.marginBottom = "10px";
+
+  const list = document.createElement("div");
+  list.style.fontSize = "12px";
+  list.style.lineHeight = "1.4";
+
+  /* ---------- RENDER ---------- */
+  const render = () => {
+    list.innerHTML = "";
+    const items = JSON.parse(localStorage.getItem(KEY) || "[]");
+    items.slice(-50).reverse().forEach(e => {
+      const row = document.createElement("div");
+      row.style.padding = "6px 0";
+      row.style.opacity = "0.85";
+      row.textContent = `${new Date(e.at).toLocaleTimeString()} · ${e.msg}`;
+      list.appendChild(row);
     });
-    if (stream.length > MAX) stream.shift();
-    write(stream);
   };
 
-  /* ---------- HOOKS ---------- */
-  const wrap = (name, fn) => {
-    if (typeof fn !== "function") return;
-    window[name] = (...args) => {
-      log(`${name} called`);
-      return fn(...args);
-    };
-  };
+  /* ---------- WATCH ---------- */
+  setInterval(render, 1000);
 
-  wrap("OTOS_INGEST", window.OTOS_INGEST);
-  wrap("OTOS_CLASSIFY", window.OTOS_CLASSIFY);
-  wrap("OTOS_EXTRACT_ACTIONS", window.OTOS_EXTRACT_ACTIONS);
-
-  log("Andy activity stream LIVE");
+  /* ---------- MOUNT ---------- */
+  wrap.appendChild(title);
+  wrap.appendChild(list);
+  host.prepend(wrap);
+  render();
 
 })();
