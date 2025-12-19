@@ -1,21 +1,27 @@
-/* ===============================
+/* =========================================================
    OTOS · Parent Core Control
-   Visual polish only (safe)
-   =============================== */
+   Visual polish ONLY — SAFE
+   Apple-level calm, spacing, depth
+   ========================================================= */
 
 :root {
   --bg: #eef2f6;
-  --panel: #e6ebf1;
+  --panel: #e9eff5;
   --card: #ffffff;
+
   --ink: #0f172a;
   --muted: #475569;
 
-  --shadow-soft: 0 10px 30px rgba(0,0,0,.08);
-  --shadow-card: 0 6px 18px rgba(0,0,0,.10);
-  --shadow-hover: 0 12px 36px rgba(0,0,0,.16);
+  --blue: #3b82f6;
+  --green: #22c55e;
+  --orange: #f59e0b;
 
-  --radius-lg: 18px;
-  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+
+  --shadow-soft: 0 10px 30px rgba(0,0,0,.08);
+  --shadow-card: 0 12px 30px rgba(0,0,0,.12);
+  --shadow-hover: 0 18px 42px rgba(0,0,0,.18);
 }
 
 /* ===== RESET ===== */
@@ -27,110 +33,115 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                Inter, Roboto, Helvetica, Arial, sans-serif;
-  background: radial-gradient(
-    circle at top,
-    #f7f9fc,
-    var(--bg)
-  );
   color: var(--ink);
+  background:
+    radial-gradient(circle at top left, #f8fbff, var(--bg));
   -webkit-font-smoothing: antialiased;
 }
 
 /* ===== TOP BAR ===== */
 .topbar {
-  height: 72px;
+  height: 80px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 0 28px;
-  background: linear-gradient(
-    180deg,
-    #020617,
-    #020617ee
-  );
-  color: white;
+  gap: 18px;
+  padding: 0 32px;
+  background: linear-gradient(180deg, #020617, #020617ee);
+  color: #fff;
   box-shadow: var(--shadow-soft);
 }
 
 .logo {
-  height: 36px;
+  height: 38px;
 }
 
 .title {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 600;
-  letter-spacing: 0.2px;
+  letter-spacing: .3px;
 }
 
-/* ===== MAIN LAYOUT ===== */
+/* ===== MAIN GRID ===== */
 #app {
   display: grid;
-  grid-template-columns: 1fr 2.2fr 1fr;
-  gap: 28px;
-  padding: 28px;
-  height: calc(100vh - 72px);
+  grid-template-columns: 1fr 2.4fr 1fr;
+  gap: 32px;
+  padding: 32px;
+  height: calc(100vh - 80px);
 }
 
 /* ===== COLUMNS ===== */
 .column {
   background: linear-gradient(
     180deg,
-    #eef3f8,
-    var(--panel)
+    #f3f7fb,
+    #e6edf4
   );
   border-radius: var(--radius-lg);
-  padding: 22px;
+  padding: 28px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.6),
-              var(--shadow-soft);
+  gap: 22px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.04);
 }
 
 /* ===== CARDS ===== */
 .card {
   background: var(--card);
   border-radius: var(--radius-md);
-  padding: 22px 24px;
-  font-size: 20px;
+  padding: 28px 30px;
+  font-size: 22px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 1.3;
   box-shadow: var(--shadow-card);
-  cursor: default;
-  transition:
-    transform .25s ease,
-    box-shadow .25s ease;
+  position: relative;
+  transition: transform .2s ease, box-shadow .2s ease;
 }
 
-/* Hover = alive but calm */
+/* Hover = alive, not noisy */
 .card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
 }
 
-/* ===== LANE PERSONALITY ===== */
-#left .card {
-  border-left: 5px solid #2563eb;
+/* ===== LANE SIGNALS ===== */
+#left .card::before,
+#center .card::before,
+#right .card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 16%;
+  bottom: 16%;
+  width: 5px;
+  border-radius: 5px;
 }
 
-#center .card {
-  border-left: 5px solid #16a34a;
+/* Parent / Reality lane */
+#left .card::before {
+  background: var(--blue);
 }
 
-#right .card {
-  border-left: 5px solid #f59e0b;
+/* Action lane */
+#center .card::before {
+  background: var(--green);
 }
 
-/* ===== READABILITY BOOST ===== */
-@media (min-width: 1400px) {
-  .card {
-    font-size: 22px;
-    padding: 26px 28px;
-  }
+/* Agent lane */
+#right .card::before {
+  background: var(--orange);
 }
 
-/* ===== EMPTY SPACE BREATHING ===== */
+/* ===== BREATHING SPACE ===== */
 .column::after {
   content: "";
   flex: 1;
+}
+
+/* ===== RESPONSIVE SAFETY ===== */
+@media (max-width: 1200px) {
+  #app {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
 }
