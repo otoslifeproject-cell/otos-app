@@ -1,31 +1,25 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v1.4
-   NOTION BUCKET PUSH (CONTROLLED / SINGLE-SHOT)
-   Scope: Classified Buckets → Notion Databases
-   Mode: SAFE (no retries, no loops)
+   OTOS — ANDY ENGINE v1.5
+   AUDIT + ERROR LOGGING LAYER
+   Scope: Persist every action, error, decision
+   Target: Notion Errors / Audit DB (dry-run safe)
    ========================================================= */
 
 (() => {
 
-  /* ---------- CONFIG (LOCKED) ---------- */
-  const NOTION = {
-    enabled: false,                 // 🔒 set TRUE only in EYE21 Parent
-    version: "2022-06-28",
-    databases: {
-      ANALYSE: "NOTION_DB_ANALYSE_ID",
-      GOLDEN: "NOTION_DB_GOLDEN_ID",
-      REVENUE: "NOTION_DB_REVENUE_ID",
-      CANON: "NOTION_DB_CANON_ID",
-      TASK: "NOTION_DB_TASK_ID"
-    }
+  /* ---------- CONFIG ---------- */
+  const AUDIT = {
+    enabled: false,                 // 🔒 TRUE only in EYE21 Parent
+    notionEndpoint: "https://api.notion.com/v1/pages",
+    databaseId: "NOTION_DB_AUDIT_ID",
+    version: "2022-06-28"
   };
 
   /* ---------- STATE ---------- */
   const STATE = {
-    engine: "Andy v1.4",
-    sent: 0,
-    skipped: 0,
-    failed: 0
+    engine: "Andy v1.5",
+    sessionId: crypto.randomUUID(),
+    events: []
   };
 
   /* ---------- HELPERS ---------- */
@@ -41,27 +35,36 @@
     report.appendChild(line);
   };
 
-  const getBuckets = () => {
-    const raw = localStorage.getItem("OTOS_CLASSIFIED_DOCS");
-    if (!raw) return null;
-    try { return JSON.parse(raw); }
-    catch { return null; }
+  const logEvent = (type, detail) => {
+    const event = {
+      session: STATE.sessionId,
+      engine: STATE.engine,
+      type,
+      detail,
+      timestamp: new Date().toISOString()
+    };
+    STATE.events.push(event);
+    localStorage.setItem(
+      "OTOS_AUDIT_EVENTS",
+      JSON.stringify(STATE.events, null, 2)
+    );
+    highlight(`AUDIT: ${type}`);
   };
 
-  const buildNotionPage = (doc, dbId) => ({
-    parent: { database_id: dbId },
+  const buildAuditPage = (event) => ({
+    parent: { database_id: AUDIT.databaseId },
     properties: {
       Name: {
-        title: [{ text: { content: doc.name } }]
+        title: [{ text: { content: `${event.type}` } }]
       },
-      Type: {
-        select: { name: doc.type || "text" }
+      Session: {
+        rich_text: [{ text: { content: event.session } }]
       },
-      Size: {
-        number: doc.size || 0
+      Engine: {
+        select: { name: event.engine }
       },
-      ImportedAt: {
-        date: { start: new Date().toISOString() }
+      Timestamp: {
+        date: { start: event.timestamp }
       }
     },
     children: [
@@ -70,66 +73,62 @@
         type: "paragraph",
         paragraph: {
           rich_text: [
-            { text: { content: doc.preview.slice(0, 1800) } }
+            { text: { content: JSON.stringify(event.detail, null, 2) } }
           ]
         }
       }
     ]
   });
 
-  /* ---------- EXECUTION ---------- */
-  const buckets = getBuckets();
-
-  if (!buckets) {
-    highlight("No classified buckets found");
-    return;
+  /* ---------- HOOK INTO PREVIOUS STATE ---------- */
+  const existing = localStorage.getItem("OTOS_AUDIT_EVENTS");
+  if (existing) {
+    try { STATE.events = JSON.parse(existing); }
+    catch { STATE.events = []; }
   }
 
-  highlight("Preparing bucket push to Notion");
+  /* ---------- GLOBAL ERROR CAPTURE ---------- */
+  window.addEventListener("error", (e) => {
+    logEvent("JS_ERROR", {
+      message: e.message,
+      source: e.filename,
+      line: e.lineno
+    });
+  });
 
-  Object.entries(buckets).forEach(([bucket, docs]) => {
-    const dbId = NOTION.databases[bucket];
-    if (!dbId || !docs.length) {
-      STATE.skipped += docs.length;
-      return;
-    }
+  window.addEventListener("unhandledrejection", (e) => {
+    logEvent("PROMISE_REJECTION", {
+      reason: e.reason
+    });
+  });
 
-    docs.forEach(doc => {
-      const payload = buildNotionPage(doc, dbId);
+  /* ---------- OPTIONAL NOTION PUSH ---------- */
+  if (AUDIT.enabled && STATE.events.length) {
+    STATE.events.forEach(ev => {
+      const payload = buildAuditPage(ev);
 
-      if (!NOTION.enabled) {
-        console.group(`Notion DRY-RUN [${bucket}] → ${doc.name}`);
-        console.log(payload);
-        console.groupEnd();
-        STATE.sent += 1;
-        highlight(`Dry-run OK: ${doc.name} → ${bucket}`);
-        return;
-      }
-
-      fetch("https://api.notion.com/v1/pages", {
+      fetch(AUDIT.notionEndpoint, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${window.NOTION_TOKEN}`,
-          "Notion-Version": NOTION.version,
+          "Notion-Version": AUDIT.version,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
       })
       .then(r => r.ok ? r.json() : Promise.reject(r))
       .then(() => {
-        STATE.sent += 1;
-        highlight(`Pushed: ${doc.name} → ${bucket}`);
+        highlight(`Audit pushed: ${ev.type}`);
       })
       .catch(err => {
-        STATE.failed += 1;
-        highlight(`FAILED: ${doc.name}`);
-        console.error(err);
+        console.error("Audit push failed", err);
       });
     });
-  });
+  }
 
-  /* ---------- FINAL ---------- */
-  highlight(`Andy v1.4 complete — sent:${STATE.sent} failed:${STATE.failed}`);
-  localStorage.setItem("OTOS_NOTION_PUSH_READY", "true");
+  /* ---------- BOOT ---------- */
+  logEvent("ENGINE_START", {
+    note: "Audit + error layer active"
+  });
 
 })();
