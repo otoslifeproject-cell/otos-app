@@ -1,7 +1,6 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v3.1
-   NOTION INTAKE ADAPTER (SAFE WRITE, GUARDED)
-   Purpose: Push Tier-1 classified docs into Notion Intake DB
+   OTOS — NOTION ADAPTER PATCH v5.4
+   Purpose: Enforce consent gate for all Notion writes
    Location: otos-app/docs/andy-notion-adapter.js
    FULL SCRIPT REPLACEMENT
    ========================================================= */
@@ -9,7 +8,7 @@
 (() => {
 
   /* ---------- GUARDS ---------- */
-  if (localStorage.getItem("OTOS_ANDY_STATUS") !== "LIVE") return;
+  if (!window.OTOS_CAN_WRITE_NOTION || !window.OTOS_CAN_WRITE_NOTION()) return;
   if (!window.NOTION_TOKEN) return;
 
   /* ---------- CONFIG ---------- */
@@ -54,13 +53,14 @@
 
   /* ---------- LOAD ---------- */
   const classified = JSON.parse(localStorage.getItem("OTOS_CLASSIFIED_DOCS") || "{}");
-  let sent = 0;
 
   Object.entries(classified).forEach(([bucket, docs]) => {
     const dbId = NOTION.databases[bucket];
     if (!dbId || !docs?.length) return;
 
     docs.forEach(doc => {
+      if (doc.written) return;
+
       fetch(NOTION.endpoint, {
         method: "POST",
         headers: {
@@ -72,21 +72,14 @@
       })
       .then(r => r.ok ? r.json() : Promise.reject(r))
       .then(() => {
-        sent++;
+        doc.written = true;
         highlight(`🧠 → Notion: ${doc.name} (${bucket})`);
+        localStorage.setItem("OTOS_CLASSIFIED_DOCS", JSON.stringify(classified));
       })
       .catch(() => {
         highlight(`❌ Notion failed: ${doc.name}`);
       });
     });
   });
-
-  /* ---------- FINAL ---------- */
-  localStorage.setItem(
-    "OTOS_NOTION_WRITE_STATUS",
-    JSON.stringify({ sent, at: new Date().toISOString() })
-  );
-
-  highlight(`Notion adapter complete (sent: ${sent})`);
 
 })();
