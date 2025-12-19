@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>OTOS · Parent Control</title>
-  <link rel="stylesheet" href="/otos-app/docs/styles.css" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-
   <div class="topbar">
-    <img class="logo" src="/otos-app/docs/brand/logo/otos-logo-400.png" />
+    <img class="logo" src="./brand/logo/otos-logo-400.png" alt="OTOS" />
     <div class="title">Parent · Core Control</div>
   </div>
 
@@ -21,33 +21,76 @@
 
   <script>
     const cols = {
-      left: document.getElementById('left'),
-      center: document.getElementById('center'),
-      right: document.getElementById('right')
+      left: document.getElementById("left"),
+      center: document.getElementById("center"),
+      right: document.getElementById("right"),
     };
 
-    fetch('/otos-app/docs/registry.json')
-      .then(r => {
-        if (!r.ok) throw new Error('Registry fetch failed');
-        return r.json();
-      })
-      .then(modules => {
-        modules.forEach(m => {
-          if (!m.enabled) return;
-          if (!cols[m.slot]) return;
+    function showError(msg) {
+      document.body.innerHTML =
+        '<pre style="padding:16px;font:14px/1.4 ui-monospace,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap">' +
+        msg +
+        "</pre>";
+    }
 
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.textContent = m.name;
+    async function tryFetchJson(url) {
+      const bust = (url.includes("?") ? "&" : "?") + "v=" + Date.now();
+      const finalUrl = url + bust;
+      const r = await fetch(finalUrl, { cache: "no-store" });
+      if (!r.ok) throw new Error(`${r.status} ${r.statusText} @ ${url}`);
+      const data = await r.json();
+      if (!Array.isArray(data)) throw new Error(`JSON is not an array @ ${url}`);
+      return { url, data };
+    }
 
-          cols[m.slot].appendChild(card);
-        });
-      })
-      .catch(err => {
-        document.body.innerHTML = '<pre>REGISTRY LOAD FAILED\n' + err + '</pre>';
-        console.error(err);
+    (async () => {
+      const base = document.baseURI;
+      const u = (p) => new URL(p, base).toString();
+
+      // Try all plausible locations (no assumptions about Pages root)
+      const candidates = [
+        u("./registry.json"),
+        u("./docs/registry.json"),
+        "/otos-app/docs/registry.json",
+        "/otos-app/registry.json",
+      ];
+
+      let picked = null;
+      let lastErr = null;
+
+      for (const c of candidates) {
+        try {
+          picked = await tryFetchJson(c);
+          break;
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+
+      if (!picked) {
+        showError(
+          "REGISTRY LOAD FAILED\n\n" +
+          String(lastErr) +
+          "\n\nTried:\n" + candidates.join("\n") +
+          "\n\nOpen the working registry.json URL in your browser and tell me which one loads."
+        );
+        return;
+      }
+
+      const modules = picked.data;
+
+      modules.forEach((m) => {
+        if (!m || m.enabled !== true) return;
+        if (!cols[m.slot]) return;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.textContent = m.name || m.id || "Untitled";
+        cols[m.slot].appendChild(card);
       });
-  </script>
 
+      console.log("Registry loaded from:", picked.url);
+    })();
+  </script>
 </body>
 </html>
