@@ -116,3 +116,12 @@ button.primary{
   padding:6px 0;
   border-bottom:1px solid var(--border);
 }
+
+/* Registry-rendered modules */
+.module{
+  cursor:grab;
+}
+
+.module.dragging{
+  opacity:0.5;
+}
