@@ -3,52 +3,45 @@
 <head>
   <meta charset="UTF-8" />
   <title>OTOS · Parent Control</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
-<body>
-  <header class="topbar">
-    <img src="./brand/logo/otos-logo-400.png" alt="OTOS" class="logo" />
-    <div class="title">Parent · Core Control</div>
-  </header>
 
-  <main id="app">
-    <div id="left" class="column"></div>
-    <div id="center" class="column"></div>
-    <div id="right" class="column"></div>
-  </main>
+<body>
+
+  <div class="topbar">
+    <img class="logo" src="./brand/logo/otos-logo-400.png" />
+    <div class="title">Parent · Core Control</div>
+  </div>
+
+  <div id="app">
+    <div class="column" id="left"></div>
+    <div class="column" id="center"></div>
+    <div class="column" id="right"></div>
+  </div>
 
   <script>
-    async function loadRegistry() {
-      try {
-        const res = await fetch('./registry.json', { cache: 'no-store' });
-        const raw = await res.json();
+    fetch('./registry.json')
+      .then(r => r.json())
+      .then(data => {
+        data.forEach(m => {
+          if (!m.enabled) return;
 
-        // HARD FIX: accept array OR { data: [] }
-        const modules = Array.isArray(raw)
-          ? raw
-          : Array.isArray(raw.data)
-            ? raw.data
-            : [];
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.textContent = m.name;
 
-        modules.forEach(mod => {
-          if (!mod.enabled) return;
+          card.onclick = () => {
+            alert(`OPEN MODULE: ${m.id}`);
+          };
 
-          const el = document.createElement('div');
-          el.className = 'card';
-          el.innerText = mod.name;
-
-          const slot = document.getElementById(mod.slot);
-          if (slot) slot.appendChild(el);
+          document.getElementById(m.slot).appendChild(card);
         });
-
-      } catch (e) {
-        document.body.innerText = 'Registry load failed';
-        console.error(e);
-      }
-    }
-
-    loadRegistry();
+      })
+      .catch(err => {
+        document.body.innerHTML = 'Registry failed to load';
+        console.error(err);
+      });
   </script>
+
 </body>
 </html>
