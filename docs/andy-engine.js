@@ -1,123 +1,116 @@
-/* OTOS · Andy Execution Engine v2 */
-/* STRICT RULE: NO UI / CSS / LAYOUT MUTATION */
+/* =========================================================
+   OTOS — ANDY ENGINE v1.0
+   Behaviour Wiring Only
+   Scope: Intake → Stats → Highlight
+   No UI / CSS / Layout mutations
+   ========================================================= */
 
-(function () {
-
+(() => {
+  /* ---------- STATE ---------- */
   const STATE = {
-    tokens: false,
+    tokensIssued: false,
+    queue: 0,
     processed: 0,
-    queue: 0
+    highlights: [],
+    engine: "Andy v1",
+    mode: "IDLE"
   };
 
   /* ---------- HELPERS ---------- */
+  const $ = (sel) => document.querySelector(sel);
 
-  function cardByTitle(title) {
-    return Array.from(document.querySelectorAll(".card"))
-      .find(c => c.querySelector("h3")?.textContent.trim() === title);
-  }
+  const cardByTitle = (title) => {
+    const cards = Array.from(document.querySelectorAll("div"));
+    return cards.find(d => d.textContent?.trim().startsWith(title));
+  };
 
-  function setStats(label, value) {
+  const updateStats = (label, value) => {
     const statsCard = cardByTitle("Stats");
     if (!statsCard) return;
-    const p = Array.from(statsCard.querySelectorAll("p"))
-      .find(x => x.textContent.startsWith(label));
-    if (p) p.innerHTML = `${label}: <strong>${value}</strong>`;
-  }
-
-  function highlight(msg) {
-    const report = cardByTitle("Running Highlight Report");
-    if (!report) return;
-    let p = report.querySelector("p");
-    if (!p) {
-      p = document.createElement("p");
-      report.appendChild(p);
-    }
-    p.textContent = msg;
-  }
-
-  /* ---------- TOKEN CONTROL ---------- */
-
-  const tokenCard = cardByTitle("Execution Tokens");
-  if (tokenCard) {
-    const buttons = tokenCard.querySelectorAll("button");
-
-    buttons.forEach(btn => {
-      if (btn.textContent.includes("Issue")) {
-        btn.onclick = () => {
-          STATE.tokens = true;
-          highlight("Andy engine armed (tokens issued)");
-        };
-      }
-      if (btn.textContent.includes("Revoke")) {
-        btn.onclick = () => {
-          STATE.tokens = false;
-          highlight("Andy engine idle (tokens revoked)");
-        };
+    const lines = statsCard.querySelectorAll("div, span, p");
+    lines.forEach(l => {
+      if (l.textContent?.includes(label)) {
+        l.textContent = `${label}: ${value}`;
       }
     });
+  };
+
+  const highlight = (msg) => {
+    const report = cardByTitle("Running Highlight Report");
+    if (!report) return;
+    const line = document.createElement("div");
+    line.textContent = `• ${msg}`;
+    report.appendChild(line);
+    STATE.highlights.push(msg);
+  };
+
+  /* ---------- TOKENS ---------- */
+  const tokenBtn = Array.from(document.querySelectorAll("button"))
+    .find(b => b.textContent.includes("Issue token"));
+
+  if (tokenBtn) {
+    tokenBtn.onclick = () => {
+      STATE.tokensIssued = true;
+      highlight("Execution token issued");
+    };
   }
 
-  /* ---------- INGEST ---------- */
+  /* ---------- INTAKE ---------- */
+  const ingestBtn = Array.from(document.querySelectorAll("button"))
+    .find(b => b.textContent.includes("Ingest batch"));
 
-  const intakeCard = cardByTitle("Intake");
-  if (intakeCard) {
-    const ingestBtn = Array.from(intakeCard.querySelectorAll("button"))
-      .find(b => b.textContent.includes("Ingest"));
+  if (ingestBtn) {
+    ingestBtn.onclick = () => {
+      if (!STATE.tokensIssued) {
+        highlight("Ingest blocked — no token");
+        return;
+      }
 
-    if (ingestBtn) {
-      ingestBtn.onclick = () => {
-        if (!STATE.tokens) {
-          highlight("Blocked: no execution tokens");
-          return;
-        }
+      STATE.mode = "INGESTING";
+      STATE.queue += 1;
+      updateStats("Queue", STATE.queue);
+      highlight("Ingest started");
 
-        STATE.queue += 1;
-        setStats("Queue", STATE.queue);
-        highlight("Ingest accepted");
-
-        setTimeout(() => {
-          STATE.queue -= 1;
-          STATE.processed += 1;
-          setStats("Queue", STATE.queue);
-          setStats("Processed", STATE.processed);
-          highlight("Ingest complete");
-        }, 700);
-      };
-    }
+      /* Simulated processing delay */
+      setTimeout(() => {
+        STATE.queue -= 1;
+        STATE.processed += 1;
+        updateStats("Queue", STATE.queue);
+        updateStats("Processed", STATE.processed);
+        highlight("Document processed");
+        STATE.mode = "IDLE";
+      }, 900);
+    };
   }
 
   /* ---------- EXPORT ---------- */
+  const exportBtn = Array.from(document.querySelectorAll("button"))
+    .find(b => b.textContent.includes("Export"));
 
-  const statsCard = cardByTitle("Stats");
-  if (statsCard) {
-    const exportBtn = Array.from(statsCard.querySelectorAll("button"))
-      .find(b => b.textContent.includes("Export"));
-
-    if (exportBtn) {
-      exportBtn.onclick = () => {
-        const payload = {
-          processed: STATE.processed,
-          exportedAt: new Date().toISOString(),
-          engine: "Andy v2"
-        };
-
-        const blob = new Blob(
-          [JSON.stringify(payload, null, 2)],
-          { type: "application/json" }
-        );
-
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "otos-tier3-archive.json";
-        a.click();
-
-        highlight("Tier-3 archive exported");
+  if (exportBtn) {
+    exportBtn.onclick = () => {
+      const payload = {
+        engine: STATE.engine,
+        processed: STATE.processed,
+        highlights: STATE.highlights,
+        exportedAt: new Date().toISOString()
       };
-    }
+
+      const blob = new Blob(
+        [JSON.stringify(payload, null, 2)],
+        { type: "application/json" }
+      );
+
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "otos-tier3-archive.json";
+      a.click();
+
+      highlight("Tier-3 archive exported");
+    };
   }
 
-  /* ---------- BOOT CONFIRM ---------- */
-
-  highlight("Andy engine loaded (bound, idle)");
+  /* ---------- BOOT ---------- */
+  highlight("Andy engine initialised (idle)");
 
 })();
