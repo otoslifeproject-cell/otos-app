@@ -1,84 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>OTOS — Parent</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <title>OTOS · Parent Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Core styles -->
+  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Brand -->
+  <link rel="icon" href="./brand/logo/otos-logo-400.png" />
 </head>
+
 <body>
-
-<header class="topbar">
-  <div class="brand">OTOS</div>
-  <div class="mode">Parent · Core Control</div>
-</header>
-
-<main class="layout">
-
-  <!-- LEFT -->
-  <aside class="lane parent">
-    <h2>EYE21 · Parent</h2>
-
-    <div class="card">
-      <h3>Focus</h3>
-      <p>Finish UI wiring</p>
+  <header class="topbar">
+    <div class="brand">
+      <img src="./brand/logo/otos-logo-400.png" alt="OTOS" />
+      <span>Parent · Core Control</span>
     </div>
+  </header>
 
-    <div class="card">
-      <h3>Parent Notes</h3>
-      <textarea placeholder="Governance only..."></textarea>
-    </div>
-  </aside>
+  <main id="app">
+    <!-- LEFT: Parent -->
+    <section class="column parent">
+      <h2>EYE21 · Parent</h2>
+      <div id="parentModules" class="module-stack"></div>
+    </section>
 
-  <!-- CENTER -->
-  <section class="lane core">
+    <!-- CENTER: Core -->
+    <section class="column core">
+      <h2>Core</h2>
+      <div id="coreModules" class="module-stack"></div>
+    </section>
 
-    <div class="card action-card">
-      <h2>🔥 ONE ACTION</h2>
-      <div class="meta">State: Ready · Score: 9/10 · Source: SkyHawk</div>
-
-      <h3>Prepare NHS Pilot Launch Pack</h3>
-      <p>This action is prioritised due to funding relevance and deadline proximity.</p>
-
-      <div class="action-buttons">
-        <button class="primary" id="btnAction">ACTION</button>
-        <button id="btnSnooze">Snooze</button>
-        <button id="btnNext">Next Action</button>
-      </div>
-
-      <div class="action-links">
-        <a href="#" id="viewTask">View Task</a>
-        <a href="#" id="viewProject">View Project</a>
-      </div>
-
-      <div class="action-detail" id="actionDetail">
-        <hr />
-        <strong>Detail</strong>
-        <p>
-          Assemble pitch deck, outcome model and submission documents required
-          for NHS pilot approval.
-        </p>
-      </div>
-    </div>
-
-    <!-- NOTE: Everything else in CORE lane will now be rendered by UI Registry loader -->
-
-  </section>
-
-  <!-- RIGHT -->
-  <aside class="lane agent">
-    <h2>Andy · Agent</h2>
-
-    <div class="dropzone">Drop files here</div>
-
-    <div class="card context" id="contextDrawer">
-      <h3>Context</h3>
-      <p class="muted">Select a Task or Project</p>
-    </div>
-  </aside>
-
-</main>
-
-<script src="script.js"></script>
-<script src="ui-registry-loader.js"></script>
-</body>
-</html>
+    <!-- RIGHT: Agent -->
+    <section class="column agent">
+      <h2>Andy · Agent</h2>
+      <div id="agentModules" class="module-stack"></div>
+    </sect
