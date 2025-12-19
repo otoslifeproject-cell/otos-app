@@ -1,25 +1,31 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v1.3
-   COMMAND PARSER + CLASSIFIER
-   Scope: A / G / R / C / T commands
-   Output: Structured staging buckets (Notion-ready)
-   No UI / CSS / layout changes
+   OTOS — ANDY ENGINE v1.4
+   NOTION BUCKET PUSH (CONTROLLED / SINGLE-SHOT)
+   Scope: Classified Buckets → Notion Databases
+   Mode: SAFE (no retries, no loops)
    ========================================================= */
 
 (() => {
 
+  /* ---------- CONFIG (LOCKED) ---------- */
+  const NOTION = {
+    enabled: false,                 // 🔒 set TRUE only in EYE21 Parent
+    version: "2022-06-28",
+    databases: {
+      ANALYSE: "NOTION_DB_ANALYSE_ID",
+      GOLDEN: "NOTION_DB_GOLDEN_ID",
+      REVENUE: "NOTION_DB_REVENUE_ID",
+      CANON: "NOTION_DB_CANON_ID",
+      TASK: "NOTION_DB_TASK_ID"
+    }
+  };
+
   /* ---------- STATE ---------- */
   const STATE = {
-    engine: "Andy v1.3",
-    mode: "CLASSIFY",
-    buckets: {
-      ANALYSE: [],
-      GOLDEN: [],
-      REVENUE: [],
-      CANON: [],
-      TASK: [],
-      OTHER: []
-    }
+    engine: "Andy v1.4",
+    sent: 0,
+    skipped: 0,
+    failed: 0
   };
 
   /* ---------- HELPERS ---------- */
@@ -35,72 +41,95 @@
     report.appendChild(line);
   };
 
-  const getCommand = () => {
-    const input = document.querySelector("input[placeholder*='Command']");
-    return (input?.value || "A").trim().toUpperCase();
-  };
-
-  const getStaged = () => {
-    const raw = localStorage.getItem("OTOS_STAGED_DOCS");
-    if (!raw) return [];
+  const getBuckets = () => {
+    const raw = localStorage.getItem("OTOS_CLASSIFIED_DOCS");
+    if (!raw) return null;
     try { return JSON.parse(raw); }
-    catch { return []; }
+    catch { return null; }
   };
 
-  const persistBuckets = () => {
-    localStorage.setItem(
-      "OTOS_CLASSIFIED_DOCS",
-      JSON.stringify(STATE.buckets, null, 2)
-    );
-  };
-
-  /* ---------- CLASSIFIER ---------- */
-  const classify = (doc, cmd) => {
-    switch (cmd) {
-      case "A":
-        STATE.buckets.ANALYSE.push(doc);
-        return "ANALYSE";
-      case "G":
-        STATE.buckets.GOLDEN.push(doc);
-        return "GOLDEN";
-      case "R":
-        STATE.buckets.REVENUE.push(doc);
-        return "REVENUE";
-      case "C":
-        STATE.buckets.CANON.push(doc);
-        return "CANON";
-      case "T":
-        STATE.buckets.TASK.push(doc);
-        return "TASK";
-      default:
-        STATE.buckets.OTHER.push(doc);
-        return "OTHER";
-    }
-  };
+  const buildNotionPage = (doc, dbId) => ({
+    parent: { database_id: dbId },
+    properties: {
+      Name: {
+        title: [{ text: { content: doc.name } }]
+      },
+      Type: {
+        select: { name: doc.type || "text" }
+      },
+      Size: {
+        number: doc.size || 0
+      },
+      ImportedAt: {
+        date: { start: new Date().toISOString() }
+      }
+    },
+    children: [
+      {
+        object: "block",
+        type: "paragraph",
+        paragraph: {
+          rich_text: [
+            { text: { content: doc.preview.slice(0, 1800) } }
+          ]
+        }
+      }
+    ]
+  });
 
   /* ---------- EXECUTION ---------- */
-  const staged = getStaged();
+  const buckets = getBuckets();
 
-  if (!staged.length) {
-    highlight("No staged documents to classify");
+  if (!buckets) {
+    highlight("No classified buckets found");
     return;
   }
 
-  const cmd = getCommand();
-  highlight(`Classifying ${staged.length} document(s) with command [${cmd}]`);
+  highlight("Preparing bucket push to Notion");
 
-  staged.forEach(doc => {
-    const bucket = classify(doc, cmd);
-    highlight(`→ ${doc.name} → ${bucket}`);
+  Object.entries(buckets).forEach(([bucket, docs]) => {
+    const dbId = NOTION.databases[bucket];
+    if (!dbId || !docs.length) {
+      STATE.skipped += docs.length;
+      return;
+    }
+
+    docs.forEach(doc => {
+      const payload = buildNotionPage(doc, dbId);
+
+      if (!NOTION.enabled) {
+        console.group(`Notion DRY-RUN [${bucket}] → ${doc.name}`);
+        console.log(payload);
+        console.groupEnd();
+        STATE.sent += 1;
+        highlight(`Dry-run OK: ${doc.name} → ${bucket}`);
+        return;
+      }
+
+      fetch("https://api.notion.com/v1/pages", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${window.NOTION_TOKEN}`,
+          "Notion-Version": NOTION.version,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.ok ? r.json() : Promise.reject(r))
+      .then(() => {
+        STATE.sent += 1;
+        highlight(`Pushed: ${doc.name} → ${bucket}`);
+      })
+      .catch(err => {
+        STATE.failed += 1;
+        highlight(`FAILED: ${doc.name}`);
+        console.error(err);
+      });
+    });
   });
 
-  persistBuckets();
-
-  highlight("Classification complete");
-  highlight("Buckets saved (localStorage: OTOS_CLASSIFIED_DOCS)");
-
-  /* ---------- READY SIGNAL ---------- */
-  localStorage.setItem("OTOS_CLASSIFY_READY", "true");
-  highlight("Andy ready for Notion bucket push");
+  /* ---------- FINAL ---------- */
+  highlight(`Andy v1.4 complete — sent:${STATE.sent} failed:${STATE.failed}`);
+  localStorage.setItem("OTOS_NOTION_PUSH_READY", "true");
 
 })();
