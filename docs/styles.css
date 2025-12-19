@@ -1,56 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>OTOS · Parent Control</title>
-  <link rel="stylesheet" href="./styles.css" />
-</head>
-<body>
-
-  <div class="topbar">
-    <img src="./brand/logo/otos-logo-400.png" class="logo" />
-    <div class="title">Parent · Core Control</div>
-  </div>
-
-  <div id="app">
-    <div class="column" id="left"></div>
-    <div class="column" id="center"></div>
-    <div class="column" id="right"></div>
-  </div>
-
-<script>
-fetch("./registry.json")
-  .then(r => r.json())
-  .then(data => {
-    const items = Array.isArray(data) ? data : data.modules || [];
-    render(items);
-  })
-  .catch(err => {
-    document.body.innerHTML = "Registry load failed";
-    console.error(err);
-  });
-
-function render(items) {
-  const slots = {
-    left: document.getElementById("left"),
-    center: document.getElementById("center"),
-    right: document.getElementById("right")
-  };
-
-  Object.values(slots).forEach(col => col.innerHTML = "");
-
-  items
-    .filter(m => m.enabled !== false)
-    .forEach(m => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.textContent = m.name || m.id;
-
-      const slot = m.slot || "center";
-      (slots[slot] || slots.center).appendChild(card);
-    });
+:root {
+  --bg: #f3f6fb;
+  --card: #ffffff;
+  --ink: #0f172a;
+  --muted: #475569;
+  --border: rgba(0,0,0,.08);
 }
-</script>
 
-</body>
-</html>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.topbar {
+  height: 56px;
+  background: linear-gradient(180deg,#020617,#020617);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 12px;
+  color: white;
+}
+
+.logo {
+  height: 28px;
+}
+
+.title {
+  font-weight: 600;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 24px;
+  padding: 24px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.05),
+    0 8px 20px rgba(0,0,0,.06);
+  font-weight: 500;
+}
