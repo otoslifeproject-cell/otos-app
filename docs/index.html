@@ -26,7 +26,7 @@
       right: document.getElementById('right')
     };
 
-    fetch('./registry.json')
+    fetch('./docs/registry.json')
       .then(r => r.json())
       .then(modules => {
         modules.forEach(m => {
