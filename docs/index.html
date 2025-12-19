@@ -1,30 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <title>OTOS · Parent Core Control</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="./style.css" />
+  <!-- CORE STYLES -->
+  <style>
+    :root{
+      --bg:#eef2f7;
+      --card:#ffffff;
+      --ink:#0f172a;
+      --muted:#475569;
+      --border:rgba(0,0,0,.08);
+      --shadow:0 10px 30px rgba(0,0,0,.08);
+      --radius:14px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
+      color:var(--ink);
+      background:radial-gradient(circle at bottom right,#dbeafe,var(--bg));
+    }
+
+    /* =========================
+       HEADER (LOCKED)
+       ========================= */
+    header{
+      height:64px;
+      padding:0 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      background:linear-gradient(180deg,#020617,#020617);
+      color:#e5e7eb;
+      box-shadow:0 2px 8px rgba(0,0,0,.25);
+    }
+    header .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    header img.logo{
+      height:32px;      /* 🔒 ONLY LOGO SIZE CONTROL */
+      width:auto;
+      display:block;
+    }
+    header .title{
+      font-weight:600;
+      letter-spacing:.2px;
+    }
+    header .status{
+      font-size:13px;
+      opacity:.9;
+    }
+
+    /* =========================
+       LAYOUT
+       ========================= */
+    .wrap{
+      padding:24px;
+      max-width:1400px;
+      margin:0 auto;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1.6fr 1fr;
+      gap:20px;
+      align-items:start;
+    }
+    .col{
+      display:flex;
+      flex-direction:column;
+      gap:20px;
+    }
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px 18px 16px;
+    }
+    .card h3{
+      margin:0 0 6px;
+      font-size:16px;
+    }
+    .card p{
+      margin:0;
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    /* =========================
+       CONTROLS
+       ========================= */
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-top:8px;
+      font-size:14px;
+    }
+    button{
+      font-size:13px;
+      padding:6px 10px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      background:#f8fafc;
+      cursor:pointer;
+    }
+    button:hover{background:#eef2f7}
+    input[type="range"]{width:100%}
+    input[type="file"]{font-size:13px}
+
+    textarea{
+      width:100%;
+      min-height:90px;
+      resize:vertical;
+      padding:8px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      font-size:13px;
+    }
+
+    .stats{
+      font-size:14px;
+      display:flex;
+      justify-content:space-between;
+    }
+
+    .highlight{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    @media(max-width:1100px){
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 
 <body>
-  <!-- TOP BAR -->
-  <header class="topbar">
-    <div class="brand">
-      <img src="./brand/logo/otos-logo-400.png" alt="OTOS" class="logo" />
-      <span>Parent · Core Control</span>
-    </div>
-    <div class="status">System idle · No execution tokens issued</div>
-  </header>
 
-  <!-- MAIN GRID -->
-  <main class="grid">
+<header>
+  <div class="brand">
+    <img src="./brand/otos-logo-400.png" class="logo" alt="OTOS">
+    <div class="title">Parent · Core Control</div>
+  </div>
+  <div class="status">System idle · No execution tokens issued</div>
+</header>
 
-    <!-- LEFT COLUMN -->
-    <section class="col">
+<div class="wrap">
+  <div class="grid">
 
+    <!-- LEFT -->
+    <div class="col">
       <div class="card">
         <h3>Parent Node</h3>
         <p>Authority · Read / Lock / Authorise</p>
@@ -32,42 +164,36 @@
 
       <div class="card">
         <h3>Reality Radar</h3>
+        <p>Mode <strong>GUIDED</strong></p>
         <div class="row">
-          <span>Mode</span><strong>GUIDED</strong>
+          <span>Temp 4</span>
         </div>
-        <div class="row">
-          <span>Temp</span><strong>4</strong>
-        </div>
-        <input type="range" min="1" max="10" value="4" disabled />
+        <input type="range" min="1" max="10" value="4">
       </div>
 
       <div class="card">
         <h3>System State</h3>
-        <div class="row">
-          <span>Locks</span><strong>Enforced</strong>
-        </div>
-        <div class="row">
-          <span>Memory</span><strong>Tiered</strong>
-        </div>
+        <div class="row"><span>Locks</span><strong>Enforced</strong></div>
+        <div class="row"><span>Memory</span><strong>Tiered</strong></div>
       </div>
 
       <div class="card">
         <h3>Execution Tokens</h3>
-        <button id="issue-token">Issue token: INGEST + READ + SUGGEST</button>
-        <button id="revoke-token">Revoke tokens</button>
-        <p class="muted">Andy cannot act without explicit tokens.</p>
+        <div class="row">
+          <button id="issue-token">Issue token: INGEST + READ + SUGGEST</button>
+          <button id="revoke-token">Revoke tokens</button>
+        </div>
+        <p style="margin-top:6px">Andy cannot act without explicit tokens.</p>
       </div>
 
       <div class="card">
         <h3>Notes</h3>
         <textarea placeholder="Quick notes (local only)"></textarea>
       </div>
+    </div>
 
-    </section>
-
-    <!-- CENTER COLUMN -->
-    <section class="col wide">
-
+    <!-- CENTER -->
+    <div class="col">
       <div class="card">
         <h3>Focus</h3>
         <p>One action · Projects</p>
@@ -75,55 +201,50 @@
 
       <div class="card">
         <h3>One Action</h3>
-        <p><strong>Wire Andy intake + stats safely (token-gated)</strong></p>
+        <p>Wire Andy intake + stats safely (token-gated)</p>
       </div>
 
       <div class="card">
         <h3>Projects</h3>
-        <p class="muted">(Locked — loads next layer)</p>
+        <p>(Locked — loads next layer)</p>
       </div>
+    </div>
 
-    </section>
-
-    <!-- RIGHT COLUMN -->
-    <section class="col">
-
+    <!-- RIGHT -->
+    <div class="col">
       <div class="card">
         <h3>Andy · Execution Agent</h3>
-        <p class="muted">Feeder · Intake + extraction (no promotion)</p>
+        <p>Feeder · Intake + extraction (no promotion)</p>
       </div>
 
       <div class="card">
         <h3>Intake</h3>
-        <input id="file-input" type="file" multiple />
-        <input id="cmd" type="text" placeholder="Command: A / G / R / C / T" />
-        <button id="ingest-btn">Ingest batch</button>
-        <p class="muted">
+        <input id="file-input" type="file" multiple>
+        <div class="row">
+          <input id="cmd" placeholder="Command: A / G / R / C / T" style="flex:1">
+          <button id="ingest-btn">Ingest batch</button>
+        </div>
+        <p style="margin-top:6px">
           A analyse · G golden · R revenue · C canon · T tasks · ? notable
         </p>
       </div>
 
       <div class="card">
         <h3>Stats</h3>
-        <div class="row">
-          <span>Processed</span><strong id="stat-processed">0</strong>
-        </div>
-        <div class="row">
-          <span>Queue</span><strong id="stat-queue">0</strong>
-        </div>
-        <button>Export Tier-3 Archive (JSON)</button>
+        <div class="stats"><span>Processed</span><strong id="stat-processed">0</strong></div>
+        <div class="stats"><span>Queue</span><strong id="stat-queue">0</strong></div>
+        <button style="margin-top:8px">Export Tier-3 Archive (JSON)</button>
       </div>
 
       <div class="card">
         <h3>Running Highlight Report</h3>
         <div id="highlight-report" class="highlight"></div>
       </div>
+    </div>
 
-    </section>
+  </div>
+</div>
 
-  </main>
-
-  <!-- ENGINE -->
-  <script src="./andy-engine.js"></script>
+<script src="./andy-engine.js"></script>
 </body>
 </html>
