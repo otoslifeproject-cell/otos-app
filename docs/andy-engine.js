@@ -1,128 +1,94 @@
 /* =========================================================
-   ANDY · EXECUTION AGENT (SAFE CORE)
-   - NO layout mutation
-   - NO CSS access
-   - Token-gated
-   - Local only
+   ANDY ENGINE v0.1
+   Logic only — NO layout / NO CSS / NO DOM mutation beyond IDs
    ========================================================= */
 
-(function () {
-  const state = {
-    tokensIssued: false,
-    processed: 0,
-    queue: 0,
-    highlights: []
-  };
+/* ---------- STATE ---------- */
 
-  // ---- DOM SAFE GETTERS ----
-  const $ = (id) => document.getElementById(id);
+const AndyState = {
+  tokensIssued: false,
+  processed: 0,
+  queue: 0,
+  highlights: []
+};
 
-  const statProcessed = () => $("stat-processed");
-  const statQueue = () => $("stat-queue");
-  const highlightBox = () => $("highlight-report");
+/* ---------- DOM ---------- */
 
-  // ---- RENDER (TEXT ONLY) ----
-  function renderStats() {
-    if (statProcessed()) statProcessed().textContent = state.processed;
-    if (statQueue()) statQueue().textContent = state.queue;
+const issueBtn = document.getElementById("issue-token");
+const revokeBtn = document.getElementById("revoke-token");
+const ingestBtn = document.getElementById("ingest-btn");
+
+const fileInput = document.getElementById("file-input");
+const cmdInput = document.getElementById("cmd");
+
+const statProcessed = document.getElementById("stat-processed");
+const statQueue = document.getElementById("stat-queue");
+const highlightBox = document.getElementById("highlight-report");
+
+/* ---------- HELPERS ---------- */
+
+function renderStats() {
+  statProcessed.textContent = AndyState.processed;
+  statQueue.textContent = AndyState.queue;
+}
+
+function addHighlight(text) {
+  AndyState.highlights.unshift(text);
+  AndyState.highlights = AndyState.highlights.slice(0, 10);
+  highlightBox.innerHTML = AndyState.highlights
+    .map(h => `<div>• ${h}</div>`)
+    .join("");
+}
+
+/* ---------- TOKEN CONTROL ---------- */
+
+issueBtn.addEventListener("click", () => {
+  AndyState.tokensIssued = true;
+  addHighlight("Execution tokens issued");
+});
+
+revokeBtn.addEventListener("click", () => {
+  AndyState.tokensIssued = false;
+  addHighlight("Execution tokens revoked");
+});
+
+/* ---------- INGEST ---------- */
+
+ingestBtn.addEventListener("click", () => {
+  if (!AndyState.tokensIssued) {
+    addHighlight("Blocked: no execution tokens");
+    return;
   }
 
-  function renderHighlights() {
-    if (!highlightBox()) return;
-    highlightBox.innerHTML = "";
-    state.highlights.slice(-10).forEach((h) => {
-      const div = document.createElement("div");
-      div.textContent = "• " + h;
-      highlightBox.appendChild(div);
-    });
+  const files = fileInput.files;
+  const cmd = (cmdInput.value || "").toUpperCase();
+
+  if (!files || files.length === 0) {
+    addHighlight("No files selected");
+    return;
   }
 
-  // ---- TOKEN CONTROL ----
-  function issueTokens() {
-    state.tokensIssued = true;
-  }
+  AndyState.queue += files.length;
+  renderStats();
 
-  function revokeTokens() {
-    state.tokensIssued = false;
-  }
+  Array.from(files).forEach((file, idx) => {
+    setTimeout(() => {
+      AndyState.queue -= 1;
+      AndyState.processed += 1;
 
-  // ---- INGEST CORE ----
-  function ingestFiles(files, mode) {
-    if (!state.tokensIssued) {
-      alert("Tokens required.");
-      return;
-    }
-    if (!files || files.length === 0) return;
+      addHighlight(
+        `Ingested "${file.name}" as ${cmd || "UNCLASSIFIED"}`
+      );
 
-    state.queue += files.length;
-    renderStats();
-
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        state.queue--;
-        state.processed++;
-        state.highlights.push(
-          `[${mode}] ${file.name} (${file.type || "unknown"})`
-        );
-        renderStats();
-        renderHighlights();
-      };
-      reader.readAsText(file);
-    });
-  }
-
-  // ---- EXPORT ----
-  function exportArchive() {
-    const blob = new Blob(
-      [
-        JSON.stringify(
-          {
-            processed: state.processed,
-            highlights: state.highlights
-          },
-          null,
-          2
-        )
-      ],
-      { type: "application/json" }
-    );
-
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "andy-tier3-archive.json";
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
-
-  // ---- PUBLIC API ----
-  window.ANDY = {
-    issueTokens,
-    revokeTokens,
-    ingestFiles,
-    exportArchive
-  };
-
-  // ---- EVENT WIRING (NO LAYOUT) ----
-  window.addEventListener("DOMContentLoaded", () => {
-    if ($("issue-token"))
-      $("issue-token").addEventListener("click", issueTokens);
-
-    if ($("revoke-token"))
-      $("revoke-token").addEventListener("click", revokeTokens);
-
-    if ($("ingest-btn"))
-      $("ingest-btn").addEventListener("click", () => {
-        ingestFiles(
-          $("file-input").files,
-          $("cmd").value || "A"
-        );
-      });
-
-    if ($("export-archive"))
-      $("export-archive").addEventListener("click", exportArchive);
-
-    renderStats();
+      renderStats();
+    }, 300 * (idx + 1));
   });
-})();
 
+  fileInput.value = "";
+  cmdInput.value = "";
+});
+
+/* ---------- INIT ---------- */
+
+renderStats();
+addHighlight("Andy engine ready (idle)");
