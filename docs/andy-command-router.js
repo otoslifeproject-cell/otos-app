@@ -1,58 +1,51 @@
-// Andy Command Router
-// Scope: intake-only, zero promotion, token-gated
-// Matches EYE20 Andy Contract
+/* =========================================================
+   OTOS — ANDY ENGINE v4.3
+   COMMAND → INTAKE WIRING (PALETTE → INGEST)
+   Purpose: Route keyboard commands (A/G/R/C/T) into Intake
+   Location: otos-app/docs/andy-command-router.js
+   FULL SCRIPT REPLACEMENT
+   ========================================================= */
 
-(function () {
-  const input = document.querySelector('[placeholder*="Command"]');
-  const highlight = document.querySelector('.running-highlights');
-  const stats = {
-    processed: 0,
-    queue: 0
+(() => {
+
+  /* ---------- GUARDS ---------- */
+  if (localStorage.getItem("OTOS_ANDY_STATUS") !== "LIVE") return;
+
+  /* ---------- STATE ---------- */
+  let activeCommand = localStorage.getItem("OTOS_LAST_COMMAND") || "A";
+
+  /* ---------- HELPERS ---------- */
+  const highlight = (msg) => {
+    const report = Array.from(document.querySelectorAll(".card"))
+      .find(c => c.textContent.includes("Highlight"));
+    if (!report) return;
+    const line = document.createElement("div");
+    line.textContent = `• ${msg}`;
+    report.appendChild(line);
   };
 
-  if (!input) return;
-
-  function log(msg) {
-    if (!highlight) return;
-    const line = document.createElement('div');
-    line.className = 'highlight-line';
-    line.textContent = msg;
-    highlight.prepend(line);
-  }
-
-  function route(cmd) {
-    switch (cmd.toUpperCase()) {
-      case 'A':
-        log('🔍 Analyse: extracting structure, themes, signal.');
-        break;
-      case 'G':
-        log('✨ Golden scan: checking for reusable language.');
-        break;
-      case 'R':
-        log('💰 Revenue lens: flagging monetisable insight.');
-        break;
-      case 'C':
-        log('📘 Canon candidate: consistency + NHS-safe tone.');
-        break;
-      case 'T':
-        log('⛔ Tasks & blockers detected.');
-        break;
-      case '?':
-        log('ℹ️ Help: A Analyse | G Golden | R Revenue | C Canon | T Tasks');
-        break;
-      default:
-        log('📥 Default ingest: archive-first, no mutation.');
-    }
-  }
-
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const cmd = input.value.trim();
-      input.value = '';
-      route(cmd);
+  /* ---------- COMMAND LISTENER ---------- */
+  window.addEventListener("storage", (e) => {
+    if (e.key === "OTOS_LAST_COMMAND" && e.newValue) {
+      activeCommand = e.newValue;
+      highlight(`⌨️ Active command set: ${activeCommand}`);
     }
   });
 
-  log('Andy Command Router online.');
+  /* ---------- INTAKE HOOK ---------- */
+  if (typeof window.OTOS_INGEST !== "function") {
+    highlight("⚠️ Intake not available for command routing");
+    return;
+  }
+
+  // Wrap ingest to inject active command
+  const originalIngest = window.OTOS_INGEST;
+  window.OTOS_INGEST = (files, cmd) => {
+    const useCmd = cmd || activeCommand || "A";
+    highlight(`➡️ Routing ingest with command: ${useCmd}`);
+    return originalIngest(files, useCmd);
+  };
+
+  highlight("Command router LIVE");
+
 })();
