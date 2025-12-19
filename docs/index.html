@@ -2,107 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit — V2.0 (3-Lane Locked)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- SCALE UP DEFAULT VIEW FOR EYES -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.12" />
-
+  <title>OTOS Cockpit — One Action</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
 
-<!-- SKYHAWK / SYSTEM TICKER -->
-<header class="skyhawk">
-  <div class="ticker">
-    <div class="ticker-track">
-      <span>🛰 SKYHAWK · Nominal</span>
-      <span>Latency 14ms</span>
-      <span>Feeds 6</span>
-      <span>No anomalies</span>
-      <span>🧠 Focus: ONE</span>
-      <span>🔒 Parent Protected</span>
-
-      <span>🛰 SKYHAWK · Nominal</span>
-      <span>Latency 14ms</span>
-      <span>Feeds 6</span>
-      <span>No anomalies</span>
-      <span>🧠 Focus: ONE</span>
-      <span>🔒 Parent Protected</span>
-    </div>
-  </div>
+<header class="top-bar">
+  <div class="brand">OTOS</div>
+  <div class="mode">Parent · Core Control</div>
 </header>
 
-<!-- LOGO — HARD ANCHORED -->
-<div class="logo-anchor">
-  <img src="brand/logo/otos-logo-400.png" class="otos-logo" alt="OTOS" />
-</div>
+<main class="layout">
 
-<!-- WORKSPACE -->
-<div class="workspace">
+  <!-- LEFT: Parent -->
+  <aside class="lane parent">
+    <h2>EYE21 · Parent</h2>
+    <p class="muted">Governance · Truth · Locks</p>
 
-  <!-- LEFT — PARENT NODE -->
-  <section class="lane lane-parent">
-    <div class="lane-head">
-      <div>
-        <span class="pill parent-pill">EYE21 · Parent</span>
-        <div class="subpill">Governance · Truth · Locks</div>
-      </div>
+    <div class="panel">
+      <h3>Focus</h3>
+      <p>Finish UI wiring</p>
     </div>
 
-    <div class="card">
-      <h3>FOCUS</h3>
-      <div class="focus-card">
-        <strong>Finish UI wiring</strong>
-        <p>Visual truth → Agents → Notion</p>
-      </div>
-    </div>
-
-    <div class="card">
+    <div class="panel">
       <h3>Parent Notes</h3>
       <textarea placeholder="Governance only…"></textarea>
     </div>
+  </aside>
+
+  <!-- CENTRE: One Action -->
+  <section class="lane core">
+    <div id="one-action"></div>
   </section>
 
-  <!-- CENTRE — CORE CANVAS -->
-  <main class="lane lane-core">
-    <div class="lane-head">
-      <span class="pill core-pill">CORE · Cognitive Space</span>
-    </div>
+  <!-- RIGHT: Agent -->
+  <aside class="lane agent">
+    <h2>Andy · Agent</h2>
+    <p class="muted">Ingest → Analyse → Route</p>
 
-    <div class="core-grid">
-      <div class="tile">Projects</div>
-      <div class="tile">Tasks</div>
-      <div class="tile">Actions</div>
-      <div class="tile">Reality Radar</div>
-      <div class="tile">System State</div>
-      <div class="tile">Notes</div>
-    </div>
-  </main>
-
-  <!-- RIGHT — ANDY -->
-  <aside class="lane lane-andy">
-    <div class="lane-head">
-      <span class="pill andy-pill">Andy · Agent</span>
-      <div class="subpill">Ingest → Analyse → Route</div>
-    </div>
-
-    <div class="card dropzone">
+    <div class="panel dashed">
       Drop files here
     </div>
 
-    <div class="card">
+    <div class="panel">
       <h3>Queue</h3>
-      <div class="queue">Idle</div>
+      <p class="muted">Idle</p>
     </div>
   </aside>
 
-</div>
+</main>
 
-<footer class="footer">
-  <span>LOCKED · V2.0 · 3-Lane Baseline</span>
-</footer>
+<script>
+fetch('registry.json')
+  .then(res => res.json())
+  .then(data => {
+    const modules = data.modules
+      .sort((a, b) => b.priority - a.priority);
+
+    const top = modules[0];
+
+    if (top.name === "One Action") {
+      document.getElementById('one-action').innerHTML = `
+        <div class="action-card">
+          <div class="action-header">
+            <span class="icon">${top.icon}</span>
+            <h1>ONE ACTION</h1>
+          </div>
+
+          <p class="action-title">
+            Prepare NHS Pilot Launch Pack
+          </p>
+
+          <p class="action-why">
+            This action is prioritised due to funding relevance and deadline proximity.
+          </p>
+
+          <div class="action-buttons">
+            <button class="primary">ACTION</button>
+            <button>Snooze</button>
+            <button>Next Action</button>
+          </div>
+
+          <div class="action-links">
+            <button class="link">View Task</button>
+            <button class="link">View Project</button>
+          </div>
+        </div>
+      `;
+    }
+  });
+</script>
 
 </body>
 </html>
