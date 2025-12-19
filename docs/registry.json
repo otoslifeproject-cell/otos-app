@@ -1,0 +1,13 @@
+{
+  "modules": [
+    {
+      "name": "One Action",
+      "icon": "🔥",
+      "purpose": "Primary business-moving action surfaced by system awareness",
+      "group": "Core",
+      "colour": "neutral",
+      "status": "In progress",
+      "priority": 10
+    }
+  ]
+}
