@@ -1,12 +1,9 @@
-/* =========================================================
-   OTOS Cockpit — UI Layer V1.2
-   SAFE BUILD on V1.1 BASELINE
-   UI ONLY — NO LOGIC — NO AGENTS
-   ========================================================= */
+/* =====================================================
+   OTOS Cockpit — UI Layer v1.2
+   LOCKED BASELINE VISUAL GRID
+   NO LOGIC • NO AGENTS • CSS ONLY
+===================================================== */
 
-/* -------------------------
-   ROOT / THEME
-------------------------- */
 :root{
   --bg:#eef4fb;
   --card:#ffffff;
@@ -22,9 +19,7 @@
   --radius-sm:12px;
 }
 
-/* -------------------------
-   BASE
-------------------------- */
+/* BASE RESET */
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -33,14 +28,13 @@ body{
   background:radial-gradient(circle at bottom right,#dbeafe,var(--bg));
 }
 
-/* -------------------------
-   SKYHAWK (LOCKED)
-------------------------- */
+/* SKYHAWK */
 .skyhawk{
   background:#020617;
   color:#e5e7eb;
   padding:10px 16px;
   font-size:13px;
+  overflow:hidden;
 }
 .ticker-track{
   display:flex;
@@ -53,67 +47,44 @@ body{
   to{transform:translateX(-50%)}
 }
 
-/* -------------------------
-   LOGO (HARD-LOCKED POSITION)
-------------------------- */
+/* LOGO — HARD LOCK */
 .logo-anchor{
-  position:relative;
-  z-index:2;
+  position:fixed;
+  top:56px;
+  left:18px;
+  z-index:10;
+  pointer-events:none;
 }
 .otos-logo{
-  position:absolute;
-  top:-72px;
-  left:-36px;
-  height:72px;
+  height:48px;
   width:auto;
-  pointer-events:none;
-  filter:drop-shadow(0 6px 18px rgba(0,0,0,.15));
 }
 
-/* -------------------------
-   WORKSPACE LAYOUT
-------------------------- */
+/* MAIN WORKSPACE GRID */
 .workspace{
   display:grid;
-  grid-template-columns:320px minmax(640px,1fr) 380px;
+  grid-template-columns: 360px 1fr 380px;
   gap:18px;
-  padding:18px 18px 90px;
+  padding:96px 18px 90px;
+  align-items:start;
 }
 
-/* -------------------------
-   LANES
-------------------------- */
+/* LANES */
 .lane{
   display:flex;
   flex-direction:column;
 }
-.lane-parent{opacity:.95}
-.lane-core{
-  transform:scale(1.01);
-}
-.lane-andy{
-  opacity:.96;
-}
+.lane-parent{}
+.lane-core{}
+.lane-andy{}
 
-/* -------------------------
-   LANE HEADERS
-------------------------- */
+/* HEADERS */
 .lane-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
   margin-bottom:12px;
 }
-.lane-title{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
-.lane-actions{display:flex;gap:8px}
-
-/* -------------------------
-   PILLS
-------------------------- */
 .pill{
   padding:6px 12px;
   border-radius:999px;
@@ -128,32 +99,29 @@ body{
 .subpill{
   font-size:12px;
   color:var(--muted);
+  margin-left:8px;
 }
 
-/* -------------------------
-   CARDS
-------------------------- */
+/* CARDS */
 .card{
   background:rgba(255,255,255,.9);
   border:1px solid var(--border);
   border-radius:var(--radius);
   padding:14px;
   margin-bottom:14px;
-  box-shadow:0 6px 22px rgba(0,0,0,.04);
 }
 .panel-title{
-  font-weight:800;
   font-size:13px;
+  font-weight:800;
   margin-bottom:10px;
-  letter-spacing:.02em;
+  color:#020617;
 }
 
-/* -------------------------
-   FOCUS DECK
-------------------------- */
+/* FOCUS */
 .focus-card{
-  border-left:5px solid var(--parent);
-  padding-left:12px;
+  border:1px dashed var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px;
 }
 .focus-label{
   font-size:11px;
@@ -162,21 +130,20 @@ body{
 }
 .focus-title{
   font-size:16px;
-  font-weight:800;
+  font-weight:900;
+  margin:4px 0;
 }
 .focus-meta{
   font-size:12px;
   color:var(--muted);
 }
 
-/* -------------------------
-   CHAT
-------------------------- */
+/* CHAT */
 .chat-log{
-  height:260px;
+  height:240px;
   overflow:auto;
   background:#f8fafc;
-  border-radius:var(--radius-sm);
+  border-radius:12px;
   padding:12px;
 }
 .msg{margin-bottom:10px}
@@ -192,29 +159,7 @@ body{
   margin-top:10px;
 }
 
-/* -------------------------
-   INPUTS / BUTTONS
-------------------------- */
-.input{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-}
-.btn{
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:#fff;
-  font-weight:700;
-  cursor:pointer;
-}
-.btn.small{padding:6px 10px;font-size:12px}
-.btn-ghost{background:#f1f5f9}
-
-/* -------------------------
-   TELEMETRY
-------------------------- */
+/* TELEMETRY */
 .telemetry-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -222,71 +167,67 @@ body{
   font-size:12px;
 }
 
-/* -------------------------
-   CORE — ACTION CARD (DOMINANT)
-------------------------- */
+/* CORE ACTION */
 .action-card{
-  border:2px solid var(--core);
-  box-shadow:0 12px 40px rgba(14,165,233,.25);
+  border:1px dashed var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px;
 }
 .action-top{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  margin-bottom:8px;
 }
 .action-pill{
   font-size:11px;
   font-weight:900;
-  padding:4px 10px;
-  border-radius:999px;
   background:#e0f2fe;
-  color:var(--core);
+  padding:4px 8px;
+  border-radius:999px;
 }
 .action-title{
   font-size:18px;
   font-weight:900;
-  margin:10px 0 4px;
+  margin:6px 0;
 }
 .action-meta{
-  font-size:13px;
+  font-size:12px;
   color:var(--muted);
 }
 .action-actions{
   display:flex;
-  gap:10px;
-  margin-top:12px;
+  gap:8px;
+  margin-top:10px;
 }
 
-/* -------------------------
-   DECK
-------------------------- */
+/* DECK */
 .deck{
-  background:#f8fafc;
-  padding:12px;
+  border:1px dashed var(--border);
   border-radius:var(--radius-sm);
+  padding:12px;
+  font-size:13px;
 }
 .deck-empty{
-  font-size:12px;
   color:var(--muted);
 }
 
-/* -------------------------
-   MODULE TILES
-------------------------- */
+/* MODULE TILES — THIS IS THE CENTREPIECE */
 .tiles{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(2, minmax(0,1fr));
   gap:14px;
 }
 .tile{
-  border:1px solid var(--border);
-  border-radius:var(--radius-sm);
-  padding:12px;
   background:#fff;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px;
 }
 .tile-head{
   display:flex;
   justify-content:space-between;
+  align-items:center;
   font-weight:800;
 }
 .tile-tag{
@@ -297,24 +238,20 @@ body{
   color:#334155;
 }
 .tile-body{
-  font-size:13px;
+  font-size:12px;
   color:var(--muted);
   margin-top:6px;
 }
 
-/* -------------------------
-   ANDY (VISUALLY ALIVE, LOGIC OFF)
-------------------------- */
+/* ANDY */
 .dropzone{
-  border:2px dashed #c7d2fe;
+  border:2px dashed var(--border);
+  border-radius:var(--radius);
   padding:22px;
   text-align:center;
-  border-radius:var(--radius-sm);
-  background:#f8fafc;
 }
-.dz-hover{
-  background:#eef2ff;
-}
+.dz-title{font-weight:900}
+.dz-sub,.dz-mini{font-size:12px;color:var(--muted)}
 .queue{
   font-size:12px;
 }
@@ -322,9 +259,25 @@ body{
   color:var(--muted);
 }
 
-/* -------------------------
-   FOOTER
-------------------------- */
+/* INPUTS / BUTTONS */
+.input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+}
+.btn{
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn-ghost{background:#f1f5f9}
+.btn.small{padding:6px 8px;font-size:12px}
+
+/* FOOTER */
 .footer{
   position:fixed;
   bottom:0;left:0;right:0;
@@ -338,340 +291,6 @@ body{
   font-size:11px;
   font-weight:900;
   background:#dbeafe;
-  padding:4px 10px;
-  border-radius:999px;
-}
-/* HEADERS */
-.lane-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-.pill{
-  padding:6px 12px;
-  border-radius:999px;
-  font-weight:700;
-  font-size:13px;
-  border:1px solid var(--border);
-  background:#fff;
-}
-.parent-pill{color:var(--parent)}
-.andy-pill{color:var(--andy)}
-.core-pill{color:var(--core)}
-.subpill{font-size:12px;color:var(--muted); margin-left:8px}
-
-/* CARDS */
-.card{
-  background:rgba(255,255,255,.85);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:14px;
-  backdrop-filter: blur(10px);
-}
-.panel-title{
-  font-weight:900;
-  font-size:12px;
-  letter-spacing:.4px;
-  color:#0b1220;
-  margin-bottom:10px;
-}
-
-/* FOCUS */
-.focus-card{
-  border:1px solid var(--border);
-  background:#fff;
-  border-radius:14px;
-  padding:12px;
-}
-.focus-label{
-  font-size:11px;
-  font-weight:900;
-  color:var(--muted);
-}
-.focus-title{
-  margin-top:4px;
-  font-size:16px;
-  font-weight:900;
-}
-.focus-meta{
-  margin-top:6px;
-  font-size:12px;
-  color:var(--muted);
-}
-
-/* CHAT */
-.chat-log{
-  height:260px;
-  overflow:auto;
-  background:#f8fafc;
-  border-radius:12px;
-  padding:12px;
-  border:1px solid rgba(0,0,0,.05);
-}
-.msg{margin-bottom:10px}
-.msg-role{font-size:11px;font-weight:800}
-.msg-text{font-size:13px}
-.msg.parent{
-  border-left:4px solid var(--parent);
-  padding-left:8px;
-}
-
-/* INPUTS */
-.input{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:#fff;
-}
-.chat-compose{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
-
-/* BUTTONS */
-.btn{
-  padding:10px 12px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:#fff;
-  font-weight:800;
-  cursor:pointer;
-}
-.btn-ghost{background:#f1f5f9}
-.btn.small{padding:6px 8px;font-size:12px}
-.btn:hover{filter:brightness(.98)}
-
-/* TELEMETRY */
-.telemetry-grid{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:10px;
-  font-size:13px;
-}
-
-/* CORE: ACTION CARD */
-.action-card{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-}
-.action-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:8px;
-}
-.action-pill{
-  font-size:11px;
-  font-weight:900;
-  padding:4px 10px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:#e0f2fe;
-}
-.action-mini{
-  font-size:12px;
-  color:var(--muted);
-  text-align:right;
-}
-.action-title{
-  font-size:16px;
-  font-weight:950;
-  margin:6px 0 4px;
-}
-.action-meta{
-  font-size:12px;
-  color:var(--muted);
-}
-.action-actions{
-  margin-top:10px;
-  display:flex;
-  gap:10px;
-}
-
-/* CORE: DECK */
-.deck{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.deck-empty{
-  font-size:12px;
-  color:var(--muted);
-  background:#fff;
-  border:1px dashed rgba(0,0,0,.14);
-  border-radius:14px;
-  padding:12px;
-}
-.deck-item{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-}
-.deck-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-.deck-meta{
-  margin-top:6px;
-  font-size:12px;
-  color:var(--muted);
-}
-
-/* CORE: TILES */
-.tiles{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:12px;
-}
-.tile{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-  min-height:110px;
-}
-.tile-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:8px;
-}
-.tile-tag{
-  font-size:11px;
-  font-weight:900;
-  color:var(--muted);
-  border:1px solid var(--border);
-  padding:3px 8px;
-  border-radius:999px;
-  background:#f8fafc;
-}
-.tile-body{
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.35;
-}
-
-/* ANDY: DROPZONE */
-.dropzone{
-  text-align:center;
-  padding:18px;
-  border:1px dashed rgba(0,0,0,.16);
-  background:rgba(255,255,255,.78);
-}
-.dropzone.dz-hover{
-  outline:2px solid rgba(22,163,74,.35);
-  background:rgba(240,253,244,.85);
-}
-.dz-title{font-weight:950}
-.dz-sub{font-size:12px;color:var(--muted);margin-top:4px}
-.dz-mini{font-size:11px;color:var(--muted);margin-top:8px}
-
-/* ANDY: QUEUE */
-.queue{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.q-empty{
-  font-size:12px;
-  color:var(--muted);
-  background:#fff;
-  border:1px dashed rgba(0,0,0,.14);
-  border-radius:14px;
-  padding:12px;
-}
-.q-item{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-}
-.q-name{font-weight:900;font-size:13px}
-.q-meta{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  font-size:12px;
-  color:var(--muted);
-  margin-top:6px;
-}
-.q-status{
-  font-weight:900;
-}
-
-/* TASK LIST */
-.task-capture{display:flex;gap:10px}
-.task-list{margin-top:10px;display:flex;flex-direction:column;gap:8px}
-.t-item{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:10px;
-  font-size:13px;
-}
-
-/* SETTINGS */
-.settings-panel{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.35);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:50;
-}
-.settings-panel.hidden{display:none}
-.settings-card{
-  background:#fff;
-  padding:18px;
-  border-radius:16px;
-  width:420px;
-  border:1px solid rgba(0,0,0,.12);
-}
-.settings-head{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:12px;
-}
-.setting-row{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  margin-bottom:12px;
-}
-
-/* FOOTER */
-.footer{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  padding:10px 14px;
-  background:rgba(255,255,255,.8);
-  border-top:1px solid var(--border);
-  display:flex;
-  gap:12px;
-  z-index:40;
-}
-.foot-pill{
-  font-size:11px;
-  font-weight:950;
-  background:#dbeafe;
   padding:4px 8px;
   border-radius:999px;
-}
-.foot-text{font-size:12px;color:var(--muted)}
-
-/* RESPONSIVE */
-@media (max-width: 1180px){
-  .workspace{grid-template-columns:1fr}
-  .otos-logo{position:static; height:56px; margin:12px 0 0 12px}
 }
