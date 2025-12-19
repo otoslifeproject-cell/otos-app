@@ -1,17 +1,5 @@
 [
   {
-    "id": "one-action",
-    "name": "One Action",
-    "slot": "center",
-    "enabled": true
-  },
-  {
-    "id": "projects",
-    "name": "Projects",
-    "slot": "center",
-    "enabled": true
-  },
-  {
     "id": "reality-radar",
     "name": "Reality Radar",
     "slot": "left",
@@ -30,7 +18,19 @@
     "enabled": true
   },
   {
-    "id": "andy-agent",
+    "id": "one-action",
+    "name": "One Action",
+    "slot": "center",
+    "enabled": true
+  },
+  {
+    "id": "projects",
+    "name": "Projects",
+    "slot": "center",
+    "enabled": true
+  },
+  {
+    "id": "andy",
     "name": "Andy · Agent",
     "slot": "right",
     "enabled": true
