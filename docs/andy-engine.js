@@ -1,105 +1,101 @@
 /* =========================================================
-   ANDY ENGINE v1.0
-   Safe / Local / Token-Gated
-   No UI mutation
+   ANDY · EXECUTION AGENT (SAFE CORE)
+   - NO layout mutation
+   - NO CSS access
+   - Token-gated
+   - Local only
    ========================================================= */
 
 (function () {
-  const STATE = {
-    tokens: false,
+  const state = {
+    tokensIssued: false,
     processed: 0,
     queue: 0,
-    highlights: [],
-    archive: []
+    highlights: []
   };
 
-  const el = (id) => document.getElementById(id);
+  // ---- DOM SAFE GETTERS ----
+  const $ = (id) => document.getElementById(id);
 
-  const renderStats = () => {
-    const statsCards = document.querySelectorAll(".card");
-    statsCards.forEach(card => {
-      if (card.innerText.includes("Processed")) {
-        card.innerHTML = `
-          <h3>Stats</h3>
-          <div class="row"><span>Processed</span><strong>${STATE.processed}</strong></div>
-          <div class="row"><span>Queue</span><strong>${STATE.queue}</strong></div>
-          <button id="export-archive">Export Tier-3 Archive (JSON)</button>
-        `;
-        document
-          .getElementById("export-archive")
-          .addEventListener("click", exportArchive);
-      }
+  const statProcessed = () => $("stat-processed");
+  const statQueue = () => $("stat-queue");
+  const highlightBox = () => $("highlight-report");
+
+  // ---- RENDER (TEXT ONLY) ----
+  function renderStats() {
+    if (statProcessed()) statProcessed().textContent = state.processed;
+    if (statQueue()) statQueue().textContent = state.queue;
+  }
+
+  function renderHighlights() {
+    if (!highlightBox()) return;
+    highlightBox.innerHTML = "";
+    state.highlights.slice(-10).forEach((h) => {
+      const div = document.createElement("div");
+      div.textContent = "• " + h;
+      highlightBox.appendChild(div);
     });
-  };
+  }
 
-  const renderHighlights = () => {
-    const box = document.querySelector(".highlight-box");
-    if (!box) return;
-    box.innerHTML = STATE.highlights
-      .slice(-10)
-      .map(h => `<div class="highlight-item">${h}</div>`)
-      .join("");
-  };
+  // ---- TOKEN CONTROL ----
+  function issueTokens() {
+    state.tokensIssued = true;
+  }
 
-  const issueTokens = () => {
-    STATE.tokens = true;
-    console.log("Andy: tokens issued");
-  };
+  function revokeTokens() {
+    state.tokensIssued = false;
+  }
 
-  const revokeTokens = () => {
-    STATE.tokens = false;
-    console.log("Andy: tokens revoked");
-  };
-
-  const ingestFiles = (files, mode = "A") => {
-    if (!STATE.tokens) {
-      alert("Execution tokens required.");
+  // ---- INGEST CORE ----
+  function ingestFiles(files, mode) {
+    if (!state.tokensIssued) {
+      alert("Tokens required.");
       return;
     }
-
     if (!files || files.length === 0) return;
 
-    STATE.queue += files.length;
+    state.queue += files.length;
     renderStats();
 
-    Array.from(files).forEach(file => {
+    Array.from(files).forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
-        const entry = {
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          mode,
-          contentPreview: reader.result.slice(0, 500),
-          timestamp: new Date().toISOString()
-        };
-
-        STATE.archive.push(entry);
-        STATE.highlights.push(`Ingested: ${file.name}`);
-        STATE.processed++;
-        STATE.queue--;
-
+        state.queue--;
+        state.processed++;
+        state.highlights.push(
+          `[${mode}] ${file.name} (${file.type || "unknown"})`
+        );
         renderStats();
         renderHighlights();
       };
       reader.readAsText(file);
     });
-  };
+  }
 
-  const exportArchive = () => {
+  // ---- EXPORT ----
+  function exportArchive() {
     const blob = new Blob(
-      [JSON.stringify(STATE.archive, null, 2)],
+      [
+        JSON.stringify(
+          {
+            processed: state.processed,
+            highlights: state.highlights
+          },
+          null,
+          2
+        )
+      ],
       { type: "application/json" }
     );
-    const url = URL.createObjectURL(blob);
+
     const a = document.createElement("a");
-    a.href = url;
+    a.href = URL.createObjectURL(blob);
     a.download = "andy-tier3-archive.json";
     a.click();
-    URL.revokeObjectURL(url);
-  };
+    URL.revokeObjectURL(a.href);
+  }
 
-  // Expose Andy safely
+  // ---- PUBLIC API ----
   window.ANDY = {
     issueTokens,
     revokeTokens,
@@ -107,25 +103,26 @@
     exportArchive
   };
 
-  // Wire buttons when DOM is ready
-  document.addEventListener("DOMContentLoaded", () => {
-    document
-      .querySelectorAll("button")
-      .forEach(btn => {
-        if (btn.innerText.includes("Issue token")) {
-          btn.addEventListener("click", issueTokens);
-        }
-        if (btn.innerText.includes("Revoke")) {
-          btn.addEventListener("click", revokeTokens);
-        }
-        if (btn.innerText.includes("Ingest batch")) {
-          btn.addEventListener("click", () => {
-            const fileInput = document.querySelector('input[type="file"]');
-            const cmdInput = document.querySelector('input[placeholder^="Command"]');
-            ingestFiles(fileInput.files, cmdInput?.value || "A");
-          });
-        }
-      });
-  });
+  // ---- EVENT WIRING (NO LAYOUT) ----
+  window.addEventListener("DOMContentLoaded", () => {
+    if ($("issue-token"))
+      $("issue-token").addEventListener("click", issueTokens);
 
+    if ($("revoke-token"))
+      $("revoke-token").addEventListener("click", revokeTokens);
+
+    if ($("ingest-btn"))
+      $("ingest-btn").addEventListener("click", () => {
+        ingestFiles(
+          $("file-input").files,
+          $("cmd").value || "A"
+        );
+      });
+
+    if ($("export-archive"))
+      $("export-archive").addEventListener("click", exportArchive);
+
+    renderStats();
+  });
 })();
+
