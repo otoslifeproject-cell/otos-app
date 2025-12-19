@@ -1,15 +1,30 @@
+/* =========================================================
+   OTOS Cockpit — UI Layer V1.2
+   SAFE BUILD on V1.1 BASELINE
+   UI ONLY — NO LOGIC — NO AGENTS
+   ========================================================= */
+
+/* -------------------------
+   ROOT / THEME
+------------------------- */
 :root{
   --bg:#eef4fb;
   --card:#ffffff;
   --ink:#0f172a;
   --muted:#475569;
   --border:rgba(0,0,0,.08);
+
   --parent:#2563eb;
-  --andy:#16a34a;
   --core:#0ea5e9;
+  --andy:#16a34a;
+
+  --radius:16px;
+  --radius-sm:12px;
 }
 
-/* base */
+/* -------------------------
+   BASE
+------------------------- */
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -18,50 +33,314 @@ body{
   background:radial-gradient(circle at bottom right,#dbeafe,var(--bg));
 }
 
-/* SKYHAWK */
+/* -------------------------
+   SKYHAWK (LOCKED)
+------------------------- */
 .skyhawk{
   background:#020617;
   color:#e5e7eb;
   padding:10px 16px;
   font-size:13px;
-  position:sticky;
-  top:0;
-  z-index:20;
 }
 .ticker-track{
   display:flex;
   gap:28px;
+  white-space:nowrap;
   animation:drift 22s linear infinite;
-  will-change:transform;
 }
 @keyframes drift{
   from{transform:translateX(0)}
   to{transform:translateX(-50%)}
 }
 
-/* LOGO (make it visible but keep the locked anchor + path) */
-.logo-anchor{position:relative; z-index:30;}
+/* -------------------------
+   LOGO (HARD-LOCKED POSITION)
+------------------------- */
+.logo-anchor{
+  position:relative;
+  z-index:2;
+}
 .otos-logo{
-  position:fixed;
-  /* visible + consistent: just under the ticker bar */
-  top:46px;
-  left:16px;
-  height:62px;
+  position:absolute;
+  top:-72px;
+  left:-36px;
+  height:72px;
   width:auto;
   pointer-events:none;
-  filter: drop-shadow(0 10px 18px rgba(0,0,0,.14));
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.15));
 }
 
-/* LAYOUT */
+/* -------------------------
+   WORKSPACE LAYOUT
+------------------------- */
 .workspace{
   display:grid;
-  grid-template-columns: 1fr 1.15fr 380px;
+  grid-template-columns:320px minmax(640px,1fr) 380px;
   gap:18px;
-  padding:18px 18px 80px;
+  padding:18px 18px 90px;
 }
 
-.lane{min-width:0}
+/* -------------------------
+   LANES
+------------------------- */
+.lane{
+  display:flex;
+  flex-direction:column;
+}
+.lane-parent{opacity:.95}
+.lane-core{
+  transform:scale(1.01);
+}
+.lane-andy{
+  opacity:.96;
+}
 
+/* -------------------------
+   LANE HEADERS
+------------------------- */
+.lane-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
+}
+.lane-title{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.lane-actions{display:flex;gap:8px}
+
+/* -------------------------
+   PILLS
+------------------------- */
+.pill{
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:13px;
+  border:1px solid var(--border);
+  background:#fff;
+}
+.parent-pill{color:var(--parent)}
+.core-pill{color:var(--core)}
+.andy-pill{color:var(--andy)}
+.subpill{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* -------------------------
+   CARDS
+------------------------- */
+.card{
+  background:rgba(255,255,255,.9);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:14px;
+  box-shadow:0 6px 22px rgba(0,0,0,.04);
+}
+.panel-title{
+  font-weight:800;
+  font-size:13px;
+  margin-bottom:10px;
+  letter-spacing:.02em;
+}
+
+/* -------------------------
+   FOCUS DECK
+------------------------- */
+.focus-card{
+  border-left:5px solid var(--parent);
+  padding-left:12px;
+}
+.focus-label{
+  font-size:11px;
+  font-weight:900;
+  color:var(--parent);
+}
+.focus-title{
+  font-size:16px;
+  font-weight:800;
+}
+.focus-meta{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* -------------------------
+   CHAT
+------------------------- */
+.chat-log{
+  height:260px;
+  overflow:auto;
+  background:#f8fafc;
+  border-radius:var(--radius-sm);
+  padding:12px;
+}
+.msg{margin-bottom:10px}
+.msg-role{font-size:11px;font-weight:800}
+.msg-text{font-size:13px}
+.msg.parent{
+  border-left:4px solid var(--parent);
+  padding-left:8px;
+}
+.chat-compose{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+/* -------------------------
+   INPUTS / BUTTONS
+------------------------- */
+.input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+}
+.btn{
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn.small{padding:6px 10px;font-size:12px}
+.btn-ghost{background:#f1f5f9}
+
+/* -------------------------
+   TELEMETRY
+------------------------- */
+.telemetry-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  font-size:12px;
+}
+
+/* -------------------------
+   CORE — ACTION CARD (DOMINANT)
+------------------------- */
+.action-card{
+  border:2px solid var(--core);
+  box-shadow:0 12px 40px rgba(14,165,233,.25);
+}
+.action-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.action-pill{
+  font-size:11px;
+  font-weight:900;
+  padding:4px 10px;
+  border-radius:999px;
+  background:#e0f2fe;
+  color:var(--core);
+}
+.action-title{
+  font-size:18px;
+  font-weight:900;
+  margin:10px 0 4px;
+}
+.action-meta{
+  font-size:13px;
+  color:var(--muted);
+}
+.action-actions{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
+}
+
+/* -------------------------
+   DECK
+------------------------- */
+.deck{
+  background:#f8fafc;
+  padding:12px;
+  border-radius:var(--radius-sm);
+}
+.deck-empty{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* -------------------------
+   MODULE TILES
+------------------------- */
+.tiles{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.tile{
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px;
+  background:#fff;
+}
+.tile-head{
+  display:flex;
+  justify-content:space-between;
+  font-weight:800;
+}
+.tile-tag{
+  font-size:11px;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#f1f5f9;
+  color:#334155;
+}
+.tile-body{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:6px;
+}
+
+/* -------------------------
+   ANDY (VISUALLY ALIVE, LOGIC OFF)
+------------------------- */
+.dropzone{
+  border:2px dashed #c7d2fe;
+  padding:22px;
+  text-align:center;
+  border-radius:var(--radius-sm);
+  background:#f8fafc;
+}
+.dz-hover{
+  background:#eef2ff;
+}
+.queue{
+  font-size:12px;
+}
+.q-empty{
+  color:var(--muted);
+}
+
+/* -------------------------
+   FOOTER
+------------------------- */
+.footer{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  padding:10px 14px;
+  background:rgba(255,255,255,.9);
+  border-top:1px solid var(--border);
+  display:flex;
+  gap:12px;
+}
+.foot-pill{
+  font-size:11px;
+  font-weight:900;
+  background:#dbeafe;
+  padding:4px 10px;
+  border-radius:999px;
+}
 /* HEADERS */
 .lane-head{
   display:flex;
