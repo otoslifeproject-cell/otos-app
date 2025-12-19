@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>OTOS · Parent Control</title>
-
-  <!-- HARD-LOCKED PATHS FOR GITHUB PAGES -->
-  <link rel="stylesheet" href="/otos-app/docs/styles.css" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
 
   <div class="topbar">
-    <img class="logo" src="/otos-app/docs/brand/logo/otos-logo-400.png" />
+    <img class="logo" src="./brand/logo/otos-logo-400.png" />
     <div class="title">Parent · Core Control</div>
   </div>
 
@@ -28,8 +26,7 @@
       right: document.getElementById('right')
     };
 
-    // 🔒 THIS IS THE CRITICAL LINE
-    fetch('/otos-app/docs/registry.json')
+    fetch('./registry.json')
       .then(r => {
         if (!r.ok) throw new Error('Registry fetch failed');
         return r.json();
