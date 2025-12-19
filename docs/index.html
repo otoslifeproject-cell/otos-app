@@ -37,4 +37,48 @@
     <section class="column agent">
       <h2>Andy · Agent</h2>
       <div id="agentModules" class="module-stack"></div>
-    </sect
+    </section>
+  </main>
+
+  <!-- Loader -->
+  <script>
+    async function loadRegistry() {
+      const res = await fetch('./registry.json', { cache: 'no-store' });
+      if (!res.ok) throw new Error('Registry not found');
+      return res.json();
+    }
+
+    function renderModule(row) {
+      const div = document.createElement('div');
+      div.className = 'module-card';
+      div.innerHTML = `
+        <div class="module-header">
+          <span class="icon">${row.icon || ''}</span>
+          <span class="title">${row.name}</span>
+        </div>
+        <div class="module-purpose">${row.purpose || ''}</div>
+      `;
+      return div;
+    }
+
+    function routeModule(row) {
+      const group = (row.group || '').toLowerCase();
+      if (group === 'core') return document.getElementById('coreModules');
+      if (group === 'agent') return document.getElementById('agentModules');
+      return document.getElementById('parentModules');
+    }
+
+    loadRegistry()
+      .then(data => {
+        data.forEach(row => {
+          const target = routeModule(row);
+          target.appendChild(renderModule(row));
+        });
+      })
+      .catch(err => {
+        document.body.innerHTML =
+          '<pre style="padding:2rem">Registry load failed\n' + err.message + '</pre>';
+      });
+  </script>
+</body>
+</html>
