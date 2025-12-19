@@ -1,56 +1,147 @@
-<!-- ======================================================
-     COPY–REPLACE FILE
-     Path: /docs/index.html
-     Added: registry-engine.js (single inclusion)
-     ====================================================== -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
   <title>OTOS · Parent Core Control</title>
-  <link rel="stylesheet" href="styles.css" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary stylesheet -->
+  <link id="css-main" rel="stylesheet" href="styles.css" />
+
+  <!-- Docs fallback -->
+  <script>
+    (function () {
+      const isDocs = location.pathname.includes("/docs/");
+      if (isDocs) {
+        const l = document.getElementById("css-main");
+        l.href = "styles.css";
+      }
+    })();
+  </script>
+
+  <!-- Andy Engine -->
+  <script src="./docs/andy-engine.js" defer></script>
 </head>
 
 <body>
+  <!-- TOP BAR -->
   <header class="topbar">
     <div class="brand">
-      <img class="logo" src="brand/logo/otos-logo-400.png" alt="OTOS" />
+      <img
+        id="otos-logo"
+        class="logo"
+        src="otos-app/docs/brand/logo/otos-logo-400.png"
+        alt="OTOS"
+      />
       <div class="title">Parent · Core Control</div>
     </div>
     <div class="status-pill">
-      <span class="dot"></span>
-      <span class="pill-text" id="pill-text">System idle · No execution tokens issued</span>
+      <span class="dot green"></span>
+      System idle · No execution tokens issued
     </div>
   </header>
 
-  <main id="app" class="app">
-    <section class="lane lane-parent">
-      <div class="lane-head">
-        <span class="lane-chip chip-parent">Parent Node</span>
-        <div class="lane-sub">Authority · Read/Lock/Authorise</div>
+  <!-- MAIN APP -->
+  <main id="app">
+    <!-- LEFT COLUMN -->
+    <section class="panel left">
+      <h3>Parent Node</h3>
+      <p class="muted">Authority · Read / Lock / Authorise</p>
+
+      <div class="card">
+        <h4>Reality Radar</h4>
+        <div class="row">
+          <span>Mode</span>
+          <strong>GUIDED</strong>
+        </div>
+        <div class="row">
+          <span>Temp</span>
+          <strong>4</strong>
+        </div>
       </div>
-      <div class="stack"></div>
+
+      <div class="card">
+        <h4>System State</h4>
+        <p>Locks: <strong>Enforced</strong></p>
+        <p>Memory: <strong>Tiered</strong></p>
+      </div>
+
+      <div class="card">
+        <h4>Execution Tokens</h4>
+        <button id="issue-token">Issue token: INGEST + READ + SUGGEST</button>
+        <button id="revoke-token" class="danger">Revoke tokens</button>
+      </div>
+
+      <div class="card">
+        <h4>Notes</h4>
+        <textarea placeholder="Quick notes (local only)"></textarea>
+      </div>
     </section>
 
-    <section class="lane lane-centre">
-      <div class="lane-head">
-        <span class="lane-chip chip-centre">Focus</span>
-        <div class="lane-sub">One action · Projects</div>
+    <!-- CENTER COLUMN -->
+    <section class="panel center">
+      <h3>Focus</h3>
+      <p class="muted">One action · Projects</p>
+
+      <div class="card">
+        <h4>One Action</h4>
+        <div class="pill success">
+          Wire Andy intake + stats safely (token-gated)
+        </div>
       </div>
-      <div class="stack"></div>
+
+      <div class="card muted">
+        <h4>Projects</h4>
+        <p>(Locked — loads next layer)</p>
+      </div>
     </section>
 
-    <section class="lane lane-agent">
-      <div class="lane-head">
-        <span class="lane-chip chip-agent">Andy · Execution Agent</span>
-        <div class="lane-sub">Feeder · Intake + extraction</div>
+    <!-- RIGHT COLUMN -->
+    <section class="panel right">
+      <h3>Andy · Execution Agent</h3>
+      <p class="muted">Feeder · Intake + extraction (no promotion)</p>
+
+      <div class="card">
+        <h4>Intake</h4>
+        <input id="file-input" type="file" multiple />
+        <input id="cmd" placeholder="Command: A / G / R / C / T / ?" />
+        <button id="ingest-btn">Ingest batch</button>
       </div>
-      <div class="stack"></div>
+
+      <div class="card">
+        <h4>Stats</h4>
+        <p>Processed: <strong id="stat-processed">0</strong></p>
+        <p>Queue: <strong id="stat-queue">0</strong></p>
+        <button id="export-archive">Export Tier-3 Archive (JSON)</button>
+      </div>
+
+      <div class="card">
+        <h4>Running Highlight Report</h4>
+        <div id="highlight-report" class="highlight-box"></div>
+      </div>
     </section>
   </main>
 
-  <script src="andy-engine.js"></script>
-  <script src="registry-engine.js"></script>
+  <!-- FULL UI WIRING SCRIPT -->
+  <script>
+    document.getElementById("issue-token").addEventListener("click", () => {
+      ANDY.issueTokens();
+    });
+
+    document.getElementById("revoke-token").addEventListener("click", () => {
+      ANDY.revokeTokens();
+    });
+
+    document.getElementById("ingest-btn").addEventListener("click", () => {
+      const files = document.getElementById("file-input").files;
+      const mode = document.getElementById("cmd").value || "A";
+      ANDY.ingestFiles(files, mode);
+    });
+
+    document.getElementById("export-archive").addEventListener("click", () => {
+      ANDY.exportArchive();
+    });
+  </script>
 </body>
 </html>
