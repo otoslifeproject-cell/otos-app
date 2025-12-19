@@ -14,9 +14,10 @@
 
 <main class="layout">
 
-  <!-- LEFT: PARENT -->
+  <!-- LEFT -->
   <aside class="lane parent">
     <h2>EYE21 · Parent</h2>
+
     <div class="card">
       <h3>Focus</h3>
       <p>Finish UI wiring</p>
@@ -28,51 +29,37 @@
     </div>
   </aside>
 
-  <!-- CENTER: CORE -->
+  <!-- CENTER -->
   <section class="lane core">
 
-    <div class="card action-card" id="actionCard">
-      <div class="action-header">
-        <h2>🔥 ONE ACTION</h2>
-        <div class="action-meta">
-          State: Ready · Score: 9/10 · Source: SkyHawk
-        </div>
-      </div>
+    <div class="card action-card">
+      <h2>🔥 ONE ACTION</h2>
+      <div class="meta">State: Ready · Score: 9/10 · Source: SkyHawk</div>
 
       <h3>Prepare NHS Pilot Launch Pack</h3>
-      <p class="summary">
-        This action is prioritised due to funding relevance and deadline proximity.
-      </p>
+      <p>This action is prioritised due to funding relevance and deadline proximity.</p>
 
       <div class="action-buttons">
-        <button id="btnAction" class="primary">ACTION</button>
+        <button class="primary" id="btnAction">ACTION</button>
         <button id="btnSnooze">Snooze</button>
         <button id="btnNext">Next Action</button>
       </div>
 
       <div class="action-links">
-        <a href="#">View Task</a>
-        <a href="#">View Project</a>
+        <a href="#" id="viewTask">View Task</a>
+        <a href="#" id="viewProject">View Project</a>
       </div>
 
-      <!-- EXPANDED DETAIL (HIDDEN BY DEFAULT) -->
       <div class="action-detail" id="actionDetail">
         <hr />
-        <p><strong>Why this is top:</strong></p>
+        <strong>Detail</strong>
         <p>
-          Funding window detected. Action aligns with current investment priority
-          and system-wide objective weighting.
-        </p>
-
-        <p><strong>Detail:</strong></p>
-        <p>
-          Assemble pitch deck, outcome model, and submission documents required
+          Assemble pitch deck, outcome model and submission documents required
           for NHS pilot approval.
         </p>
       </div>
     </div>
 
-    <!-- SECONDARY ACTIONS -->
     <div class="card muted">
       <h3>Other Actions</h3>
       <ul class="action-list">
@@ -84,8 +71,20 @@
 
   </section>
 
-  <!-- RIGHT: AGENT -->
+  <!-- RIGHT -->
   <aside class="lane agent">
     <h2>Andy · Agent</h2>
+
     <div class="dropzone">Drop files here</div>
-    <div class="c
+
+    <div class="card context" id="contextDrawer">
+      <h3>Context</h3>
+      <p class="muted">Select a Task or Project</p>
+    </div>
+  </aside>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
