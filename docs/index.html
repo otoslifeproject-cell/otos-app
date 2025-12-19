@@ -1,72 +1,250 @@
-<!-- FILE: otos-app/index.html -->
-<!-- FULL SCRIPT REPLACEMENT — SAFE BASELINE WITH ANDY WIRED -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS · Parent Control</title>
+  <title>OTOS · Parent Core Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="docs/styles.css" />
+  <style>
+    :root{
+      --bg:#eef4fb;
+      --card:#ffffff;
+      --ink:#0f172a;
+      --muted:#475569;
+      --border:rgba(0,0,0,.08);
+      --blue:#3b82f6;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      color:var(--ink);
+      background:radial-gradient(circle at bottom right,#dbeafe,var(--bg));
+    }
+
+    /* TOP BAR */
+    header{
+      height:56px;
+      background:linear-gradient(90deg,#020617,#020617);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 20px;
+      font-size:14px;
+    }
+
+    header .left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:600;
+    }
+
+    header .status{
+      font-size:12px;
+      opacity:.8;
+    }
+
+    /* LAYOUT */
+    #app{
+      max-width:1400px;
+      margin:24px auto;
+      padding:0 24px 40px;
+      display:grid;
+      grid-template-columns:320px 1fr 320px;
+      gap:24px;
+    }
+
+    .column{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      padding:16px;
+      box-shadow:0 10px 25px rgba(0,0,0,.06);
+    }
+
+    .card h3{
+      margin:0 0 6px 0;
+      font-size:15px;
+    }
+
+    .muted{color:var(--muted);font-size:13px}
+
+    /* SLIDER */
+    input[type=range]{
+      width:100%;
+      margin-top:8px;
+    }
+
+    /* BUTTONS */
+    button{
+      border:1px solid var(--border);
+      background:#f8fafc;
+      padding:6px 10px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    button.primary{
+      background:var(--blue);
+      color:#fff;
+      border:none;
+    }
+
+    button.small{
+      font-size:11px;
+      padding:4px 8px;
+    }
+
+    /* INPUTS */
+    input[type=text]{
+      width:100%;
+      padding:6px 8px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      font-size:12px;
+      margin-top:6px;
+    }
+
+    textarea{
+      width:100%;
+      min-height:80px;
+      border-radius:8px;
+      border:1px solid var(--border);
+      padding:8px;
+      font-size:12px;
+    }
+
+    /* STATS */
+    .stat{
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    /* HIGHLIGHT */
+    .highlight{
+      font-size:12px;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:1100px){
+      #app{grid-template-columns:1fr}
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- TOP BAR -->
-  <div class="topbar">
-    <img class="logo" src="docs/brand/logo/otos-logo-400.png" alt="OTOS Logo" />
-    <div class="title">Parent · Core Control</div>
+<header>
+  <div class="left">
+    <span>OTOS</span>
+    <span>Parent · Core Control</span>
+  </div>
+  <div class="status">System idle · No execution tokens issued</div>
+</header>
+
+<main id="app">
+
+  <!-- LEFT -->
+  <div class="column">
+
+    <div class="card">
+      <h3>Parent Node</h3>
+      <div class="muted">Authority · Read / Lock / Authorise</div>
+    </div>
+
+    <div class="card">
+      <h3>Reality Radar</h3>
+      <div class="muted">Mode <b>GUIDED</b></div>
+      <div class="muted">Temp 4</div>
+      <input type="range" min="1" max="10" value="4" />
+    </div>
+
+    <div class="card">
+      <h3>System State</h3>
+      <div class="stat"><span>Locks</span><b>Enforced</b></div>
+      <div class="stat"><span>Memory</span><b>Tiered</b></div>
+    </div>
+
+    <div class="card">
+      <h3>Execution Tokens</h3>
+      <button class="small">Issue token: INGEST + READ + SUGGEST</button>
+      <button class="small">Revoke tokens</button>
+      <div class="muted" style="margin-top:6px">
+        Andy cannot act without explicit tokens.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Notes</h3>
+      <textarea placeholder="Quick notes (local only)"></textarea>
+    </div>
+
   </div>
 
-  <!-- MAIN APP LAYOUT -->
-  <div id="app">
-    <div class="column" id="left"></div>
-    <div class="column" id="center"></div>
-    <div class="column" id="right"></div>
+  <!-- CENTER -->
+  <div class="column">
+
+    <div class="card">
+      <h3>Focus</h3>
+      <div class="muted">One action · Projects</div>
+    </div>
+
+    <div class="card">
+      <h3>One Action</h3>
+      <div class="muted">Wire Andy intake + stats safely (token-gated)</div>
+    </div>
+
+    <div class="card">
+      <h3>Projects</h3>
+      <div class="muted">(Locked — loads next layer)</div>
+    </div>
+
   </div>
 
-  <!-- =========================
-       CORE UI LOADER
-       ========================= -->
-  <script>
-    const cols = {
-      left: document.getElementById('left'),
-      center: document.getElementById('center'),
-      right: document.getElementById('right')
-    };
+  <!-- RIGHT -->
+  <div class="column">
 
-    fetch('docs/registry.json')
-      .then(r => {
-        if (!r.ok) throw new Error('Registry fetch failed');
-        return r.json();
-      })
-      .then(modules => {
-        modules.forEach(m => {
-          if (!m.enabled) return;
-          if (!cols[m.slot]) return;
+    <div class="card">
+      <h3>Andy · Execution Agent</h3>
+      <div class="muted">Feeder · Intake + extraction (no promotion)</div>
+    </div>
 
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.textContent = m.name;
+    <div class="card">
+      <h3>Intake</h3>
+      <input type="file" />
+      <input type="text" placeholder="Command: A / G / R / C / T" />
+      <button class="primary small" style="margin-top:6px">Ingest batch</button>
+      <div class="muted" style="margin-top:6px">
+        A analyse · G golden · R revenue · C canon · T tasks · ? notable
+      </div>
+    </div>
 
-          cols[m.slot].appendChild(card);
-        });
-      })
-      .catch(err => {
-        console.error(err);
-        document.body.innerHTML =
-          '<pre style="padding:20px;color:#fff;background:#111">' +
-          'REGISTRY LOAD FAILED\n\n' + err.message +
-          '</pre>';
-      });
-  </script>
+    <div class="card">
+      <h3>Stats</h3>
+      <div class="stat"><span>Processed</span><b>0</b></div>
+      <div class="stat"><span>Queue</span><b>0</b></div>
+      <button class="small" style="margin-top:6px">Export Tier-3 Archive (JSON)</button>
+    </div>
 
-  <!-- =========================
-       ANDY ENGINE (ORDER LOCKED)
-       ========================= -->
-  <script src="docs/andy-engine.js"></script>
-  <script src="docs/andy-auto-chain.js"></script>
-  <script src="docs/andy-notion-feeder.js"></script>
+    <div class="card">
+      <h3>Running Highlight Report</h3>
+      <div class="highlight">Andy engine ready (idle)</div>
+    </div>
+
+  </div>
+
+</main>
 
 </body>
 </html>
