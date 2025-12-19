@@ -2,96 +2,90 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit — One Action</title>
+  <title>OTOS — Parent</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<header class="top-bar">
+<header class="topbar">
   <div class="brand">OTOS</div>
   <div class="mode">Parent · Core Control</div>
 </header>
 
 <main class="layout">
 
-  <!-- LEFT: Parent -->
+  <!-- LEFT: PARENT -->
   <aside class="lane parent">
     <h2>EYE21 · Parent</h2>
-    <p class="muted">Governance · Truth · Locks</p>
-
-    <div class="panel">
+    <div class="card">
       <h3>Focus</h3>
       <p>Finish UI wiring</p>
     </div>
 
-    <div class="panel">
+    <div class="card">
       <h3>Parent Notes</h3>
-      <textarea placeholder="Governance only…"></textarea>
+      <textarea placeholder="Governance only..."></textarea>
     </div>
   </aside>
 
-  <!-- CENTRE: One Action -->
+  <!-- CENTER: CORE -->
   <section class="lane core">
-    <div id="one-action"></div>
+
+    <div class="card action-card" id="actionCard">
+      <div class="action-header">
+        <h2>🔥 ONE ACTION</h2>
+        <div class="action-meta">
+          State: Ready · Score: 9/10 · Source: SkyHawk
+        </div>
+      </div>
+
+      <h3>Prepare NHS Pilot Launch Pack</h3>
+      <p class="summary">
+        This action is prioritised due to funding relevance and deadline proximity.
+      </p>
+
+      <div class="action-buttons">
+        <button id="btnAction" class="primary">ACTION</button>
+        <button id="btnSnooze">Snooze</button>
+        <button id="btnNext">Next Action</button>
+      </div>
+
+      <div class="action-links">
+        <a href="#">View Task</a>
+        <a href="#">View Project</a>
+      </div>
+
+      <!-- EXPANDED DETAIL (HIDDEN BY DEFAULT) -->
+      <div class="action-detail" id="actionDetail">
+        <hr />
+        <p><strong>Why this is top:</strong></p>
+        <p>
+          Funding window detected. Action aligns with current investment priority
+          and system-wide objective weighting.
+        </p>
+
+        <p><strong>Detail:</strong></p>
+        <p>
+          Assemble pitch deck, outcome model, and submission documents required
+          for NHS pilot approval.
+        </p>
+      </div>
+    </div>
+
+    <!-- SECONDARY ACTIONS -->
+    <div class="card muted">
+      <h3>Other Actions</h3>
+      <ul class="action-list">
+        <li>Review CPFT demo materials</li>
+        <li>Prepare Sun Network follow-up</li>
+        <li>Consolidate evidence pack</li>
+      </ul>
+    </div>
+
   </section>
 
-  <!-- RIGHT: Agent -->
+  <!-- RIGHT: AGENT -->
   <aside class="lane agent">
     <h2>Andy · Agent</h2>
-    <p class="muted">Ingest → Analyse → Route</p>
-
-    <div class="panel dashed">
-      Drop files here
-    </div>
-
-    <div class="panel">
-      <h3>Queue</h3>
-      <p class="muted">Idle</p>
-    </div>
-  </aside>
-
-</main>
-
-<script>
-fetch('registry.json')
-  .then(res => res.json())
-  .then(data => {
-    const modules = data.modules
-      .sort((a, b) => b.priority - a.priority);
-
-    const top = modules[0];
-
-    if (top.name === "One Action") {
-      document.getElementById('one-action').innerHTML = `
-        <div class="action-card">
-          <div class="action-header">
-            <span class="icon">${top.icon}</span>
-            <h1>ONE ACTION</h1>
-          </div>
-
-          <p class="action-title">
-            Prepare NHS Pilot Launch Pack
-          </p>
-
-          <p class="action-why">
-            This action is prioritised due to funding relevance and deadline proximity.
-          </p>
-
-          <div class="action-buttons">
-            <button class="primary">ACTION</button>
-            <button>Snooze</button>
-            <button>Next Action</button>
-          </div>
-
-          <div class="action-links">
-            <button class="link">View Task</button>
-            <button class="link">View Project</button>
-          </div>
-        </div>
-      `;
-    }
-  });
-</script>
-
-</body>
-</html>
+    <div class="dropzone">Drop files here</div>
+    <div class="c
