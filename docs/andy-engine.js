@@ -1,22 +1,17 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v2.1
-   AGENT READINESS + HANDOVER SIGNAL
-   Scope: Confirm Andy LIVE + Parent handover to EYE21
-   Behaviour only. No UI changes.
+   OTOS — ANDY ENGINE v2.2
+   PARENT COMMAND CONSOLE (SAFE MODE)
+   Scope: Manual commands → Andy (no autonomy)
+   Behaviour only. No UI / CSS changes.
    ========================================================= */
 
 (() => {
 
   /* ---------- STATE ---------- */
   const STATE = {
-    engine: "Andy v2.1",
-    checks: {
-      ingest: false,
-      classify: false,
-      actions: false,
-      projects: false,
-      notionReady: false
-    }
+    engine: "Andy v2.2",
+    safeMode: true,
+    commands: []
   };
 
   /* ---------- HELPERS ---------- */
@@ -32,35 +27,90 @@
     report.appendChild(line);
   };
 
-  const exists = (key) => localStorage.getItem(key) !== null;
+  const save = (key, val) =>
+    localStorage.setItem(key, JSON.stringify(val, null, 2));
 
-  /* ---------- CHECKS ---------- */
-  STATE.checks.ingest        = exists("OTOS_STAGED_DOCS");
-  STATE.checks.classify     = exists("OTOS_CLASSIFIED_DOCS");
-  STATE.checks.actions      = exists("OTOS_ACTIONS");
-  STATE.checks.projects     = exists("OTOS_PROJECTS");
-  STATE.checks.notionReady  = exists("OTOS_NOTION_PUSH_READY");
-
-  Object.entries(STATE.checks).forEach(([k, v]) => {
-    highlight(`Check ${k}: ${v ? "OK" : "MISSING"}`);
-  });
-
-  /* ---------- READY LOGIC ---------- */
-  const allGreen = Object.values(STATE.checks).every(Boolean);
-
-  if (allGreen) {
-    highlight("ANDY STATUS: LIVE + STABLE");
-    highlight("Parent handover authorised → EYE21");
-    localStorage.setItem("OTOS_ANDY_LIVE", "true");
-    localStorage.setItem("OTOS_EYE21_READY", "true");
-  } else {
-    highlight("ANDY STATUS: PARTIAL — awaiting inputs");
+  /* ---------- COMMAND INPUT ---------- */
+  const intakeCard = cardByTitle("Intake");
+  if (!intakeCard) {
+    highlight("Command console not found");
+    return;
   }
 
-  /* ---------- FINAL ---------- */
-  localStorage.setItem(
-    "OTOS_ANDY_STATUS",
-    JSON.stringify({ engine: STATE.engine, checks: STATE.checks }, null, 2)
-  );
+  const cmdInput = intakeCard.querySelector("input[type='text']");
+  const ingestBtn = Array.from(intakeCard.querySelectorAll("button"))
+    .find(b => b.textContent.includes("Ingest"));
+
+  if (!cmdInput || !ingestBtn) {
+    highlight("Command bindings missing");
+    return;
+  }
+
+  /* ---------- COMMAND HANDLER ---------- */
+  ingestBtn.addEventListener("click", () => {
+    const raw = (cmdInput.value || "").trim();
+    if (!raw) {
+      highlight("No command provided");
+      return;
+    }
+
+    const cmd = {
+      id: crypto.randomUUID(),
+      raw,
+      issuedAt: new Date().toISOString(),
+      safeMode: STATE.safeMode
+    };
+
+    STATE.commands.push(cmd);
+    save("OTOS_PARENT_COMMANDS", STATE.commands);
+
+    highlight(`Command received: "${raw}"`);
+    highlight(`Mode: ${STATE.safeMode ? "SAFE" : "LIVE"}`);
+
+    // Command routing (non-executing)
+    if (/^ANALYZE|^A\b/i.test(raw)) {
+      highlight("Routed → ANALYSE pipeline");
+    } else if (/^GOLDEN|^G\b/i.test(raw)) {
+      highlight("Routed → GOLDEN statements");
+    } else if (/^REVENUE|^R\b/i.test(raw)) {
+      highlight("Routed → REVENUE ideas");
+    } else if (/^CANON|^C\b/i.test(raw)) {
+      highlight("Routed → CANON docs");
+    } else if (/^TASK|^T\b/i.test(raw)) {
+      highlight("Routed → TASK generation");
+    } else {
+      highlight("Routed → GENERAL intake");
+    }
+
+    cmdInput.value = "";
+  });
+
+  /* ---------- SAFE MODE TOGGLE ---------- */
+  const tokenCard = cardByTitle("Execution Tokens");
+  if (tokenCard) {
+    const revokeBtn = Array.from(tokenCard.querySelectorAll("button"))
+      .find(b => b.textContent.includes("Revoke"));
+
+    if (revokeBtn) {
+      revokeBtn.addEventListener("click", () => {
+        STATE.safeMode = true;
+        highlight("SAFE MODE enforced (no live writes)");
+      });
+    }
+
+    const issueBtn = Array.from(tokenCard.querySelectorAll("button"))
+      .find(b => b.textContent.includes("Issue"));
+
+    if (issueBtn) {
+      issueBtn.addEventListener("click", () => {
+        STATE.safeMode = false;
+        highlight("LIVE MODE armed (Parent authorised)");
+      });
+    }
+  }
+
+  /* ---------- BOOT ---------- */
+  save("OTOS_ANDY_MODE", { safeMode: STATE.safeMode });
+  highlight("Parent Command Console online");
 
 })();
