@@ -1,19 +1,26 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v1.1
-   Notion Bridge (Dry-Run / Local)
-   Scope: Intake → Parse → Stage → Preview Push
-   No UI mutations
+   OTOS — ANDY ENGINE v1.2
+   NOTION PUSH (LIVE-SAFE SIMULATION)
+   Scope: Stage → Validate → Notion Payload → Send Stub
+   No UI changes. No destructive ops.
    ========================================================= */
 
 (() => {
+  /* ---------- CONFIG ---------- */
+  const NOTION = {
+    enabled: false,               // 🔒 flip to true only in EYE21
+    endpoint: "https://api.notion.com/v1/pages",
+    databaseId: "NOTION_DATABASE_ID_HERE",
+    version: "2022-06-28"
+  };
+
   /* ---------- STATE ---------- */
   const STATE = {
-    tokensIssued: false,
-    queue: 0,
-    processed: 0,
-    staged: [],
-    mode: "IDLE",
-    engine: "Andy v1.1"
+    engine: "Andy v1.2",
+    mode: "READY",
+    sent: 0,
+    failed: 0,
+    lastError: null
   };
 
   /* ---------- HELPERS ---------- */
@@ -29,6 +36,13 @@
     report.appendChild(line);
   };
 
+  const getStagedPayload = () => {
+    const raw = localStorage.getItem("OTOS_STAGED_DOCS");
+    if (!raw) return [];
+    try { return JSON.parse(raw); }
+    catch { return []; }
+  };
+
   const setStat = (label, value) => {
     const stats = cardByTitle("Stats");
     if (!stats) return;
@@ -39,94 +53,85 @@
     });
   };
 
-  /* ---------- TOKEN GATE ---------- */
-  const tokenBtn = [...document.querySelectorAll("button")]
-    .find(b => b.textContent.includes("Issue token"));
+  /* ---------- PAYLOAD BUILDER ---------- */
+  const buildNotionPage = (doc) => ({
+    parent: { database_id: NOTION.databaseId },
+    properties: {
+      Name: {
+        title: [{ text: { content: doc.name } }]
+      },
+      Type: {
+        select: { name: doc.type }
+      },
+      Size: {
+        number: doc.size
+      },
+      StagedAt: {
+        date: { start: doc.stagedAt }
+      }
+    },
+    children: [
+      {
+        object: "block",
+        type: "paragraph",
+        paragraph: {
+          rich_text: [
+            { text: { content: doc.preview.slice(0, 2000) } }
+          ]
+        }
+      }
+    ]
+  });
 
-  if (tokenBtn) {
-    tokenBtn.onclick = () => {
-      STATE.tokensIssued = true;
-      highlight("Execution token confirmed");
-    };
+  /* ---------- EXECUTION ---------- */
+  const staged = getStagedPayload();
+
+  if (!staged.length) {
+    highlight("No staged documents found");
+    return;
   }
 
-  /* ---------- FILE INGEST ---------- */
-  const fileInput = document.querySelector("input[type='file']");
-  const ingestBtn = [...document.querySelectorAll("button")]
-    .find(b => b.textContent.includes("Ingest batch"));
+  highlight(`Preparing ${staged.length} document(s) for Notion`);
 
-  if (ingestBtn) {
-    ingestBtn.onclick = async () => {
-      if (!STATE.tokensIssued) {
-        highlight("Ingest blocked — token required");
-        return;
-      }
+  staged.forEach((doc, idx) => {
+    const payload = buildNotionPage(doc);
 
-      if (!fileInput || !fileInput.files.length) {
-        highlight("No files selected");
-        return;
-      }
+    if (!NOTION.enabled) {
+      console.group(`Notion DRY-RUN → ${doc.name}`);
+      console.log(payload);
+      console.groupEnd();
 
-      STATE.mode = "INGESTING";
-      STATE.queue += fileInput.files.length;
-      setStat("Queue", STATE.queue);
-      highlight(`Ingesting ${fileInput.files.length} file(s)`);
+      STATE.sent += 1;
+      setStat("Processed", STATE.sent);
+      highlight(`Dry-run OK: ${doc.name}`);
+      return;
+    }
 
-      for (const file of fileInput.files) {
-        const text = await file.text();
+    /* LIVE SEND (locked) */
+    fetch(NOTION.endpoint, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${window.NOTION_TOKEN}`,
+        "Notion-Version": NOTION.version,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    })
+      .then(r => r.ok ? r.json() : Promise.reject(r))
+      .then(() => {
+        STATE.sent += 1;
+        setStat("Processed", STATE.sent);
+        highlight(`Pushed to Notion: ${doc.name}`);
+      })
+      .catch(err => {
+        STATE.failed += 1;
+        STATE.lastError = err;
+        highlight(`FAILED: ${doc.name}`);
+      });
+  });
 
-        const stagedDoc = {
-          name: file.name,
-          size: file.size,
-          type: file.type || "text/plain",
-          preview: text.slice(0, 800),
-          stagedAt: new Date().toISOString()
-        };
-
-        STATE.staged.push(stagedDoc);
-        STATE.queue -= 1;
-        STATE.processed += 1;
-
-        setStat("Queue", STATE.queue);
-        setStat("Processed", STATE.processed);
-
-        highlight(`Parsed: ${file.name}`);
-      }
-
-      STATE.mode = "STAGED";
-      highlight("All documents staged (Notion dry-run)");
-    };
-  }
-
-  /* ---------- STAGE EXPORT ---------- */
-  const exportBtn = [...document.querySelectorAll("button")]
-    .find(b => b.textContent.includes("Export"));
-
-  if (exportBtn) {
-    exportBtn.onclick = () => {
-      const payload = {
-        engine: STATE.engine,
-        mode: STATE.mode,
-        processed: STATE.processed,
-        staged: STATE.staged,
-        exportedAt: new Date().toISOString()
-      };
-
-      const blob = new Blob(
-        [JSON.stringify(payload, null, 2)],
-        { type: "application/json" }
-      );
-
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "otos-notion-stage-preview.json";
-      a.click();
-
-      highlight("Staged payload exported (Notion-ready)");
-    };
-  }
-
-  /* ---------- BOOT ---------- */
-  highlight("Andy v1.1 online — Notion bridge staged");
+  /* ---------- FINAL ---------- */
+  highlight(`Andy v1.2 complete — ${STATE.sent} ready for Notion`);
+  localStorage.setItem("OTOS_NOTION_READY", "true");
 
 })();
