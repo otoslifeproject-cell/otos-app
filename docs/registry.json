@@ -1,13 +1,38 @@
-{
-  "modules": [
-    {
-      "name": "One Action",
-      "icon": "🔥",
-      "purpose": "Primary business-moving action surfaced by system awareness",
-      "group": "Core",
-      "colour": "neutral",
-      "status": "In progress",
-      "priority": 10
-    }
-  ]
-}
+[
+  {
+    "id": "one-action",
+    "name": "One Action",
+    "slot": "center",
+    "enabled": true
+  },
+  {
+    "id": "projects",
+    "name": "Projects",
+    "slot": "center",
+    "enabled": true
+  },
+  {
+    "id": "reality-radar",
+    "name": "Reality Radar",
+    "slot": "left",
+    "enabled": true
+  },
+  {
+    "id": "system-state",
+    "name": "System State",
+    "slot": "left",
+    "enabled": true
+  },
+  {
+    "id": "notes",
+    "name": "Notes",
+    "slot": "left",
+    "enabled": true
+  },
+  {
+    "id": "andy-agent",
+    "name": "Andy · Agent",
+    "slot": "right",
+    "enabled": true
+  }
+]
