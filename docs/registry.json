@@ -1,38 +1,15 @@
+// ========================================================
+// COPY–REPLACE FILE
+// Path: /docs/registry.json
+// Canonical module registry
+// ========================================================
 [
-  {
-    "id": "reality-radar",
-    "name": "Reality Radar",
-    "slot": "left",
-    "enabled": true
-  },
-  {
-    "id": "system-state",
-    "name": "System State",
-    "slot": "left",
-    "enabled": true
-  },
-  {
-    "id": "notes",
-    "name": "Notes",
-    "slot": "left",
-    "enabled": true
-  },
-  {
-    "id": "one-action",
-    "name": "One Action",
-    "slot": "center",
-    "enabled": true
-  },
-  {
-    "id": "projects",
-    "name": "Projects",
-    "slot": "center",
-    "enabled": true
-  },
-  {
-    "id": "andy",
-    "name": "Andy · Agent",
-    "slot": "right",
-    "enabled": true
-  }
+  { "id": "reality-radar", "name": "Reality Radar", "slot": "left", "enabled": true },
+  { "id": "system-state",  "name": "System State",  "slot": "left", "enabled": true },
+  { "id": "notes",         "name": "Notes",         "slot": "left", "enabled": true },
+
+  { "id": "one-action",    "name": "One Action",    "slot": "center", "enabled": true },
+  { "id": "projects",      "name": "Projects",      "slot": "center", "enabled": true },
+
+  { "id": "andy",          "name": "Andy · Agent",  "slot": "right", "enabled": true }
 ]
