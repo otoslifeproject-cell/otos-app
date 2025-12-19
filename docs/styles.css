@@ -1,25 +1,14 @@
-/* =====================================================
-   OTOS Cockpit — UI Layer v1.2
-   LOCKED BASELINE VISUAL GRID
-   NO LOGIC • NO AGENTS • CSS ONLY
-===================================================== */
-
 :root{
   --bg:#eef4fb;
   --card:#ffffff;
   --ink:#0f172a;
   --muted:#475569;
   --border:rgba(0,0,0,.08);
-
   --parent:#2563eb;
-  --core:#0ea5e9;
   --andy:#16a34a;
-
-  --radius:16px;
-  --radius-sm:12px;
 }
 
-/* BASE RESET */
+/* base */
 *{box-sizing:border-box}
 body{
   margin:0;
@@ -34,12 +23,10 @@ body{
   color:#e5e7eb;
   padding:10px 16px;
   font-size:13px;
-  overflow:hidden;
 }
 .ticker-track{
   display:flex;
   gap:28px;
-  white-space:nowrap;
   animation:drift 22s linear infinite;
 }
 @keyframes drift{
@@ -47,43 +34,31 @@ body{
   to{transform:translateX(-50%)}
 }
 
-/* LOGO — HARD LOCK */
-.logo-anchor{
-  position:fixed;
-  top:56px;
-  left:18px;
-  z-index:10;
+/* LOGO */
+.logo-anchor{position:relative}
+.otos-logo{
+  position:absolute;
+  top:-72px;
+  left:-36px;
+  height:74px;
+  width:auto;
   pointer-events:none;
 }
-.otos-logo{
-  height:48px;
-  width:auto;
-}
 
-/* MAIN WORKSPACE GRID */
+/* LAYOUT */
 .workspace{
   display:grid;
-  grid-template-columns: 360px 1fr 380px;
+  grid-template-columns:1fr 380px;
   gap:18px;
-  padding:96px 18px 90px;
-  align-items:start;
+  padding:18px 18px 80px;
 }
-
-/* LANES */
-.lane{
-  display:flex;
-  flex-direction:column;
-}
-.lane-parent{}
-.lane-core{}
-.lane-andy{}
 
 /* HEADERS */
 .lane-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 .pill{
   padding:6px 12px;
@@ -94,53 +69,21 @@ body{
   background:#fff;
 }
 .parent-pill{color:var(--parent)}
-.core-pill{color:var(--core)}
 .andy-pill{color:var(--andy)}
-.subpill{
-  font-size:12px;
-  color:var(--muted);
-  margin-left:8px;
-}
+.subpill{font-size:12px;color:var(--muted)}
 
 /* CARDS */
 .card{
-  background:rgba(255,255,255,.9);
+  background:rgba(255,255,255,.85);
   border:1px solid var(--border);
-  border-radius:var(--radius);
+  border-radius:16px;
   padding:14px;
   margin-bottom:14px;
-}
-.panel-title{
-  font-size:13px;
-  font-weight:800;
-  margin-bottom:10px;
-  color:#020617;
-}
-
-/* FOCUS */
-.focus-card{
-  border:1px dashed var(--border);
-  border-radius:var(--radius-sm);
-  padding:12px;
-}
-.focus-label{
-  font-size:11px;
-  font-weight:900;
-  color:var(--parent);
-}
-.focus-title{
-  font-size:16px;
-  font-weight:900;
-  margin:4px 0;
-}
-.focus-meta{
-  font-size:12px;
-  color:var(--muted);
 }
 
 /* CHAT */
 .chat-log{
-  height:240px;
+  height:260px;
   overflow:auto;
   background:#f8fafc;
   border-radius:12px;
@@ -153,119 +96,21 @@ body{
   border-left:4px solid var(--parent);
   padding-left:8px;
 }
-.chat-compose{
-  display:flex;
-  gap:10px;
-  margin-top:10px;
-}
 
-/* TELEMETRY */
-.telemetry-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  font-size:12px;
-}
-
-/* CORE ACTION */
-.action-card{
-  border:1px dashed var(--border);
-  border-radius:var(--radius-sm);
-  padding:12px;
-}
-.action-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:8px;
-}
-.action-pill{
-  font-size:11px;
-  font-weight:900;
-  background:#e0f2fe;
-  padding:4px 8px;
-  border-radius:999px;
-}
-.action-title{
-  font-size:18px;
-  font-weight:900;
-  margin:6px 0;
-}
-.action-meta{
-  font-size:12px;
-  color:var(--muted);
-}
-.action-actions{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
-}
-
-/* DECK */
-.deck{
-  border:1px dashed var(--border);
-  border-radius:var(--radius-sm);
-  padding:12px;
-  font-size:13px;
-}
-.deck-empty{
-  color:var(--muted);
-}
-
-/* MODULE TILES — THIS IS THE CENTREPIECE */
-.tiles{
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:14px;
-}
-.tile{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:12px;
-}
-.tile-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-weight:800;
-}
-.tile-tag{
-  font-size:11px;
-  padding:2px 8px;
-  border-radius:999px;
-  background:#f1f5f9;
-  color:#334155;
-}
-.tile-body{
-  font-size:12px;
-  color:var(--muted);
-  margin-top:6px;
-}
-
-/* ANDY */
-.dropzone{
-  border:2px dashed var(--border);
-  border-radius:var(--radius);
-  padding:22px;
-  text-align:center;
-}
-.dz-title{font-weight:900}
-.dz-sub,.dz-mini{font-size:12px;color:var(--muted)}
-.queue{
-  font-size:12px;
-}
-.q-empty{
-  color:var(--muted);
-}
-
-/* INPUTS / BUTTONS */
+/* INPUTS */
 .input{
   width:100%;
   padding:10px;
   border-radius:10px;
   border:1px solid var(--border);
 }
+.chat-compose{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+/* BUTTONS */
 .btn{
   padding:10px 12px;
   border-radius:10px;
@@ -277,12 +122,52 @@ body{
 .btn-ghost{background:#f1f5f9}
 .btn.small{padding:6px 8px;font-size:12px}
 
+/* SETTINGS */
+.settings-panel{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.settings-panel.hidden{display:none}
+.settings-card{
+  background:#fff;
+  padding:18px;
+  border-radius:16px;
+  width:420px;
+}
+.settings-head{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+.setting-row{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  margin-bottom:12px;
+}
+
+/* HINTS */
+.hint{
+  font-size:12px;
+  color:var(--muted);
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.link-status{
+  font-weight:800;
+}
+
 /* FOOTER */
 .footer{
   position:fixed;
   bottom:0;left:0;right:0;
   padding:10px 14px;
-  background:rgba(255,255,255,.9);
+  background:rgba(255,255,255,.8);
   border-top:1px solid var(--border);
   display:flex;
   gap:12px;
