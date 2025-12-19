@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>OTOS · Parent Control</title>
-<link rel="stylesheet" href="/otos-app/docs/styles.css" />
-
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
@@ -34,20 +33,16 @@
       })
       .then(modules => {
         modules.forEach(m => {
-          if (!m.enabled) return;
-          if (!cols[m.slot]) return;
-
+          if (!m.enabled || !cols[m.slot]) return;
           const card = document.createElement('div');
           card.className = 'card';
           card.textContent = m.name;
-
           cols[m.slot].appendChild(card);
         });
       })
       .catch(err => {
         document.body.innerHTML =
-          '<pre>REGISTRY LOAD FAILED\n' + err.message + '</pre>';
-        console.error(err);
+          '<pre>REGISTRY LOAD FAILED\n' + err + '</pre>';
       });
   </script>
 
