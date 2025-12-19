@@ -4,11 +4,10 @@
   <meta charset="UTF-8" />
   <title>OTOS · Parent Core Control</title>
 
-  <!-- ✅ FIXED PATH -->
-  <link rel="stylesheet" href="./docs/styles.css" />
+  <!-- HARD-LOCKED STYLES -->
+  <link rel="stylesheet" href="./styles.css" />
 
-  <!-- Andy engine (present but passive) -->
-  <script src="./docs/andy-engine.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
 
 <body>
@@ -16,38 +15,36 @@
 <header class="topbar">
   <div class="brand">
     <img
+      id="otos-logo"
       class="logo"
-      src="./docs/brand/logo/otos-logo-400.png"
+      src="./brand/logo/otos-logo-400.png"
       alt="OTOS"
     />
     <div class="title">Parent · Core Control</div>
   </div>
-
-  <div class="status-pill">
-    <span class="dot green"></span>
-    <span>System idle · No execution tokens issued</span>
-  </div>
+  <div class="status">System idle · No execution tokens issued</div>
 </header>
 
-<main id="app">
+<main class="grid">
 
-  <section class="column left">
+  <!-- LEFT COLUMN -->
+  <section class="col">
     <div class="card">
       <h3>Parent Node</h3>
-      <p class="muted">Authority · Read / Lock / Authorise</p>
+      <p>Authority · Read / Lock / Authorise</p>
     </div>
 
     <div class="card">
       <h3>Reality Radar</h3>
-      <div class="row"><span>Mode</span><strong>GUIDED</strong></div>
-      <div class="row"><span>Temp</span><strong>4</strong></div>
+      <p><strong>Mode</strong> GUIDED</p>
+      <p><strong>Temp</strong> 4</p>
       <input type="range" min="1" max="10" value="4" />
     </div>
 
     <div class="card">
       <h3>System State</h3>
-      <div class="row"><span>Locks</span><strong>Enforced</strong></div>
-      <div class="row"><span>Memory</span><strong>Tiered</strong></div>
+      <p><strong>Locks</strong> Enforced</p>
+      <p><strong>Memory</strong> Tiered</p>
     </div>
 
     <div class="card">
@@ -63,43 +60,43 @@
     </div>
   </section>
 
-  <section class="column center">
-    <div class="card focus">
+  <!-- CENTRE COLUMN -->
+  <section class="col wide">
+    <div class="card">
       <h3>Focus</h3>
-      <p class="muted">One action · Projects</p>
+      <p>One action · Projects</p>
     </div>
 
-    <div class="card highlight">
+    <div class="card">
       <h3>One Action</h3>
-      <p><strong>Wire Andy intake + stats safely (token-gated)</strong></p>
+      <p>Wire Andy intake + stats safely (token-gated)</p>
     </div>
 
-    <div class="card locked">
+    <div class="card">
       <h3>Projects</h3>
       <p class="muted">(Locked — loads next layer)</p>
     </div>
   </section>
 
-  <section class="column right">
-    <div class="card agent">
+  <!-- RIGHT COLUMN -->
+  <section class="col">
+    <div class="card">
       <h3>Andy · Execution Agent</h3>
       <p class="muted">Feeder · Intake + extraction (no promotion)</p>
     </div>
 
     <div class="card">
       <h3>Intake</h3>
-      <input type="file" multiple />
-      <input type="text" placeholder="Command: A / G / R / C / T / ?" />
+      <input type="file" />
+      <input placeholder="Command: A / G / R / C / T ?" />
       <button>Ingest batch</button>
-      <p class="muted">
-        A analyse · G golden · R revenue · C canon · T tasks · ? notable
-      </p>
+      <p class="muted">A analyse · G golden · R revenue · C canon · T tasks · ? notable</p>
     </div>
 
     <div class="card">
       <h3>Stats</h3>
-      <div class="row"><span>Processed</span><strong>0</strong></div>
-      <div class="row"><span>Queue</span><strong>0</strong></div>
+      <p>Processed <strong>0</strong></p>
+      <p>Queue <strong>0</strong></p>
       <button>Export Tier-3 Archive (JSON)</button>
     </div>
 
@@ -110,6 +107,9 @@
   </section>
 
 </main>
+
+<!-- ANDY ENGINE (SAFE TO LOAD, DOES NOTHING UNTIL TOKENS) -->
+<script src="./andy-engine.js"></script>
 
 </body>
 </html>
