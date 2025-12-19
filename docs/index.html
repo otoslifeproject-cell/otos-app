@@ -3,113 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <title>OTOS · Parent Core Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- HARD-LOCKED STYLES -->
+  <!-- Explicit, stable CSS path (GitHub Pages safe) -->
   <link rel="stylesheet" href="./styles.css" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 </head>
-
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <img
-      id="otos-logo"
-      class="logo"
-      src="./brand/logo/otos-logo-400.png"
-      alt="OTOS"
-    />
-    <div class="title">Parent · Core Control</div>
-  </div>
-  <div class="status">System idle · No execution tokens issued</div>
-</header>
-
-<main class="grid">
-
-  <!-- LEFT COLUMN -->
-  <section class="col">
-    <div class="card">
-      <h3>Parent Node</h3>
-      <p>Authority · Read / Lock / Authorise</p>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="brand">
+      <img
+        id="otoslogo"
+        class="logo"
+        src="./brand/logo/otos-logo-400.png"
+        alt="OTOS"
+      />
+      <div class="title">Parent · Core Control</div>
     </div>
 
-    <div class="card">
-      <h3>Reality Radar</h3>
-      <p><strong>Mode</strong> GUIDED</p>
-      <p><strong>Temp</strong> 4</p>
-      <input type="range" min="1" max="10" value="4" />
+    <div class="system-status">
+      <span class="dot green"></span>
+      System idle · No execution tokens issued
     </div>
+  </header>
 
-    <div class="card">
-      <h3>System State</h3>
-      <p><strong>Locks</strong> Enforced</p>
-      <p><strong>Memory</strong> Tiered</p>
-    </div>
+  <!-- MAIN GRID -->
+  <main id="app">
 
-    <div class="card">
-      <h3>Execution Tokens</h3>
-      <button>Issue token: INGEST + READ + SUGGEST</button>
-      <button class="danger">Revoke tokens</button>
-      <p class="muted">Andy cannot act without explicit tokens.</p>
-    </div>
+    <!-- LEFT COLUMN -->
+    <section class="column">
 
-    <div class="card">
-      <h3>Notes</h3>
-      <textarea placeholder="Quick notes (local only)"></textarea>
-    </div>
-  </section>
+      <div class="card">
+        <h3>Parent Node</h3>
+        <p class="muted">Authority · Read / Lock / Authorise</p>
+      </div>
 
-  <!-- CENTRE COLUMN -->
-  <section class="col wide">
-    <div class="card">
-      <h3>Focus</h3>
-      <p>One action · Projects</p>
-    </div>
+      <div class="card">
+        <h3>Reality Radar</h3>
+        <div class="row">
+          <div>
+            <strong>Mode</strong>
+            <div>GUIDED</div>
+          </div>
+          <div>
+            <strong>Temp</strong>
+            <div>4</div>
+          </div>
+        </div>
+        <input type="range" min="1" max="10" value="4" disabled />
+      </div>
 
-    <div class="card">
-      <h3>One Action</h3>
-      <p>Wire Andy intake + stats safely (token-gated)</p>
-    </div>
+      <div class="card">
+        <h3>System State</h3>
+        <div class="row">
+          <div>Locks</div><div><strong>Enforced</strong></div>
+        </div>
+        <div class="row">
+          <div>Memory</div><div><strong>Tiered</strong></div>
+        </div>
+      </div>
 
-    <div class="card">
-      <h3>Projects</h3>
-      <p class="muted">(Locked — loads next layer)</p>
-    </div>
-  </section>
+      <div class="card">
+        <h3>Execution Tokens</h3>
+        <button id="issue-token">Issue token: INGEST + READ + SUGGEST</button>
+        <button id="revoke-token" class="danger">Revoke tokens</button>
+        <p class="muted">Andy cannot act without explicit tokens.</p>
+      </div>
 
-  <!-- RIGHT COLUMN -->
-  <section class="col">
-    <div class="card">
-      <h3>Andy · Execution Agent</h3>
-      <p class="muted">Feeder · Intake + extraction (no promotion)</p>
-    </div>
+      <div class="card">
+        <h3>Notes</h3>
+        <textarea placeholder="Quick notes (local only)"></textarea>
+      </div>
 
-    <div class="card">
-      <h3>Intake</h3>
-      <input type="file" />
-      <input placeholder="Command: A / G / R / C / T ?" />
-      <button>Ingest batch</button>
-      <p class="muted">A analyse · G golden · R revenue · C canon · T tasks · ? notable</p>
-    </div>
+    </section>
 
-    <div class="card">
-      <h3>Stats</h3>
-      <p>Processed <strong>0</strong></p>
-      <p>Queue <strong>0</strong></p>
-      <button>Export Tier-3 Archive (JSON)</button>
-    </div>
+    <!-- CENTER COLUMN -->
+    <section class="column">
 
-    <div class="card">
-      <h3>Running Highlight Report</h3>
-      <div class="highlight-box"></div>
-    </div>
-  </section>
+      <div class="card">
+        <h3>Focus</h3>
+        <p class="muted">One action · Projects</p>
+      </div>
 
-</main>
+      <div class="card">
+        <h3>One Action</h3>
+        <strong>Wire Andy intake + stats safely (token-gated)</strong>
+      </div>
 
-<!-- ANDY ENGINE (SAFE TO LOAD, DOES NOTHING UNTIL TOKENS) -->
-<script src="./andy-engine.js"></script>
+      <div class="card">
+        <h3>Projects</h3>
+        <p class="muted">(Locked — loads next layer)</p>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN -->
+    <section class="column">
+
+      <div class="card">
+        <h3>Andy · Execution Agent</h3>
+        <p class="muted">Feeder · Intake + extraction (no promotion)</p>
+      </div>
+
+      <div class="card">
+        <h3>Intake</h3>
+        <input type="file" id="file-input" multiple />
+        <div class="row">
+          <input id="cmd" placeholder="Command: A / G / R / C / T / ?" />
+          <button id="ingest-btn">Ingest batch</button>
+        </div>
+        <p class="muted">
+          A analyse · G golden · R revenue · C canon · T tasks · ? notable
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Stats</h3>
+        <div class="row"><div>Processed</div><div id="stat-processed">0</div></div>
+        <div class="row"><div>Queue</div><div id="stat-queue">0</div></div>
+        <button id="export-archive">Export Tier-3 Archive (JSON)</button>
+      </div>
+
+      <div class="card">
+        <h3>Running Highlight Report</h3>
+        <div id="highlight-report" class="highlight-box"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Andy engine loaded AFTER layout (no layout mutation) -->
+  <script src="./andy-engine.js"></script>
 
 </body>
 </html>
