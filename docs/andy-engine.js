@@ -1,17 +1,15 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v1.8
-   ONE ACTION CONTROLS (SAFE, NON-DESTRUCTIVE)
-   Scope: Snooze / Complete / Next Action
-   Mode: Local-state only
+   OTOS — ANDY ENGINE v1.9
+   TASK LIST SURFACE (READ-ONLY, SAFE)
+   Scope: Tasks → Projects awareness (no edits)
    ========================================================= */
 
 (() => {
 
   /* ---------- STATE ---------- */
   const STATE = {
-    engine: "Andy v1.8",
-    topAction: null,
-    history: []
+    engine: "Andy v1.9",
+    tasks: []
   };
 
   /* ---------- HELPERS ---------- */
@@ -27,80 +25,50 @@
     report.appendChild(line);
   };
 
-  const loadTopAction = () => {
-    const raw = localStorage.getItem("OTOS_TOP_ACTION");
-    if (!raw) return null;
+  const loadTasks = () => {
+    const raw = localStorage.getItem("OTOS_TASKS");
+    if (!raw) return [];
     try { return JSON.parse(raw); }
-    catch { return null; }
-  };
-
-  const saveHistory = (entry) => {
-    STATE.history.push(entry);
-    localStorage.setItem(
-      "OTOS_ACTION_HISTORY",
-      JSON.stringify(STATE.history, null, 2)
-    );
+    catch { return []; }
   };
 
   /* ---------- LOAD ---------- */
-  STATE.topAction = loadTopAction();
-  if (!STATE.topAction) {
-    highlight("No active Top Action");
+  STATE.tasks = loadTasks();
+  if (!STATE.tasks.length) {
+    highlight("No tasks to surface");
     return;
   }
 
-  /* ---------- UI HOOK ---------- */
-  const actionCard = cardByTitle("One Action");
-  if (!actionCard) {
-    highlight("One Action card missing");
+  /* ---------- SURFACE INTO UI ---------- */
+  const projectsCard = cardByTitle("Projects");
+  if (!projectsCard) {
+    highlight("Projects card not found");
     return;
   }
 
-  const controls = document.createElement("div");
-  controls.style.marginTop = "10px";
-  controls.style.display = "flex";
-  controls.style.gap = "8px";
+  const list = document.createElement("div");
+  list.style.marginTop = "8px";
+  list.style.fontSize = "13px";
+  list.style.color = "#0f172a";
 
-  const btnComplete = document.createElement("button");
-  btnComplete.textContent = "Complete";
+  STATE.tasks
+    .slice(0, 5)               // top 5 only (safe)
+    .forEach(task => {
+      const row = document.createElement("div");
+      row.style.marginBottom = "6px";
+      row.innerHTML = `
+        <strong>${task.description}</strong><br>
+        <span style="color:#475569">
+          From ${task.source} · Score ${task.score}
+        </span>
+      `;
+      list.appendChild(row);
+    });
 
-  const btnSnooze = document.createElement("button");
-  btnSnooze.textContent = "Snooze";
+  projectsCard.appendChild(list);
 
-  const btnNext = document.createElement("button");
-  btnNext.textContent = "Next Action";
-
-  controls.appendChild(btnComplete);
-  controls.appendChild(btnSnooze);
-  controls.appendChild(btnNext);
-  actionCard.appendChild(controls);
-
-  /* ---------- ACTIONS ---------- */
-  btnComplete.onclick = () => {
-    saveHistory({ action: STATE.topAction, result: "COMPLETED", at: Date.now() });
-    localStorage.removeItem("OTOS_TOP_ACTION");
-    highlight("Top Action marked COMPLETE");
-  };
-
-  btnSnooze.onclick = () => {
-    saveHistory({ action: STATE.topAction, result: "SNOOZED", at: Date.now() });
-    highlight("Top Action snoozed (manual resurface later)");
-  };
-
-  btnNext.onclick = () => {
-    const all = JSON.parse(localStorage.getItem("OTOS_ACTIONS") || "[]");
-    const next = all.find(a => a.id !== STATE.topAction.id);
-    if (!next) {
-      highlight("No further actions available");
-      return;
-    }
-    localStorage.setItem("OTOS_TOP_ACTION", JSON.stringify(next));
-    highlight("Next Action promoted");
-    location.reload();
-  };
-
-  /* ---------- READY ---------- */
-  highlight("One Action controls enabled");
-  localStorage.setItem("OTOS_ACTION_CONTROLS_READY", "true");
+  /* ---------- SIGNAL ---------- */
+  highlight(`Tasks surfaced (${Math.min(STATE.tasks.length, 5)} shown)`);
+  localStorage.setItem("OTOS_TASK_LIST_READY", "true");
 
 })();
