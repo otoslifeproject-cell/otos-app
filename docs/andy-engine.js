@@ -1,16 +1,22 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v2.0
-   PROJECT AGGREGATION + READINESS FLAGS
-   Scope: Tasks → Projects (grouped, read-only)
-   No UI / CSS / layout mutation
+   OTOS — ANDY ENGINE v2.1
+   AGENT READINESS + HANDOVER SIGNAL
+   Scope: Confirm Andy LIVE + Parent handover to EYE21
+   Behaviour only. No UI changes.
    ========================================================= */
 
 (() => {
 
   /* ---------- STATE ---------- */
   const STATE = {
-    engine: "Andy v2.0",
-    projects: {}
+    engine: "Andy v2.1",
+    checks: {
+      ingest: false,
+      classify: false,
+      actions: false,
+      projects: false,
+      notionReady: false
+    }
   };
 
   /* ---------- HELPERS ---------- */
@@ -26,70 +32,35 @@
     report.appendChild(line);
   };
 
-  const loadTasks = () => {
-    const raw = localStorage.getItem("OTOS_TASKS");
-    if (!raw) return [];
-    try { return JSON.parse(raw); }
-    catch { return []; }
-  };
+  const exists = (key) => localStorage.getItem(key) !== null;
 
-  /* ---------- AGGREGATION ---------- */
-  const tasks = loadTasks();
-  if (!tasks.length) {
-    highlight("No tasks found — skipping project aggregation");
-    return;
+  /* ---------- CHECKS ---------- */
+  STATE.checks.ingest        = exists("OTOS_STAGED_DOCS");
+  STATE.checks.classify     = exists("OTOS_CLASSIFIED_DOCS");
+  STATE.checks.actions      = exists("OTOS_ACTIONS");
+  STATE.checks.projects     = exists("OTOS_PROJECTS");
+  STATE.checks.notionReady  = exists("OTOS_NOTION_PUSH_READY");
+
+  Object.entries(STATE.checks).forEach(([k, v]) => {
+    highlight(`Check ${k}: ${v ? "OK" : "MISSING"}`);
+  });
+
+  /* ---------- READY LOGIC ---------- */
+  const allGreen = Object.values(STATE.checks).every(Boolean);
+
+  if (allGreen) {
+    highlight("ANDY STATUS: LIVE + STABLE");
+    highlight("Parent handover authorised → EYE21");
+    localStorage.setItem("OTOS_ANDY_LIVE", "true");
+    localStorage.setItem("OTOS_EYE21_READY", "true");
+  } else {
+    highlight("ANDY STATUS: PARTIAL — awaiting inputs");
   }
 
-  tasks.forEach(t => {
-    const key = t.source || "General";
-    if (!STATE.projects[key]) {
-      STATE.projects[key] = {
-        name: key,
-        tasks: [],
-        readiness: 0
-      };
-    }
-    STATE.projects[key].tasks.push(t);
-  });
-
-  Object.values(STATE.projects).forEach(p => {
-    const avgScore =
-      p.tasks.reduce((s, t) => s + (t.score || 0), 0) / p.tasks.length;
-    p.readiness = Math.round(avgScore);
-  });
-
-  /* ---------- PERSIST ---------- */
+  /* ---------- FINAL ---------- */
   localStorage.setItem(
-    "OTOS_PROJECTS",
-    JSON.stringify(STATE.projects, null, 2)
+    "OTOS_ANDY_STATUS",
+    JSON.stringify({ engine: STATE.engine, checks: STATE.checks }, null, 2)
   );
-
-  /* ---------- SURFACE (READ-ONLY) ---------- */
-  const projectsCard = cardByTitle("Projects");
-  if (projectsCard) {
-    const block = document.createElement("div");
-    block.style.marginTop = "8px";
-    block.style.fontSize = "13px";
-
-    Object.values(STATE.projects)
-      .slice(0, 5)
-      .forEach(p => {
-        const row = document.createElement("div");
-        row.style.marginBottom = "6px";
-        row.innerHTML = `
-          <strong>${p.name}</strong><br>
-          <span style="color:#475569">
-            Tasks ${p.tasks.length} · Readiness ${p.readiness}/10
-          </span>
-        `;
-        block.appendChild(row);
-      });
-
-    projectsCard.appendChild(block);
-  }
-
-  /* ---------- SIGNAL ---------- */
-  highlight(`Projects aggregated (${Object.keys(STATE.projects).length})`);
-  localStorage.setItem("OTOS_PROJECTS_READY", "true");
 
 })();
