@@ -20,26 +20,34 @@
   </div>
 
   <script>
+    const mount = document.getElementById('center');
+
+    function openModule(id) {
+      mount.innerHTML = '';
+      const frame = document.createElement('iframe');
+      frame.src = `./ui/${id}/index.html`;
+      frame.style.width = '100%';
+      frame.style.height = '420px';
+      frame.style.border = '0';
+      mount.appendChild(frame);
+    }
+
     fetch('./registry.json')
       .then(r => r.json())
-      .then(data => {
-        data.forEach(m => {
+      .then(list => {
+        list.forEach(m => {
           if (!m.enabled) return;
 
           const card = document.createElement('div');
           card.className = 'card';
           card.textContent = m.name;
-
-          card.onclick = () => {
-            alert(`OPEN MODULE: ${m.id}`);
-          };
+          card.onclick = () => openModule(m.id);
 
           document.getElementById(m.slot).appendChild(card);
         });
       })
-      .catch(err => {
+      .catch(() => {
         document.body.innerHTML = 'Registry failed to load';
-        console.error(err);
       });
   </script>
 
