@@ -1,50 +1,230 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-GB">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>OTOS · Parent Control</title>
-  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Primary stylesheet (root) -->
+  <link id="css-main" rel="stylesheet" href="styles.css" />
+
+  <!-- If someone loads /docs/index.html, this fallback will pick up docs/styles.css -->
+  <script>
+    (function () {
+      const isDocs = location.pathname.includes("/docs/");
+      if (isDocs) {
+        const l = document.getElementById("css-main");
+        l.href = "styles.css"; // in /docs/, styles.css is alongside
+      }
+    })();
+  </script>
 </head>
 
 <body>
+  <header class="topbar">
+    <div class="brand">
+      <img
+        id="otosLogo"
+        class="logo"
+        src="docs/brand/logo/otos-logo-400.png"
+        alt="OTOS"
+      />
+      <div class="title">Parent · Core Control</div>
+    </div>
 
-  <div class="topbar">
-    <img class="logo" src="./brand/logo/otos-logo-400.png" />
-    <div class="title">Parent · Core Control</div>
-  </div>
+    <div class="ticker" aria-label="System ticker">
+      <span class="dot"></span>
+      <span id="tickerText">System idle · No execution tokens issued</span>
+    </div>
+  </header>
 
-  <div id="app">
-    <div class="column" id="left"></div>
-    <div class="column" id="center"></div>
-    <div class="column" id="right"></div>
-  </div>
+  <main id="app">
+    <!-- LEFT: Parent Node -->
+    <section class="col parent" aria-label="Parent Node">
+      <div class="col-head">
+        <div class="col-badge badge-parent">Parent Node</div>
+        <div class="col-sub">Authority · Read/Lock/Authorise</div>
+      </div>
 
+      <div class="panel">
+        <div class="panel-title">Reality Radar</div>
+        <div class="panel-body">
+          <div class="metric-row">
+            <div class="metric">
+              <div class="metric-k">Mode</div>
+              <div id="radarMode" class="metric-v">GUIDED</div>
+            </div>
+            <div class="metric">
+              <div class="metric-k">Temp</div>
+              <div id="tempVal" class="metric-v">4</div>
+            </div>
+          </div>
+
+          <label class="slider">
+            <span>Proactivity (Temperature)</span>
+            <input id="tempSlider" type="range" min="1" max="10" value="4" />
+          </label>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">System State</div>
+        <div class="panel-body">
+          <div class="kv">
+            <div class="k">Locks</div>
+            <div class="v">Enforced (UI + Agents)</div>
+          </div>
+          <div class="kv">
+            <div class="k">Memory</div>
+            <div class="v">Tiered (Archive-first)</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="token-box">
+            <div class="token-title">Execution Tokens</div>
+            <div class="token-sub">Andy cannot act without explicit tokens.</div>
+
+            <div class="token-row">
+              <button id="btnIssueToken" class="btn primary">Issue token: INGEST + READ + SUGGEST</button>
+              <button id="btnRevokeTokens" class="btn">Revoke tokens</button>
+            </div>
+
+            <div class="kv">
+              <div class="k">Token status</div>
+              <div id="tokenStatus" class="v">None</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Notes</div>
+        <div class="panel-body">
+          <textarea id="parentNotes" class="notes" placeholder="Quick notes (local). No auto-promotion."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- CENTRE: Focus -->
+    <section class="col focus" aria-label="Focus">
+      <div class="col-head">
+        <div class="col-badge badge-focus">Focus</div>
+        <div class="col-sub">One action · Projects</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">One Action</div>
+        <div class="panel-body">
+          <div class="action-card" id="oneAction">
+            Wire Andy intake + stats safely (token-gated).
+          </div>
+        </div>
+      </div>
+
+      <div class="panel grow">
+        <div class="panel-title">Projects</div>
+        <div class="panel-body">
+          <div class="placeholder">
+            (Next layer: load projects/tasks from your DB. For now, this stays locked visually.)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Andy -->
+    <section class="col andy" aria-label="Andy Execution Agent">
+      <div class="col-head">
+        <div class="col-badge badge-andy">Andy · Execution Agent</div>
+        <div class="col-sub">Feeder · Intake + extraction (no promotion)</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Intake</div>
+        <div class="panel-body">
+          <div id="dropzone" class="dropzone" tabindex="0">
+            <div class="dz-top">
+              <div class="dz-title">Drop files here</div>
+              <div class="dz-sub">Any file, any age. Default: dump everything.</div>
+            </div>
+
+            <div class="dz-actions">
+              <input id="filePicker" type="file" multiple />
+              <input id="cmdInput" class="cmd" maxlength="12" placeholder="Command: A / G / R / C / T / ?" />
+              <button id="btnIngest" class="btn primary">Ingest batch</button>
+            </div>
+
+            <div class="dz-hint">
+              Shortcuts: <b>A</b> analyse · <b>G</b> golden · <b>R</b> revenue · <b>C</b> canon candidate · <b>T</b> tasks/blockers · <b>?</b> notable
+            </div>
+
+            <div id="andyGate" class="gate">
+              <div class="gate-title">Andy is idle (token-gated)</div>
+              <div class="gate-sub">Issue a token from Parent to enable ingestion.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Stats</div>
+        <div class="panel-body">
+          <div class="metric-row">
+            <div class="metric">
+              <div class="metric-k">State</div>
+              <div id="andyState" class="metric-v">IDLE</div>
+            </div>
+            <div class="metric">
+              <div class="metric-k">Processed</div>
+              <div id="filesProcessed" class="metric-v">0</div>
+            </div>
+            <div class="metric">
+              <div class="metric-k">Queue</div>
+              <div id="filesQueued" class="metric-v">0</div>
+            </div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Last completed</div>
+            <div id="lastCompleted" class="v">—</div>
+          </div>
+
+          <div class="kv">
+            <div class="k">Ready for next</div>
+            <div id="readySignal" class="v">Yes (idle)</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="token-row">
+            <button id="btnExportTier3" class="btn">Export Tier-3 Archive (JSON)</button>
+            <button id="btnClearLocal" class="btn danger">Clear local cache</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel grow">
+        <div class="panel-title">Running Highlight Report</div>
+        <div class="panel-body">
+          <div id="highlightFeed" class="feed"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+
+  <!-- Robust logo fallback (locked path first, then fallback for /docs loads) -->
   <script>
-    const cols = {
-      left: document.getElementById('left'),
-      center: document.getElementById('center'),
-      right: document.getElementById('right')
-    };
-
-    fetch('./registry.json')
-      .then(r => {
-        if (!r.ok) throw new Error('Registry fetch failed');
-        return r.json();
-      })
-      .then(modules => {
-        modules.forEach(m => {
-          if (!m.enabled || !cols[m.slot]) return;
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.textContent = m.name;
-          cols[m.slot].appendChild(card);
-        });
-      })
-      .catch(err => {
-        document.body.innerHTML =
-          '<pre>REGISTRY LOAD FAILED\n' + err + '</pre>';
+    (function () {
+      const img = document.getElementById("otosLogo");
+      img.addEventListener("error", function () {
+        // If /docs/... fails, try relative in case page is served from /docs/
+        if (img.src.includes("/docs/brand/logo/")) {
+          img.src = "brand/logo/otos-logo-400.png";
+        }
       });
+    })();
   </script>
-
 </body>
 </html>
