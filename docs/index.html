@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <title>OTOS · Parent Core Control</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Main stylesheet -->
-  <link id="css-main" rel="stylesheet" href="./docs/styles.css" />
+  <!-- MAIN CSS (single source of truth) -->
+  <link id="css-main" rel="stylesheet" href="./styles.css" />
 
-  <!-- Docs fallback -->
+  <!-- PATH SAFETY: allow /otos-app/ or /docs/ -->
   <script>
     (function () {
-      if (location.pathname.includes("/docs/")) {
-        const l = document.getElementById("css-main");
-        l.href = "styles.css";
-      }
+      const p = location.pathname;
+      const css = document.getElementById("css-main");
+      if (p.includes("/docs/")) css.href = "styles.css";
+      if (!p.includes("/docs/")) css.href = "docs/styles.css";
     })();
   </script>
+
+  <!-- ANDY ENGINE -->
+  <script src="./andy-engine.js" defer></script>
 </head>
 
 <body>
@@ -26,112 +28,141 @@
     <img
       id="otos-logo"
       class="logo"
-      src="otos-app/docs/brand/logo/otos-logo-400.png"
+      src="docs/brand/logo/otos-logo-400.png"
       alt="OTOS"
     />
     <div class="title">Parent · Core Control</div>
   </div>
 
-  <div class="system-pill ok">
-    System idle · No execution tokens issued
+  <div class="status-pill">
+    <span class="dot green"></span>
+    <span id="system-status">System idle · No execution tokens issued</span>
   </div>
 </header>
 
 <main id="app">
 
-  <!-- LEFT -->
+  <!-- LEFT COLUMN -->
   <section class="column left">
+
     <div class="card">
       <h3>Parent Node</h3>
       <p class="muted">Authority · Read / Lock / Authorise</p>
     </div>
 
     <div class="card">
-      <h4>Reality Radar</h4>
+      <h3>Reality Radar</h3>
       <div class="row">
-        <span>Mode</span><strong>GUIDED</strong>
+        <span>Mode</span>
+        <strong>GUIDED</strong>
       </div>
       <div class="row">
-        <span>Temp</span><strong>4</strong>
+        <span>Temp</span>
+        <strong id="temp">4</strong>
       </div>
+      <input type="range" min="1" max="10" value="4" />
     </div>
 
     <div class="card">
-      <h4>System State</h4>
+      <h3>System State</h3>
       <div class="row"><span>Locks</span><strong>Enforced</strong></div>
       <div class="row"><span>Memory</span><strong>Tiered</strong></div>
     </div>
 
     <div class="card">
-      <h4>Execution Tokens</h4>
-      <button id="issue-token" class="btn primary">
-        Issue token: INGEST + READ + SUGGEST
-      </button>
-      <button id="revoke-token" class="btn danger">
-        Revoke tokens
-      </button>
-      <div class="muted small">Andy cannot act without tokens.</div>
+      <h3>Execution Tokens</h3>
+      <button id="issue-token">Issue token: INGEST + READ + SUGGEST</button>
+      <button id="revoke-token" class="danger">Revoke tokens</button>
+      <p class="muted">Andy cannot act without explicit tokens.</p>
     </div>
 
     <div class="card">
-      <h4>Notes</h4>
+      <h3>Notes</h3>
       <textarea placeholder="Quick notes (local only)"></textarea>
     </div>
+
   </section>
 
-  <!-- CENTER -->
+  <!-- CENTER COLUMN -->
   <section class="column center">
+
     <div class="card focus">
       <h3>Focus</h3>
-      <p>One action · Projects</p>
-      <div class="highlight">
-        Wire Andy intake + stats safely (token-gated)
-      </div>
+      <p class="muted">One action · Projects</p>
     </div>
 
-    <div class="card">
-      <h4>Projects</h4>
+    <div class="card highlight">
+      <h3>One Action</h3>
+      <p><strong>Wire Andy intake + stats safely (token-gated)</strong></p>
+    </div>
+
+    <div class="card locked">
+      <h3>Projects</h3>
       <p class="muted">(Locked — loads next layer)</p>
     </div>
+
   </section>
 
-  <!-- RIGHT -->
+  <!-- RIGHT COLUMN -->
   <section class="column right">
-    <div class="card">
+
+    <div class="card agent">
       <h3>Andy · Execution Agent</h3>
       <p class="muted">Feeder · Intake + extraction (no promotion)</p>
     </div>
 
     <div class="card">
-      <h4>Intake</h4>
+      <h3>Intake</h3>
+
       <input id="file-input" type="file" multiple />
-      <div class="row">
-        <input id="cmd" placeholder="Command: A / G / R / C / T / ?" />
-        <button id="ingest-btn" class="btn primary">Ingest batch</button>
-      </div>
-      <div class="muted small">
+      <input
+        id="cmd"
+        type="text"
+        placeholder="Command: A / G / R / C / T / ?"
+      />
+      <button id="ingest-btn">Ingest batch</button>
+
+      <p class="muted">
         A analyse · G golden · R revenue · C canon · T tasks · ? notable
-      </div>
+      </p>
     </div>
 
     <div class="card">
-      <h4>Stats</h4>
-      <div class="row"><span>State</span><strong id="state">IDLE</strong></div>
-      <div class="row"><span>Processed</span><strong id="processed">0</strong></div>
+      <h3>Stats</h3>
+      <div class="row"><span>State</span><strong id="andy-state">IDLE</strong></div>
+      <div class="row"><span>Processed</span><strong id="count">0</strong></div>
       <div class="row"><span>Queue</span><strong id="queue">0</strong></div>
-      <button id="export-archive" class="btn">
-        Export Tier-3 Archive (JSON)
-      </button>
+
+      <button id="export-archive">Export Tier-3 Archive (JSON)</button>
+      <button id="clear-cache" class="danger">Clear local cache</button>
     </div>
 
     <div class="card">
-      <h4>Running Highlight Report</h4>
+      <h3>Running Highlight Report</h3>
       <div id="highlight-report" class="highlight-box"></div>
     </div>
+
   </section>
 
 </main>
 
-<script src="./docs/andy-engine.js"></script>
+<!-- UI WIRING -->
+<script>
+  document.getElementById("issue-token").onclick = () => ANDY.issueTokens();
+  document.getElementById("revoke-token").onclick = () => ANDY.revokeTokens();
+
+  document.getElementById("ingest-btn").onclick = () => {
+    const files = document.getElementById("file-input").files;
+    const cmd = document.getElementById("cmd").value || "A";
+    ANDY.ingestFiles(files, cmd);
+  };
+
+  document.getElementById("export-archive").onclick = () =>
+    ANDY.exportArchive();
+
+  document.getElementById("clear-cache").onclick = () =>
+    ANDY.clearCache();
+</script>
+
 </body>
 </html>
