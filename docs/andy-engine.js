@@ -1,130 +1,147 @@
 /* ======================================================
-   ANDY · EXECUTION ENGINE v1
-   Scope: Intake → Analyse → Highlight → Archive
-   Mode: Local-first, token-gated, no promotion
+   ANDY ENGINE v1.0 — SAFE INGEST + HIGHLIGHTS
+   Contract: EYE20 (read-only, no promotion)
    ====================================================== */
 
-const AndyEngine = (() => {
+(() => {
   const state = {
-    tokens: false,
+    tokens: null,
+    registry: [],
     queue: [],
     processed: 0,
     highlights: []
   };
 
-  /* ---------- TOKEN CONTROL ---------- */
+  const $ = (id) => document.getElementById(id);
 
+  /* ---------- Registry ---------- */
+  async function loadRegistry() {
+    try {
+      const res = await fetch("registry.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("Registry HTTP error");
+      state.registry = await res.json();
+      console.log("Registry loaded", state.registry);
+      return true;
+    } catch (e) {
+      console.error("Registry load failed", e);
+      banner("Registry load failed", "error");
+      return false;
+    }
+  }
+
+  /* ---------- Tokens ---------- */
   function issueTokens() {
-    state.tokens = true;
-    log("Execution tokens ISSUED");
+    state.tokens = {
+      ingest: true,
+      read: true,
+      suggest: true
+    };
+    banner("Execution tokens issued", "ok");
   }
 
   function revokeTokens() {
-    state.tokens = false;
-    log("Execution tokens REVOKED");
+    state.tokens = null;
+    banner("Execution tokens revoked", "warn");
   }
 
-  function canRun() {
-    return state.tokens === true;
-  }
-
-  /* ---------- INGEST ---------- */
-
-  function ingestFiles(files, command = "A") {
-    if (!canRun()) {
-      log("BLOCKED: No execution tokens");
+  /* ---------- Ingest ---------- */
+  async function ingestFiles(files, mode) {
+    if (!state.tokens?.ingest) {
+      banner("No ingest token", "error");
       return;
     }
 
-    [...files].forEach(file => {
-      state.queue.push({
-        file,
-        command,
-        status: "queued"
-      });
-    });
+    for (const file of files) {
+      state.queue.push(file);
+    }
 
-    log(`${files.length} file(s) queued`);
-    processQueue();
+    processQueue(mode);
   }
 
-  /* ---------- PROCESS ---------- */
-
-  async function processQueue() {
-    while (state.queue.length > 0 && canRun()) {
-      const item = state.queue.shift();
-      await analyse(item);
+  async function processQueue(mode) {
+    while (state.queue.length) {
+      const file = state.queue.shift();
+      await analyseFile(file, mode);
       state.processed++;
       updateStats();
     }
+    banner("Batch complete", "ok");
   }
 
-  async function analyse(item) {
-    const text = await item.file.text();
+  async function analyseFile(file, mode) {
+    const text = await file.text();
 
-    const result = {
-      name: item.file.name,
-      size: item.file.size,
-      flags: detectSignals(text),
-      summary: summarise(text)
+    const signals = {
+      golden: /golden|canonical|flagship|core/i.test(text),
+      revenue: /revenue|income|£|\$/i.test(text),
+      tasks: /todo|task|blocker|next action/i.test(text),
+      nhs: /nhs|ics|trust|commission/i.test(text)
     };
 
-    state.highlights.push(result);
-    log(`Processed: ${item.file.name}`);
+    if (signals.golden) pushHighlight("Golden language detected", file.name);
+    if (signals.revenue) pushHighlight("Revenue signal", file.name);
+    if (signals.tasks) pushHighlight("Task / blocker detected", file.name);
+    if (signals.nhs) pushHighlight("NHS-relevant content", file.name);
+
+    archiveTier3(file.name, text, signals);
   }
 
-  /* ---------- INTELLIGENCE ---------- */
-
-  function detectSignals(text) {
-    const signals = [];
-
-    if (/addiction|adhd|mental/i.test(text)) signals.push("CORE_THEME");
-    if (/cost|£|\$/i.test(text)) signals.push("ECONOMIC_SIGNAL");
-    if (/nhs|policy|probation/i.test(text)) signals.push("SYSTEM_SIGNAL");
-    if (/quote|“|”/i.test(text)) signals.push("LANGUAGE_GOLD");
-
-    return signals;
+  /* ---------- Highlight ---------- */
+  function pushHighlight(label, source) {
+    state.highlights.push({ label, source, ts: new Date().toISOString() });
+    renderHighlights();
   }
 
-  function summarise(text) {
-    return text.slice(0, 400).replace(/\s+/g, " ") + "...";
+  function renderHighlights() {
+    const box = document.getElementById("highlight-report");
+    if (!box) return;
+    box.innerHTML = state.highlights
+      .slice(-10)
+      .map(h => `• ${h.label} — ${h.source}`)
+      .join("<br>");
   }
 
-  /* ---------- EXPORT ---------- */
+  /* ---------- Archive ---------- */
+  function archiveTier3(name, content, signals) {
+    const record = {
+      name,
+      content,
+      signals,
+      ts: new Date().toISOString()
+    };
+    const store = JSON.parse(localStorage.getItem("andy-archive") || "[]");
+    store.push(record);
+    localStorage.setItem("andy-archive", JSON.stringify(store));
+  }
 
   function exportArchive() {
-    const blob = new Blob(
-      [JSON.stringify(state.highlights, null, 2)],
-      { type: "application/json" }
-    );
-
+    const data = localStorage.getItem("andy-archive");
+    if (!data) return;
+    const blob = new Blob([data], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = "andy-tier3-archive.json";
     a.click();
   }
 
-  /* ---------- UI HELPERS ---------- */
-
-  function log(msg) {
-    const box = document.querySelector("#andy-log");
-    if (box) box.textContent += `\n${msg}`;
-    console.log("[ANDY]", msg);
+  /* ---------- UI ---------- */
+  function banner(msg, type) {
+    console.log(`[${type}]`, msg);
   }
 
   function updateStats() {
-    document.querySelector("#andy-processed").textContent = state.processed;
-    document.querySelector("#andy-queue").textContent = state.queue.length;
+    if ($("stat-processed")) $("stat-processed").textContent = state.processed;
+    if ($("stat-queue")) $("stat-queue").textContent = state.queue.length;
   }
 
-  /* ---------- PUBLIC API ---------- */
-
-  return {
+  /* ---------- Bindings ---------- */
+  window.ANDY = {
+    loadRegistry,
     issueTokens,
     revokeTokens,
     ingestFiles,
     exportArchive
   };
-})();
 
-window.AndyEngine = AndyEngine;
+  loadRegistry();
+})();
