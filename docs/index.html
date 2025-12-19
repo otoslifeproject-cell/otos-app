@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <title>OTOS · Parent Control</title>
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="/otos-app/docs/styles.css" />
 </head>
 
 <body>
 
   <div class="topbar">
-    <img class="logo" src="./brand/logo/otos-logo-400.png" />
+    <img class="logo" src="/otos-app/docs/brand/logo/otos-logo-400.png" />
     <div class="title">Parent · Core Control</div>
   </div>
 
@@ -26,8 +26,11 @@
       right: document.getElementById('right')
     };
 
-    fetch('./docs/registry.json')
-      .then(r => r.json())
+    fetch('/otos-app/docs/registry.json')
+      .then(r => {
+        if (!r.ok) throw new Error('Registry fetch failed');
+        return r.json();
+      })
       .then(modules => {
         modules.forEach(m => {
           if (!m.enabled) return;
@@ -41,7 +44,7 @@
         });
       })
       .catch(err => {
-        document.body.innerHTML = 'REGISTRY LOAD FAILED';
+        document.body.innerHTML = '<pre>REGISTRY LOAD FAILED\n' + err + '</pre>';
         console.error(err);
       });
   </script>
