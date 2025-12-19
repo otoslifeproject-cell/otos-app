@@ -1,102 +1,85 @@
-/* =========================================================
-   ANDY ENGINE — SAFE BASELINE (NO LAYOUT TOUCHING)
-   ========================================================= */
+/* OTOS · Andy Execution Engine (SAFE / NO-UI-TOUCH) */
+/* Layout is NEVER modified here */
 
-(() => {
-  const ANDY = {
+(function () {
+  const STATE = {
     tokens: false,
-    stats: {
-      processed: 0,
-      queue: 0
-    },
-    highlight: [],
-    log(msg) {
-      this.highlight.push(msg);
-      renderHighlights();
-    }
+    processed: 0,
+    queue: 0
   };
 
-  /* -------------------------
-     DOM LOOKUPS (STRICT)
-  ------------------------- */
-  const els = {
-    issueToken: document.getElementById("issue-token"),
-    revokeToken: document.getElementById("revoke-token"),
-    ingestBtn: document.getElementById("ingest-btn"),
-    fileInput: document.getElementById("file-input"),
-    cmdInput: document.getElementById("cmd"),
-    statProcessed: document.getElementById("stat-processed"),
-    statQueue: document.getElementById("stat-queue"),
-    highlight: document.getElementById("highlight-report")
-  };
+  const qs = (sel) => document.querySelector(sel);
+  const qsa = (sel) => Array.from(document.querySelectorAll(sel));
 
-  if (!els.issueToken || !els.ingestBtn) {
-    console.warn("ANDY: DOM not ready or ids missing");
-    return;
+  function setText(label, value) {
+    const rows = qsa(".stats");
+    rows.forEach(r => {
+      if (r.textContent.includes(label)) {
+        const strong = r.querySelector("strong");
+        if (strong) strong.textContent = value;
+      }
+    });
   }
 
-  /* -------------------------
-     RENDER
-  ------------------------- */
-  function renderStats() {
-    els.statProcessed.textContent = ANDY.stats.processed;
-    els.statQueue.textContent = ANDY.stats.queue;
+  function highlight(msg) {
+    const box = document.querySelector(".card h3")
+      ?.closest(".card")
+      ?.parentElement
+      ?.querySelector(".card:last-child p");
+    if (box) box.textContent = msg;
   }
 
-  function renderHighlights() {
-    if (!els.highlight) return;
-    els.highlight.innerHTML = ANDY.highlight
-      .slice(-5)
-      .map(l => `<div>• ${l}</div>`)
-      .join("");
+  /* TOKEN CONTROL */
+  qsa("button").forEach(btn => {
+    if (btn.textContent.includes("Issue token")) {
+      btn.onclick = () => {
+        STATE.tokens = true;
+        highlight("Andy engine ready (tokens issued)");
+      };
+    }
+    if (btn.textContent.includes("Revoke")) {
+      btn.onclick = () => {
+        STATE.tokens = false;
+        highlight("Andy engine idle (tokens revoked)");
+      };
+    }
+  });
+
+  /* INGEST */
+  const ingestBtn = qsa("button").find(b => b.textContent.includes("Ingest"));
+  if (ingestBtn) {
+    ingestBtn.onclick = () => {
+      if (!STATE.tokens) {
+        highlight("Blocked: no execution tokens");
+        return;
+      }
+      STATE.queue += 1;
+      setText("Queue", STATE.queue);
+      highlight("Ingest queued");
+      setTimeout(() => {
+        STATE.queue -= 1;
+        STATE.processed += 1;
+        setText("Queue", STATE.queue);
+        setText("Processed", STATE.processed);
+        highlight("Ingest complete");
+      }, 600);
+    };
   }
 
-  /* -------------------------
-     TOKEN CONTROL
-  ------------------------- */
-  els.issueToken.onclick = () => {
-    ANDY.tokens = true;
-    ANDY.log("Execution tokens issued");
-  };
+  /* EXPORT */
+  const exportBtn = qsa("button").find(b => b.textContent.includes("Export"));
+  if (exportBtn) {
+    exportBtn.onclick = () => {
+      const blob = new Blob([JSON.stringify({
+        processed: STATE.processed,
+        timestamp: new Date().toISOString()
+      }, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "otos-tier3-archive.json";
+      a.click();
+      highlight("Archive exported");
+    };
+  }
 
-  els.revokeToken.onclick = () => {
-    ANDY.tokens = false;
-    ANDY.log("Execution tokens revoked");
-  };
-
-  /* -------------------------
-     INGEST (SAFE / NO SIDE FX)
-  ------------------------- */
-  els.ingestBtn.onclick = () => {
-    if (!ANDY.tokens) {
-      ANDY.log("Blocked: no execution tokens");
-      return;
-    }
-
-    const files = els.fileInput.files;
-    if (!files || files.length === 0) {
-      ANDY.log("No files selected");
-      return;
-    }
-
-    const cmd = (els.cmdInput.value || "").toUpperCase().trim();
-
-    ANDY.stats.queue += files.length;
-    renderStats();
-    ANDY.log(`Ingest started (${files.length} files, cmd=${cmd || "A"})`);
-
-    // simulate safe processing
-    setTimeout(() => {
-      ANDY.stats.processed += files.length;
-      ANDY.stats.queue = 0;
-      renderStats();
-      ANDY.log("Ingest complete (idle)");
-    }, 500);
-  };
-
-  /* -------------------------
-     BOOT STATE
-  ------------------------- */
-  ANDY.log("Andy engine ready (idle)");
-  renderStats();
 })();
