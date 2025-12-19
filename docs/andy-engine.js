@@ -1,24 +1,22 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v1.6
-   ACTION DERIVATION + PRIORITY SCORING
-   Scope: Classified Docs → Tasks → One Action
-   No UI / CSS / layout mutations
+   OTOS — ANDY ENGINE v1.7
+   ONE ACTION SURFACE (READ-ONLY, SAFE)
+   Scope: Top Action → UI display
+   RULES: No layout mutation, no removals, no reflow
    ========================================================= */
 
 (() => {
 
   /* ---------- STATE ---------- */
   const STATE = {
-    engine: "Andy v1.6",
-    tasks: [],
-    actions: [],
+    engine: "Andy v1.7",
     topAction: null
   };
 
   /* ---------- HELPERS ---------- */
   const cardByTitle = (title) =>
-    Array.from(document.querySelectorAll("div"))
-      .find(d => d.textContent?.trim().startsWith(title));
+    Array.from(document.querySelectorAll(".card"))
+      .find(c => c.querySelector("h3")?.textContent.trim() === title);
 
   const highlight = (msg) => {
     const report = cardByTitle("Running Highlight Report");
@@ -28,59 +26,45 @@
     report.appendChild(line);
   };
 
-  const getBuckets = () => {
-    const raw = localStorage.getItem("OTOS_CLASSIFIED_DOCS");
-    if (!raw) return null;
-    try { return JSON.parse(raw); }
-    catch { return null; }
-  };
-
-  /* ---------- TASK DERIVATION ---------- */
-  const deriveTasks = (bucket, doc) => ({
-    id: crypto.randomUUID(),
-    source: doc.name,
-    bucket,
-    createdAt: new Date().toISOString(),
-    urgency: Math.floor(Math.random() * 10) + 1,
-    impact: Math.floor(Math.random() * 10) + 1,
-    description: `Review ${doc.name} (${bucket})`
-  });
-
-  /* ---------- ACTION SCORING ---------- */
-  const scoreTask = (task) =>
-    Math.round((task.urgency * 0.6) + (task.impact * 0.4));
-
-  /* ---------- EXECUTION ---------- */
-  const buckets = getBuckets();
-  if (!buckets) {
-    highlight("No classified docs — skipping task derivation");
+  /* ---------- LOAD TOP ACTION ---------- */
+  const raw = localStorage.getItem("OTOS_TOP_ACTION");
+  if (!raw) {
+    highlight("No Top Action found");
     return;
   }
 
-  Object.entries(buckets).forEach(([bucket, docs]) => {
-    docs.forEach(doc => {
-      const task = deriveTasks(bucket, doc);
-      task.score = scoreTask(task);
-      STATE.tasks.push(task);
-    });
-  });
-
-  if (!STATE.tasks.length) {
-    highlight("No tasks generated");
+  try {
+    STATE.topAction = JSON.parse(raw);
+  } catch {
+    highlight("Failed to parse Top Action");
     return;
   }
 
-  STATE.actions = STATE.tasks.sort((a, b) => b.score - a.score);
-  STATE.topAction = STATE.actions[0];
+  /* ---------- SURFACE INTO UI ---------- */
+  const actionCard = cardByTitle("One Action");
+  if (!actionCard) {
+    highlight("One Action card not found");
+    return;
+  }
 
-  /* ---------- PERSIST ---------- */
-  localStorage.setItem("OTOS_TASKS", JSON.stringify(STATE.tasks, null, 2));
-  localStorage.setItem("OTOS_ACTIONS", JSON.stringify(STATE.actions, null, 2));
-  localStorage.setItem("OTOS_TOP_ACTION", JSON.stringify(STATE.topAction, null, 2));
+  // safe append only
+  const block = document.createElement("div");
+  block.style.marginTop = "8px";
+  block.style.fontSize = "13px";
+  block.style.color = "#0f172a";
+
+  block.innerHTML = `
+    <strong>${STATE.topAction.description}</strong><br>
+    <span style="color:#475569">
+      Source: ${STATE.topAction.source}<br>
+      Priority score: ${STATE.topAction.score}
+    </span>
+  `;
+
+  actionCard.appendChild(block);
 
   /* ---------- SIGNAL ---------- */
-  highlight(`Tasks generated: ${STATE.tasks.length}`);
-  highlight(`Top Action → ${STATE.topAction.description} (score ${STATE.topAction.score})`);
-  highlight("Andy ready to surface One Action");
+  highlight("Top Action surfaced (read-only)");
+  localStorage.setItem("OTOS_ONE_ACTION_READY", "true");
 
 })();
