@@ -1,7 +1,7 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v2.3
-   NOTION LIVE TOGGLE + WRITE GUARD
-   Scope: Safe → Live switch with hard Parent consent
+   OTOS — ANDY ENGINE v2.4
+   NOTION WRITE EXECUTOR (GUARDED)
+   Scope: Execute queued writes ONLY when LIVE guard passes
    Behaviour only. No UI / CSS changes.
    ========================================================= */
 
@@ -9,15 +9,22 @@
 
   /* ---------- CONFIG ---------- */
   const NOTION = {
-    enabled: false,                 // hard default
-    version: "2022-06-28"
+    endpoint: "https://api.notion.com/v1/pages",
+    version: "2022-06-28",
+    databases: {
+      ANALYSE: "NOTION_DB_ANALYSE_ID",
+      GOLDEN: "NOTION_DB_GOLDEN_ID",
+      REVENUE: "NOTION_DB_REVENUE_ID",
+      CANON: "NOTION_DB_CANON_ID",
+      TASK: "NOTION_DB_TASK_ID"
+    }
   };
 
   /* ---------- STATE ---------- */
   const STATE = {
-    engine: "Andy v2.3",
-    liveArmed: false,
-    consentHash: null
+    engine: "Andy v2.4",
+    sent: 0,
+    failed: 0
   };
 
   /* ---------- HELPERS ---------- */
@@ -33,59 +40,85 @@
     report.appendChild(line);
   };
 
-  const save = (k, v) => localStorage.setItem(k, JSON.stringify(v, null, 2));
+  const canWrite = () =>
+    typeof window.OTOS_CAN_WRITE_NOTION === "function" &&
+    window.OTOS_CAN_WRITE_NOTION() === true;
 
-  /* ---------- CONSENT FLOW ---------- */
-  const tokenCard = cardByTitle("Execution Tokens");
-  if (!tokenCard) {
-    highlight("Live toggle unavailable (token card missing)");
+  const getBuckets = () => {
+    const raw = localStorage.getItem("OTOS_CLASSIFIED_DOCS");
+    if (!raw) return null;
+    try { return JSON.parse(raw); }
+    catch { return null; }
+  };
+
+  const buildNotionPage = (doc, dbId) => ({
+    parent: { database_id: dbId },
+    properties: {
+      Name: { title: [{ text: { content: doc.name } }] },
+      Type: { select: { name: doc.type || "text" } },
+      Size: { number: doc.size || 0 },
+      ImportedAt: { date: { start: new Date().toISOString() } }
+    },
+    children: [
+      {
+        object: "block",
+        type: "paragraph",
+        paragraph: {
+          rich_text: [{ text: { content: doc.preview.slice(0, 1800) } }]
+        }
+      }
+    ]
+  });
+
+  /* ---------- EXECUTION ---------- */
+  if (!canWrite()) {
+    highlight("Write executor idle (SAFE MODE)");
     return;
   }
 
-  const issueBtn = Array.from(tokenCard.querySelectorAll("button"))
-    .find(b => b.textContent.includes("Issue"));
-  const revokeBtn = Array.from(tokenCard.querySelectorAll("button"))
-    .find(b => b.textContent.includes("Revoke"));
+  const buckets = getBuckets();
+  if (!buckets) {
+    highlight("No classified buckets to write");
+    return;
+  }
 
-  if (issueBtn) {
-    issueBtn.addEventListener("click", () => {
-      STATE.liveArmed = true;
-      STATE.consentHash = crypto.randomUUID();
-      NOTION.enabled = true;
+  highlight("LIVE WRITE ENABLED — pushing to Notion");
 
-      save("OTOS_LIVE_CONSENT", {
-        armedAt: new Date().toISOString(),
-        consentHash: STATE.consentHash
+  Object.entries(buckets).forEach(([bucket, docs]) => {
+    const dbId = NOTION.databases[bucket];
+    if (!dbId || !docs.length) return;
+
+    docs.forEach(doc => {
+      const payload = buildNotionPage(doc, dbId);
+
+      fetch(NOTION.endpoint, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${window.NOTION_TOKEN}`,
+          "Notion-Version": NOTION.version,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.ok ? r.json() : Promise.reject(r))
+      .then(() => {
+        STATE.sent += 1;
+        highlight(`LIVE → ${doc.name} → ${bucket}`);
+      })
+      .catch(err => {
+        STATE.failed += 1;
+        highlight(`FAILED → ${doc.name}`);
+        console.error(err);
       });
-
-      highlight("LIVE WRITE ARMED (Parent consent)");
-      highlight(`Consent hash: ${STATE.consentHash}`);
     });
-  }
-
-  if (revokeBtn) {
-    revokeBtn.addEventListener("click", () => {
-      STATE.liveArmed = false;
-      NOTION.enabled = false;
-      STATE.consentHash = null;
-
-      localStorage.removeItem("OTOS_LIVE_CONSENT");
-      highlight("LIVE WRITE REVOKED — SAFE MODE");
-    });
-  }
-
-  /* ---------- GUARD ---------- */
-  window.OTOS_CAN_WRITE_NOTION = () => {
-    const consent = localStorage.getItem("OTOS_LIVE_CONSENT");
-    return Boolean(consent && NOTION.enabled && STATE.liveArmed);
-  };
-
-  /* ---------- BOOT ---------- */
-  save("OTOS_ANDY_LIVE_TOGGLE", {
-    engine: STATE.engine,
-    liveArmed: STATE.liveArmed
   });
 
-  highlight("Live-write guard initialised");
+  /* ---------- FINAL ---------- */
+  localStorage.setItem(
+    "OTOS_NOTION_WRITE_STATUS",
+    JSON.stringify({ sent: STATE.sent, failed: STATE.failed }, null, 2)
+  );
+
+  highlight(`Notion write complete (sent:${STATE.sent} failed:${STATE.failed})`);
 
 })();
