@@ -1,16 +1,17 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v1.7
-   ONE ACTION SURFACE (READ-ONLY, SAFE)
-   Scope: Top Action → UI display
-   RULES: No layout mutation, no removals, no reflow
+   OTOS — ANDY ENGINE v1.8
+   ONE ACTION CONTROLS (SAFE, NON-DESTRUCTIVE)
+   Scope: Snooze / Complete / Next Action
+   Mode: Local-state only
    ========================================================= */
 
 (() => {
 
   /* ---------- STATE ---------- */
   const STATE = {
-    engine: "Andy v1.7",
-    topAction: null
+    engine: "Andy v1.8",
+    topAction: null,
+    history: []
   };
 
   /* ---------- HELPERS ---------- */
@@ -26,45 +27,80 @@
     report.appendChild(line);
   };
 
-  /* ---------- LOAD TOP ACTION ---------- */
-  const raw = localStorage.getItem("OTOS_TOP_ACTION");
-  if (!raw) {
-    highlight("No Top Action found");
+  const loadTopAction = () => {
+    const raw = localStorage.getItem("OTOS_TOP_ACTION");
+    if (!raw) return null;
+    try { return JSON.parse(raw); }
+    catch { return null; }
+  };
+
+  const saveHistory = (entry) => {
+    STATE.history.push(entry);
+    localStorage.setItem(
+      "OTOS_ACTION_HISTORY",
+      JSON.stringify(STATE.history, null, 2)
+    );
+  };
+
+  /* ---------- LOAD ---------- */
+  STATE.topAction = loadTopAction();
+  if (!STATE.topAction) {
+    highlight("No active Top Action");
     return;
   }
 
-  try {
-    STATE.topAction = JSON.parse(raw);
-  } catch {
-    highlight("Failed to parse Top Action");
-    return;
-  }
-
-  /* ---------- SURFACE INTO UI ---------- */
+  /* ---------- UI HOOK ---------- */
   const actionCard = cardByTitle("One Action");
   if (!actionCard) {
-    highlight("One Action card not found");
+    highlight("One Action card missing");
     return;
   }
 
-  // safe append only
-  const block = document.createElement("div");
-  block.style.marginTop = "8px";
-  block.style.fontSize = "13px";
-  block.style.color = "#0f172a";
+  const controls = document.createElement("div");
+  controls.style.marginTop = "10px";
+  controls.style.display = "flex";
+  controls.style.gap = "8px";
 
-  block.innerHTML = `
-    <strong>${STATE.topAction.description}</strong><br>
-    <span style="color:#475569">
-      Source: ${STATE.topAction.source}<br>
-      Priority score: ${STATE.topAction.score}
-    </span>
-  `;
+  const btnComplete = document.createElement("button");
+  btnComplete.textContent = "Complete";
 
-  actionCard.appendChild(block);
+  const btnSnooze = document.createElement("button");
+  btnSnooze.textContent = "Snooze";
 
-  /* ---------- SIGNAL ---------- */
-  highlight("Top Action surfaced (read-only)");
-  localStorage.setItem("OTOS_ONE_ACTION_READY", "true");
+  const btnNext = document.createElement("button");
+  btnNext.textContent = "Next Action";
+
+  controls.appendChild(btnComplete);
+  controls.appendChild(btnSnooze);
+  controls.appendChild(btnNext);
+  actionCard.appendChild(controls);
+
+  /* ---------- ACTIONS ---------- */
+  btnComplete.onclick = () => {
+    saveHistory({ action: STATE.topAction, result: "COMPLETED", at: Date.now() });
+    localStorage.removeItem("OTOS_TOP_ACTION");
+    highlight("Top Action marked COMPLETE");
+  };
+
+  btnSnooze.onclick = () => {
+    saveHistory({ action: STATE.topAction, result: "SNOOZED", at: Date.now() });
+    highlight("Top Action snoozed (manual resurface later)");
+  };
+
+  btnNext.onclick = () => {
+    const all = JSON.parse(localStorage.getItem("OTOS_ACTIONS") || "[]");
+    const next = all.find(a => a.id !== STATE.topAction.id);
+    if (!next) {
+      highlight("No further actions available");
+      return;
+    }
+    localStorage.setItem("OTOS_TOP_ACTION", JSON.stringify(next));
+    highlight("Next Action promoted");
+    location.reload();
+  };
+
+  /* ---------- READY ---------- */
+  highlight("One Action controls enabled");
+  localStorage.setItem("OTOS_ACTION_CONTROLS_READY", "true");
 
 })();
