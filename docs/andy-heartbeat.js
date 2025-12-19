@@ -1,55 +1,73 @@
 /* =========================================================
-   OTOS — ANDY ENGINE v4.2
-   SYSTEM HEARTBEAT + LIVE STATUS PANEL
-   Purpose: Prove system is alive, advancing, and owned by EYE21
+   OTOS — ANDY ENGINE v5.9
+   PIPELINE HEARTBEAT + VISUAL PULSE
+   Purpose: Prove Andy is alive, looping, and not stalled
    Location: otos-app/docs/andy-heartbeat.js
    FULL SCRIPT REPLACEMENT
    ========================================================= */
 
 (() => {
 
-  /* ---------- GUARDS ---------- */
-  if (localStorage.getItem("OTOS_ANDY_STATUS") !== "LIVE") return;
+  /* ---------- GUARD ---------- */
+  if (window.OTOS_ANDY_HEARTBEAT_ACTIVE) return;
+  window.OTOS_ANDY_HEARTBEAT_ACTIVE = true;
 
-  /* ---------- STATE ---------- */
-  const STATE = {
-    tick: 0,
-    last: Date.now()
-  };
+  const KEY = "OTOS_HEARTBEAT";
+  const ACT_KEY = "OTOS_ACTIVITY_STREAM";
 
-  /* ---------- HELPERS ---------- */
-  const cardByTitle = (title) =>
-    Array.from(document.querySelectorAll(".card"))
-      .find(c => c.textContent.includes(title));
+  /* ---------- HOST ---------- */
+  const host =
+    document.getElementById("right") ||
+    document.getElementById("center") ||
+    document.body;
 
-  const highlight = (msg) => {
-    const report = cardByTitle("Highlight");
-    if (!report) return;
-    const line = document.createElement("div");
-    line.textContent = `• ${msg}`;
-    report.appendChild(line);
-  };
+  /* ---------- UI ---------- */
+  const dot = document.createElement("div");
+  dot.style.width = "10px";
+  dot.style.height = "10px";
+  dot.style.borderRadius = "50%";
+  dot.style.background = "#22c55e";
+  dot.style.boxShadow = "0 0 0 rgba(34,197,94,0.7)";
+  dot.style.animation = "pulse 2s infinite";
+  dot.style.marginBottom = "10px";
 
-  /* ---------- HEARTBEAT ---------- */
-  setInterval(() => {
-    STATE.tick += 1;
-    STATE.last = Date.now();
+  const label = document.createElement("div");
+  label.textContent = "Andy · Heartbeat";
+  label.style.fontSize = "12px";
+  label.style.opacity = "0.7";
+  label.style.marginBottom = "6px";
 
-    localStorage.setItem(
-      "OTOS_HEARTBEAT",
-      JSON.stringify({
-        tick: STATE.tick,
-        at: new Date().toISOString(),
-        eye: localStorage.getItem("OTOS_PARENT_NODE") || "UNSET"
-      })
-    );
+  const wrap = document.createElement("div");
+  wrap.style.padding = "10px 12px";
+  wrap.style.borderRadius = "14px";
+  wrap.style.background = "#020617";
+  wrap.style.color = "#e5e7eb";
+  wrap.style.boxShadow = "0 14px 30px rgba(0,0,0,.3)";
+  wrap.style.marginBottom = "12px";
 
-    if (STATE.tick % 5 === 0) {
-      highlight(`💓 Andy heartbeat ${STATE.tick}`);
+  /* ---------- STYLE ---------- */
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); }
+      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
     }
-  }, 2000);
+  `;
+  document.head.appendChild(style);
 
-  /* ---------- BOOT ---------- */
-  highlight("💓 Andy heartbeat started");
+  wrap.appendChild(label);
+  wrap.appendChild(dot);
+  host.prepend(wrap);
+
+  /* ---------- LOOP ---------- */
+  setInterval(() => {
+    const now = new Date().toISOString();
+    localStorage.setItem(KEY, now);
+
+    const activity = JSON.parse(localStorage.getItem(ACT_KEY) || "[]");
+    activity.push({ at: now, msg: "💓 Andy heartbeat" });
+    localStorage.setItem(ACT_KEY, JSON.stringify(activity));
+  }, 5000);
 
 })();
