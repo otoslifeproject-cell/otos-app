@@ -1,62 +1,68 @@
 :root {
-  --bg: #eef2f7;
+  --bg: #eef4fb;
   --card: #ffffff;
   --ink: #0f172a;
+  --muted: #475569;
   --border: rgba(0,0,0,.08);
 }
 
-/* RESET */
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--ink);
 }
 
 /* TOP BAR */
 .topbar {
-  height: 56px;
-  background: linear-gradient(90deg, #020617, #020617);
+  height: 64px;
+  background: linear-gradient(90deg, #020617, #0f172a);
+  color: white;
   display: flex;
   align-items: center;
-  padding: 0 16px;
   gap: 12px;
+  padding: 0 20px;
 }
 
-.topbar .logo {
-  height: 28px;
+.logo {
+  height: 36px;
 }
 
-.topbar .title {
-  color: #fff;
+.title {
   font-weight: 600;
+  font-size: 16px;
 }
 
-/* APP GRID */
+/* LAYOUT */
 #app {
   display: grid;
-  grid-template-columns: 320px 1fr 360px;
+  grid-template-columns: 1fr 2fr 1fr;
   gap: 20px;
   padding: 20px;
-  height: calc(100vh - 56px);
+  height: calc(100vh - 64px);
 }
 
 /* COLUMNS */
 .column {
+  background: rgba(0,0,0,0.04);
+  border-radius: 12px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  min-height: 100%;
 }
 
 /* CARDS */
 .card {
   background: var(--card);
-  border-radius: 10px;
-  padding: 14px 16px;
-  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 18px;
   font-weight: 600;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
 }
