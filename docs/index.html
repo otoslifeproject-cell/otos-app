@@ -1,250 +1,216 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>OTOS • Cockpit</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<title>OTOS · Cockpit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    :root {
-      --warmth: 0deg;
-      --saturation: 1;
-      --contrast: 1;
+<style>
+:root{
+  /* ENVIRONMENT CONTROLS */
+  --warmth: 0deg;
+  --saturation: 1;
+  --contrast: 1;
 
-      --bg: #eef2f6;
-      --card: #ffffff;
-      --ink: #0f172a;
-      --shadow: 0 20px 50px rgba(0,0,0,.12);
-    }
+  /* ZONE DEPTH */
+  --blur-bg: 18px;
+  --blur-back: 8px;
 
-    * { box-sizing: border-box; }
+  /* COLOURS */
+  --bg-base: #eef2f6;
+  --panel: rgba(255,255,255,.85);
+  --ink: #0f172a;
 
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
+  /* ACCENT */
+  --accent: #f97316;
+}
 
-      /* PALETTE ENGINE */
-      filter:
-        hue-rotate(var(--warmth))
-        saturate(var(--saturation))
-        contrast(var(--contrast));
+/* RESET */
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background: var(--bg-base);
+  color: var(--ink);
+  filter:
+    hue-rotate(var(--warmth))
+    saturate(var(--saturation))
+    contrast(var(--contrast));
+  overflow:hidden;
+}
 
-      transition: filter 180ms ease;
-    }
+/* BACKDROP + WATERMARK */
+#backdrop{
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(249,115,22,.08), transparent 60%),
+    radial-gradient(circle at 70% 80%, rgba(56,189,248,.06), transparent 60%);
+  z-index:-2;
+}
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr 1fr;
-      gap: 24px;
-      padding: 24px;
-      min-height: 100vh;
-    }
+#brain{
+  position:fixed;
+  inset:0;
+  background:url("docs/brand/brain-watermark.png") center/60% no-repeat;
+  opacity:.04;
+  pointer-events:none;
+  z-index:-1;
+}
 
-    .zone {
-      background: var(--card);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      transition: transform 200ms ease, box-shadow 200ms ease;
-    }
+/* LAYOUT */
+#cockpit{
+  height:100%;
+  display:grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  gap:18px;
+  padding:18px;
+}
 
-    .zone h3 {
-      margin-top: 0;
-      font-size: 14px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      opacity: .6;
-    }
+/* ZONES */
+.zone{
+  background:var(--panel);
+  backdrop-filter: blur(var(--blur-back));
+  border-radius:22px;
+  padding:18px;
+  position:relative;
+  transition:
+    transform .35s ease,
+    box-shadow .35s ease,
+    backdrop-filter .35s ease;
+  cursor:pointer;
+}
 
-    /* ENV PANEL */
-    .env {
-      position: fixed;
-      right: 24px;
-      bottom: 24px;
-      width: 260px;
-      background: rgba(255,255,255,.85);
-      backdrop-filter: blur(12px);
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: var(--shadow);
-      font-size: 13px;
-    }
+.zone h3{
+  margin:0 0 6px 0;
+  font-size:14px;
+  letter-spacing:.08em;
+  opacity:.6;
+}
 
-    .env h4 {
-      margin: 0 0 12px;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      opacity: .7;
-    }
+/* FOCUS STATE */
+.zone.focused{
+  transform:scale(1.04);
+  backdrop-filter: blur(var(--blur-bg));
+  box-shadow:0 30px 80px rgba(0,0,0,.18);
+  z-index:10;
+}
 
-    .control {
-      margin-bottom: 10px;
-    }
+/* FULLSCREEN */
+.zone.fullscreen{
+  position:fixed;
+  inset:16px;
+  z-index:100;
+  transform:none;
+  border-radius:28px;
+}
 
-    .control label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-      opacity: .7;
-    }
+/* CONTROLS */
+.zone .controls{
+  position:absolute;
+  top:14px;
+  right:14px;
+  display:flex;
+  gap:8px;
+}
 
-    input[type=range] {
-      width: 100%;
-    }
+.zone button{
+  border:none;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(0,0,0,.08);
+  cursor:pointer;
+}
 
-    .presets {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 10px;
-    }
+/* ENV PANEL */
+#env{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  width:220px;
+  background:var(--panel);
+  border-radius:18px;
+  padding:14px;
+  backdrop-filter: blur(14px);
+}
 
-    .preset {
-      padding: 6px 8px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-      background: #f1f5f9;
-      font-size: 12px;
-    }
+#env label{
+  font-size:12px;
+  opacity:.6;
+}
 
-    .preset:hover {
-      background: #e2e8f0;
-    }
+#env input{width:100%}
 
-    .save {
-      margin-top: 10px;
-      width: 100%;
-      padding: 8px;
-      border-radius: 12px;
-      border: none;
-      background: #0f172a;
-      color: white;
-      cursor: pointer;
-      font-size: 12px;
-    }
-  </style>
+/* HELPERS */
+.hidden{display:none}
+</style>
 </head>
 
 <body>
 
-  <div class="layout">
-    <div class="zone">
-      <h3>Parent</h3>
-      Authority · Read · Lock · Authorise
+<div id="backdrop"></div>
+<div id="brain"></div>
+
+<div id="cockpit">
+
+  <section class="zone" id="parent">
+    <div class="controls">
+      <button onclick="toggleFull(this)">⤢</button>
     </div>
+    <h3>PARENT</h3>
+    Authority · Read · Lock · Authorise
+  </section>
 
-    <div class="zone">
-      <h3>Core</h3>
-      One action. Calm surface. Primary focus zone.
+  <section class="zone focused" id="core">
+    <div class="controls">
+      <button onclick="toggleFull(this)">⤢</button>
     </div>
+    <h3>CORE</h3>
+    One action. Calm surface. Primary focus zone.
+  </section>
 
-    <div class="zone">
-      <h3>Andy</h3>
-      Execution agent (token-gated)
+  <section class="zone" id="andy">
+    <div class="controls">
+      <button onclick="toggleFull(this)">⤢</button>
     </div>
-  </div>
+    <h3>ANDY</h3>
+    Execution agent (token-gated)
+  </section>
 
-  <!-- ENVIRONMENT PANEL -->
-  <div class="env">
-    <h4>Environment</h4>
+</div>
 
-    <div class="control">
-      <label>Warmth <span id="wVal"></span></label>
-      <input id="warmth" type="range" min="-20" max="20" step="1">
-    </div>
+<!-- ENVIRONMENT -->
+<div id="env">
+  <label>Warmth</label>
+  <input type="range" min="-20" max="20" value="0" oninput="setVar('--warmth',this.value+'deg')">
 
-    <div class="control">
-      <label>Saturation <span id="sVal"></span></label>
-      <input id="saturation" type="range" min="0.8" max="1.4" step="0.01">
-    </div>
+  <label>Saturation</label>
+  <input type="range" min="0.7" max="1.4" step="0.01" value="1" oninput="setVar('--saturation',this.value)">
 
-    <div class="control">
-      <label>Contrast <span id="cVal"></span></label>
-      <input id="contrast" type="range" min="0.9" max="1.3" step="0.01">
-    </div>
+  <label>Contrast</label>
+  <input type="range" min="0.8" max="1.3" step="0.01" value="1" oninput="setVar('--contrast',this.value)">
+</div>
 
-    <div class="presets">
-      <button class="preset" onclick="applyPreset('focus')">Focus</button>
-      <button class="preset" onclick="applyPreset('evening')">Evening</button>
-      <button class="preset" onclick="applyPreset('energy')">High Energy</button>
-      <button class="preset" onclick="applyPreset('neutral')">Neutral</button>
-    </div>
+<script>
+/* ZONE FOCUS */
+document.querySelectorAll('.zone').forEach(z=>{
+  z.addEventListener('click',()=>{
+    document.querySelectorAll('.zone').forEach(o=>o.classList.remove('focused'));
+    z.classList.add('focused');
+  });
+});
 
-    <button class="save" onclick="saveCustom()">Save Custom</button>
-  </div>
+/* FULLSCREEN */
+function toggleFull(btn){
+  const z = btn.closest('.zone');
+  z.classList.toggle('fullscreen');
+}
 
-  <script>
-    const root = document.documentElement;
-
-    const sliders = {
-      warmth: document.getElementById('warmth'),
-      saturation: document.getElementById('saturation'),
-      contrast: document.getElementById('contrast')
-    };
-
-    const labels = {
-      warmth: document.getElementById('wVal'),
-      saturation: document.getElementById('sVal'),
-      contrast: document.getElementById('cVal')
-    };
-
-    function update() {
-      root.style.setProperty('--warmth', sliders.warmth.value + 'deg');
-      root.style.setProperty('--saturation', sliders.saturation.value);
-      root.style.setProperty('--contrast', sliders.contrast.value);
-
-      labels.warmth.textContent = sliders.warmth.value;
-      labels.saturation.textContent = sliders.saturation.value;
-      labels.contrast.textContent = sliders.contrast.value;
-
-      localStorage.setItem('otos-env', JSON.stringify({
-        warmth: sliders.warmth.value,
-        saturation: sliders.saturation.value,
-        contrast: sliders.contrast.value
-      }));
-    }
-
-    Object.values(sliders).forEach(s => s.addEventListener('input', update));
-
-    const presets = {
-      neutral: { warmth: 0, saturation: 1, contrast: 1 },
-      focus: { warmth: -6, saturation: 0.95, contrast: 1.05 },
-      evening: { warmth: 10, saturation: 0.9, contrast: 0.95 },
-      energy: { warmth: 6, saturation: 1.25, contrast: 1.15 }
-    };
-
-    function applyPreset(name) {
-      const p = presets[name];
-      sliders.warmth.value = p.warmth;
-      sliders.saturation.value = p.saturation;
-      sliders.contrast.value = p.contrast;
-      update();
-    }
-
-    function saveCustom() {
-      presets.custom = {
-        warmth: sliders.warmth.value,
-        saturation: sliders.saturation.value,
-        contrast: sliders.contrast.value
-      };
-      alert('Custom preset saved for this browser.');
-    }
-
-    // Load saved
-    const saved = JSON.parse(localStorage.getItem('otos-env'));
-    if (saved) {
-      sliders.warmth.value = saved.warmth;
-      sliders.saturation.value = saved.saturation;
-      sliders.contrast.value = saved.contrast;
-      update();
-    } else {
-      applyPreset('neutral');
-    }
-  </script>
+/* ENV VAR */
+function setVar(v,val){
+  document.documentElement.style.setProperty(v,val);
+}
+</script>
 
 </body>
 </html>
