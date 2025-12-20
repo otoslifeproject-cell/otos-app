@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>OTOS Cockpit</title>
 
 <style>
@@ -9,59 +10,92 @@
   --warmth: 0deg;
   --saturation: 100%;
   --contrast: 100%;
-  --bg-base: #eef2f7;
+  --bg: #eef2f7;
+  --panel: rgba(255,255,255,0.75);
+  --ink: #0f172a;
 }
 
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background:
-    url("./assets/brain-watermark.png") center / 60% no-repeat,
-    var(--bg-base);
+  background: var(--bg);
+  color: var(--ink);
   filter:
     hue-rotate(var(--warmth))
     saturate(var(--saturation))
     contrast(var(--contrast));
-  transition: filter 0.3s ease;
+  transition: filter 0.25s ease;
 }
 
-/* Watermark safety */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: url("./assets/brain-watermark.png") center / 60% no-repeat;
-  opacity: 0.035;
-  pointer-events: none;
-  z-index: 0;
+/* ===== HEADER ===== */
+header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: rgba(255,255,255,0.9);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
-/* Cockpit content sits above */
+header strong {
+  font-size: 14px;
+  letter-spacing: 0.3px;
+}
+
+/* ===== LAYOUT ===== */
 #cockpit {
-  position: relative;
-  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 16px;
+  padding: 16px;
+  height: calc(100vh - 56px);
+  box-sizing: border-box;
 }
 
-/* Palette Control */
-.palette-control {
+.zone {
+  background: var(--panel);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+}
+
+.zone h3 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  opacity: 0.7;
+}
+
+.zone p {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ===== PALETTE CONTROL ===== */
+.palette {
   position: fixed;
   bottom: 16px;
   right: 16px;
-  background: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.85);
   backdrop-filter: blur(12px);
   border-radius: 14px;
   padding: 14px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
   font-size: 12px;
 }
 
-.palette-control label {
+.palette label {
   display: block;
   margin-top: 8px;
   font-weight: 600;
 }
 
-.palette-control input[type="range"] {
+.palette input[type="range"] {
   width: 160px;
 }
 </style>
@@ -69,11 +103,29 @@ body::before {
 
 <body>
 
-<div id="cockpit">
-  <!-- EXISTING COCKPIT HTML GOES HERE -->
-</div>
+<header>
+  <strong>OTOS · Cockpit</strong>
+  <span style="font-size:12px;opacity:.6">System idle</span>
+</header>
 
-<div class="palette-control">
+<main id="cockpit">
+  <section class="zone">
+    <h3>Parent</h3>
+    <p>Authority · Read · Lock · Authorise</p>
+  </section>
+
+  <section class="zone">
+    <h3>Core</h3>
+    <p>One action. Calm surface. Primary focus zone.</p>
+  </section>
+
+  <section class="zone">
+    <h3>Andy</h3>
+    <p>Execution agent (token-gated)</p>
+  </section>
+</main>
+
+<div class="palette">
   <strong>Environment</strong>
 
   <label>Warmth</label>
@@ -89,17 +141,14 @@ body::before {
 <script>
 const root = document.documentElement;
 
-document.getElementById("warmth").addEventListener("input", e => {
+document.getElementById("warmth").oninput = e =>
   root.style.setProperty("--warmth", e.target.value + "deg");
-});
 
-document.getElementById("saturation").addEventListener("input", e => {
+document.getElementById("saturation").oninput = e =>
   root.style.setProperty("--saturation", e.target.value + "%");
-});
 
-document.getElementById("contrast").addEventListener("input", e => {
+document.getElementById("contrast").oninput = e =>
   root.style.setProperty("--contrast", e.target.value + "%");
-});
 </script>
 
 </body>
