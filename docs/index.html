@@ -2,120 +2,103 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OTOS · Parent Core Control</title>
+
+  <!-- Viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Core Styles -->
   <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./ui/assets/css/ui-polish.css" />
 
+  <!-- Favicon / Logo -->
+  <link rel="icon" href="./brand/logo/otos-logo-400.png" />
+
+  <!-- Safety: prevent registry crash killing UI -->
+  <script>
+    window.OTOS_CONFIG = {
+      basePath: "./",
+      registryPath: "./registry.json",
+      mode: "parent",
+      allowRegistryFailSoft: true
+    };
+  </script>
 </head>
-<body>
 
-  <!-- HEADER -->
+<body>
+  <!-- ========================================================= -->
+  <!-- TOP BAR -->
+  <!-- ========================================================= -->
   <header class="top-bar">
     <div class="brand">
       <img src="./brand/logo/otos-logo-400.png" alt="OTOS" />
       <span>Parent · Core Control</span>
     </div>
-    <div class="system-status">
+    <div class="status">
       System idle · No execution tokens issued
     </div>
   </header>
 
+  <!-- ========================================================= -->
   <!-- APP ROOT -->
+  <!-- ========================================================= -->
   <main id="app">
-
-    <!-- LEFT COLUMN -->
-    <section class="column column-left">
-
-      <div class="card">
-        <h3>Parent Node</h3>
-        <p>Authority · Read / Lock / Authorise</p>
-      </div>
-
-      <div class="card">
-        <h3>Reality Radar</h3>
-        <p>Mode <strong>GUIDED</strong></p>
-        <p>Temp 4</p>
-        <input type="range" min="1" max="10" value="4" />
-      </div>
-
-      <div class="card">
-        <h3>System State</h3>
-        <p>Locks <strong>Enforced</strong></p>
-        <p>Memory <strong>Tiered</strong></p>
-      </div>
-
-      <div class="card">
-        <h3>Execution Tokens</h3>
-        <button id="issueTokens">Issue token: INGEST + READ + SUGGEST</button>
-        <button id="revokeTokens">Revoke tokens</button>
-        <p class="hint">Andy cannot act without explicit tokens.</p>
-      </div>
-
-      <div class="card">
-        <h3>Notes</h3>
-        <textarea placeholder="Quick notes (local only)"></textarea>
-      </div>
-
-    </section>
-
-    <!-- CENTER COLUMN -->
-    <section class="column column-center">
-
-      <div class="card">
-        <h3>Focus</h3>
-        <p>One action · Projects</p>
-      </div>
-
-      <div class="card">
-        <h3>One Action</h3>
-        <p>Wire Andy intake + stats safely (token-gated)</p>
-      </div>
-
-      <div class="card">
-        <h3>Projects</h3>
-        <p>(Locked — loads next layer)</p>
-      </div>
-
-    </section>
-
-    <!-- RIGHT COLUMN -->
-    <section class="column column-right">
-
-      <div class="card">
-        <h3>Andy · Execution Agent</h3>
-        <p>Feeder · Intake + extraction (no promotion)</p>
-      </div>
-
-      <div class="card">
-        <h3>Intake</h3>
-        <input type="file" id="intakeFiles" multiple />
-        <input type="text" placeholder="Command: A / G / R / C / T" />
-        <button id="ingestBtn">Ingest batch</button>
-        <p class="hint">
-          A analyse · G golden · R revenue · C canon · T tasks · ? notable
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Stats</h3>
-        <p>Processed <strong id="statProcessed">0</strong></p>
-        <p>Queue <strong id="statQueue">0</strong></p>
-        <button id="exportArchive">Export Tier-3 Archive (JSON)</button>
-      </div>
-
-      <div class="card">
-        <h3>Running Highlight Report</h3>
-        <p id="engineStatus">Andy engine ready (idle)</p>
-      </div>
-
-    </section>
-
+    <!-- UI renders here -->
   </main>
 
-  <!-- CORE ENGINE -->
-  <script src="./app.js"></script>
+  <!-- ========================================================= -->
+  <!-- CORE BOOT ORDER (DO NOT REORDER) -->
+  <!-- ========================================================= -->
 
+  <!-- Registry (fail-soft) -->
+  <script src="./registry-engine.js"></script>
+
+  <!-- Core State -->
+  <script src="./core/state.js"></script>
+
+  <!-- UI Core -->
+  <script src="./ui-card-focus.js"></script>
+  <script src="./ui-command-palette.js"></script>
+  <script src="./ui-drag-snap.js"></script>
+  <script src="./ui-drag-persist.js"></script>
+  <script src="./ui-polish-premium.js"></script>
+
+  <!-- Andy Core -->
+  <script src="./andy-engine.js"></script>
+  <script src="./andy-feeder.js"></script>
+  <script src="./andy-pulse.js"></script>
+  <script src="./andy-queue-monitor.js"></script>
+
+  <!-- Notion Adapter (safe idle) -->
+  <script src="./andy-notion-adapter.js"></script>
+
+  <!-- ========================================================= -->
+  <!-- FINAL BOOTSTRAP -->
+  <!-- ========================================================= -->
+  <script>
+    (function boot() {
+      try {
+        if (window.RegistryEngine) {
+          RegistryEngine.init({
+            path: window.OTOS_CONFIG.registryPath,
+            failSoft: true
+          });
+        }
+
+        if (window.AndyEngine) {
+          AndyEngine.init({
+            mode: "intake",
+            ui: true,
+            stats: true,
+            live: false
+          });
+        }
+
+        console.log("OTOS boot complete");
+      } catch (e) {
+        console.error("OTOS boot error:", e);
+      }
+    })();
+  </script>
 </body>
 </html>
