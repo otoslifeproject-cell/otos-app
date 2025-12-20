@@ -1,133 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>OTOS · Parent Core Control</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<title>OTOS · Parent Core Control</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <style>
-    :root{
-      --bg:#0b1020;
-      --panel:#121a2f;
-      --panel-soft:#0f1628;
-      --ink:#e6ebff;
-      --muted:#9aa4d1;
-      --accent:#3b82f6;
-      --good:#22c55e;
-      --border:rgba(255,255,255,.08);
-      --radius:16px;
-    }
+<style>
+:root{
+  --bg:#0b1020;
+  --panel:#121a2f;
+  --panel-soft:#0f1628;
+  --ink:#e6ebff;
+  --muted:#9aa4d1;
+  --accent:#3b82f6;
+  --good:#22c55e;
+  --border:rgba(255,255,255,.08);
+  --radius:16px;
+}
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
+/* Reset */
+*{box-sizing:border-box}
+html,body{height:100%}
 
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
-      background:radial-gradient(1200px 600px at 50% -200px,#1b2550,var(--bg));
-      color:var(--ink);
-    }
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
+  background:radial-gradient(1200px 600px at 50% -200px,#1b2550,var(--bg));
+  color:var(--ink);
+}
 
-    /* Header */
-    header{
-      height:56px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 20px;
-      background:linear-gradient(180deg,#0e1428,#090e1d);
-      border-bottom:1px solid var(--border);
-      font-size:13px;
-    }
+/* Header */
+header{
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 24px;
+  background:linear-gradient(180deg,#0e1428,#090e1d);
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
 
-    header .left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:600;
-    }
+header .left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:600;
+}
 
-    header .right{
-      color:var(--muted);
-    }
+header .right{
+  color:var(--muted);
+}
 
-    /* Layout */
-    main{
-      padding:24px;
-    }
+/* Main container */
+main{
+  padding:32px 24px;
+  display:flex;
+  justify-content:center;
+}
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
-      gap:20px;
-      align-items:start;
-    }
+/* Grid */
+.grid{
+  width:100%;
+  max-width:1400px;
+  display:grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap:24px;
+  align-items:start;
+}
 
-    @media (max-width:1200px){
-      .grid{grid-template-columns:1fr}
-    }
+@media (max-width:1200px){
+  .grid{
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+}
 
-    /* Cards */
-    .card{
-      background:linear-gradient(180deg,var(--panel),var(--panel-soft));
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow:0 10px 40px rgba(0,0,0,.35);
-    }
+/* Columns feel anchored */
+.column{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
 
-    .card + .card{margin-top:16px}
+/* Cards */
+.card{
+  background:linear-gradient(180deg,var(--panel),var(--panel-soft));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:0 10px 40px rgba(0,0,0,.35);
+}
 
-    .title{
-      font-size:11px;
-      letter-spacing:.14em;
-      color:var(--muted);
-      margin-bottom:8px;
-    }
+.title{
+  font-size:11px;
+  letter-spacing:.14em;
+  color:var(--muted);
+  margin-bottom:8px;
+}
 
-    .value{
-      font-size:14px;
-      line-height:1.5;
-    }
+.value{
+  font-size:14px;
+  line-height:1.5;
+}
 
-    /* Controls */
-    input[type=range]{width:100%}
-    input,textarea,button{
-      background:#0b1225;
-      color:var(--ink);
-      border:1px solid var(--border);
-      border-radius:8px;
-      padding:8px;
-      font-size:12px;
-    }
+/* Controls */
+input[type=range]{width:100%}
 
-    textarea{min-height:60px}
+input,textarea,button{
+  background:#0b1225;
+  color:var(--ink);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:8px;
+  font-size:12px;
+}
 
-    button.primary{
-      background:linear-gradient(180deg,#2563eb,#1d4ed8);
-      border:none;
-    }
+textarea{min-height:60px}
 
-    button{cursor:pointer}
-    button + button{margin-left:8px}
+button.primary{
+  background:linear-gradient(180deg,#2563eb,#1d4ed8);
+  border:none;
+}
 
-    /* Andy pulse */
-    .pulse{
-      position:relative;
-    }
-    .pulse::after{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      border-radius:inherit;
-      animation:pulse 2s ease-out infinite;
-    }
-    @keyframes pulse{
-      0%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
-      60%{box-shadow:0 0 0 12px rgba(34,197,94,.12)}
-      100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
-    }
-  </style>
+button{cursor:pointer}
+button + button{margin-left:8px}
+
+/* Andy presence */
+.agent{
+  border:1px solid rgba(34,197,94,.4);
+  box-shadow:0 0 0 1px rgba(34,197,94,.15) inset;
+}
+</style>
 </head>
 
 <body>
@@ -145,8 +149,8 @@
 <main>
   <div class="grid">
 
-    <!-- LEFT · PARENT -->
-    <section>
+    <!-- PARENT -->
+    <section class="column">
       <div class="card">
         <div class="title">Parent Node</div>
         <div class="value">Authority · Read / Lock / Authorise</div>
@@ -180,8 +184,8 @@
       </div>
     </section>
 
-    <!-- CENTER · FOCUS -->
-    <section>
+    <!-- FOCUS -->
+    <section class="column">
       <div class="card">
         <div class="title">Focus</div>
         <div class="value">One action · Projects</div>
@@ -198,9 +202,9 @@
       </div>
     </section>
 
-    <!-- RIGHT · ANDY -->
-    <section>
-      <div class="card pulse">
+    <!-- ANDY -->
+    <section class="column">
+      <div class="card agent">
         <div class="title">Andy · Execution Agent</div>
         <div class="value">Feeder · Intake + extraction (no promotion)</div>
       </div>
