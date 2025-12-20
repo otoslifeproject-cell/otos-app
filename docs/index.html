@@ -2,189 +2,148 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>OTOS • Cockpit</title>
+<title>OTOS · Cockpit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
 :root{
   --bg:#eef3f7;
-  --card:#ffffff;
+  --card:#f8fafc;
   --ink:#0f172a;
-  --muted:#475569;
-
-  /* OTOS orange (brain-derived) */
+  --muted:#64748b;
   --accent:#f97316;
-  --accent-soft:rgba(249,115,22,.18);
-
-  /* depth tones */
   --shadow-dark:rgba(15,23,42,.18);
-  --shadow-mid:rgba(15,23,42,.10);
   --shadow-light:rgba(255,255,255,.9);
 }
 
-/* base */
+/* BASE */
 *{box-sizing:border-box}
 body{
   margin:0;
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:radial-gradient(circle at top,#f8fafc,var(--bg));
+  background:var(--bg);
   color:var(--ink);
 }
 
-/* cockpit */
+/* LAYOUT */
 .cockpit{
   display:grid;
-  grid-template-columns:1fr 1.3fr 1fr;
+  grid-template-columns:1fr 1.2fr 1fr;
   gap:24px;
-  padding:32px;
-  min-height:100vh;
+  padding:24px;
 }
 
-/* zone */
+/* ZONES */
 .zone{
-  position:relative;
   background:var(--card);
   border-radius:18px;
-  padding:20px 22px;
-  transition:
-    transform .25s ease,
-    box-shadow .25s ease,
-    filter .25s ease;
+  padding:20px;
+  position:relative;
   box-shadow:
-    0 18px 40px var(--shadow-mid),
-    inset 0 1px 0 var(--shadow-light);
+    10px 10px 24px var(--shadow-dark),
+    -10px -10px 24px var(--shadow-light);
+  transition:transform .25s ease, box-shadow .25s ease;
 }
 
-/* hover lift (subtle, single stage) */
 .zone:hover{
-  transform:translateY(-6px);
-  box-shadow:
-    0 26px 55px var(--shadow-dark),
-    inset 0 1px 0 var(--shadow-light);
+  transform:translateY(-4px);
 }
 
-/* focused zone */
-.zone.focused{
-  transform:scale(1.03) translateY(-8px);
-  box-shadow:
-    0 35px 70px rgba(15,23,42,.28),
-    inset 0 1px 0 var(--shadow-light);
-  z-index:10;
-}
-
-/* blur others */
-.zone.blurred{
-  filter:blur(3px) brightness(.95);
-  pointer-events:none;
-}
-
-/* headers */
 .zone h2{
-  margin:0 0 6px;
-  font-size:1.1rem;
+  margin:0 0 6px 0;
+  font-size:1.05rem;
 }
+
 .zone p{
   margin:0;
-  font-size:1rem;
   color:var(--muted);
+  font-size:.95rem;
 }
 
-/* expand button */
-.expand{
-  position:absolute;
-  top:14px;
-  right:14px;
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-
-  background:var(--card);
-  box-shadow:
-    0 6px 14px var(--shadow-mid),
-    inset 0 1px 0 var(--shadow-light);
-
-  font-size:18px;
-  transition:all .2s ease;
-}
-.expand:hover{
-  transform:scale(1.1);
-}
-
-/* ANDY controls */
-.panel{
-  margin-top:18px;
+/* ANDY PANEL */
+.andy{
   display:flex;
   flex-direction:column;
-  gap:14px;
+  gap:16px;
 }
 
-/* deep neumorphic input */
+/* INPUT */
 .input{
-  padding:14px 16px;
+  padding:14px;
   border-radius:14px;
-  background:var(--bg);
-  box-shadow:
-    inset 4px 4px 8px rgba(15,23,42,.12),
-    inset -4px -4px 8px rgba(255,255,255,.9);
-  font-size:1rem;
+  background:#fff;
   border:none;
   outline:none;
+  box-shadow:
+    inset 4px 4px 8px rgba(0,0,0,.06),
+    inset -4px -4px 8px #fff;
+  font-size:1rem;
 }
 
-/* buttons (true depth, modern) */
-.button-row{
+/* BUTTONS */
+.actions{
   display:flex;
   gap:12px;
 }
+
 .btn{
   flex:1;
-  padding:14px 0;
+  padding:14px 16px;
   border-radius:16px;
-  font-weight:600;
-  font-size:1rem;
-  cursor:pointer;
   border:none;
-
-  background:linear-gradient(
-    180deg,
-    #ff9f55,
-    var(--accent)
-  );
+  font-size:1rem;
+  font-weight:600;
+  cursor:pointer;
+  background:linear-gradient(145deg,#ff8a3d,#f97316);
   color:#fff;
-
   box-shadow:
-    0 10px 22px rgba(249,115,22,.45),
-    inset 0 1px 0 rgba(255,255,255,.5);
-
+    6px 6px 14px rgba(0,0,0,.25),
+    -6px -6px 14px rgba(255,255,255,.6),
+    inset 0 -2px 0 rgba(0,0,0,.2);
   transition:transform .15s ease, box-shadow .15s ease;
 }
-.btn.secondary{
-  background:#fff;
-  color:var(--ink);
-  box-shadow:
-    0 8px 18px var(--shadow-mid),
-    inset 0 1px 0 var(--shadow-light);
-}
-.btn:hover{
-  transform:translateY(-2px);
-}
+
 .btn:active{
-  transform:translateY(1px);
+  transform:translateY(2px);
   box-shadow:
-    0 4px 10px rgba(0,0,0,.25),
-    inset 0 2px 6px rgba(0,0,0,.25);
+    inset 4px 4px 8px rgba(0,0,0,.3);
 }
 
-/* stats */
-.stats{
-  margin-top:10px;
+/* STATUS */
+.status{
+  display:flex;
+  align-items:center;
+  gap:10px;
   font-size:.95rem;
+}
+
+.dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#94a3b8;
+}
+
+.dot.working{
+  background:var(--accent);
+  animation:pulse 1.2s infinite;
+}
+
+.dot.done{background:#22c55e}
+.dot.error{background:#ef4444}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(249,115,22,.5)}
+  70%{box-shadow:0 0 0 10px rgba(249,115,22,0)}
+  100%{box-shadow:0 0 0 0 rgba(249,115,22,0)}
+}
+
+/* STATS */
+.stats{
   display:flex;
   justify-content:space-between;
+  font-size:.9rem;
+  color:var(--muted);
 }
 </style>
 </head>
@@ -193,67 +152,66 @@ body{
 
 <div class="cockpit">
 
-  <div class="zone" id="parent">
-    <div class="expand">⤢</div>
+  <div class="zone">
     <h2>PARENT</h2>
     <p>Authority · Read · Lock · Authorise</p>
   </div>
 
-  <div class="zone" id="core">
-    <div class="expand">⤢</div>
+  <div class="zone">
     <h2>CORE</h2>
     <p>One action. Calm surface. Primary focus zone.</p>
   </div>
 
-  <div class="zone" id="andy">
-    <div class="expand">⤢</div>
+  <div class="zone andy" id="andy">
     <h2>ANDY</h2>
     <p>Execution agent (token-gated)</p>
 
-    <div class="panel">
-      <input class="input" placeholder="Drop file or paste text (visual only)" />
-      <input class="input" placeholder="Command: A / G / R / C / T" />
+    <input class="input" placeholder="Drop file or paste text (visual only)" />
 
-      <div class="button-row">
-        <button class="btn">Ingest</button>
-        <button class="btn secondary">Dry run</button>
-      </div>
+    <input class="input" placeholder="Command: A / G / R / C / T" />
 
-      <div class="stats">
-        <span>Processed: 0</span>
-        <span>Queue: 0</span>
-      </div>
+    <div class="actions">
+      <button class="btn" onclick="runAndy()">Ingest</button>
+      <button class="btn" onclick="dryRun()">Dry run</button>
+    </div>
+
+    <div class="status">
+      <div class="dot" id="dot"></div>
+      <span id="statusText">Idle</span>
+    </div>
+
+    <div class="stats">
+      <span>Processed: <strong id="processed">0</strong></span>
+      <span>Queue: <strong id="queue">0</strong></span>
     </div>
   </div>
 
 </div>
 
 <script>
-const zones = document.querySelectorAll('.zone');
+let processed=0;
 
-zones.forEach(z=>{
-  z.addEventListener('click',e=>{
-    if(e.target.classList.contains('expand')) return;
-    zones.forEach(o=>{
-      o.classList.toggle('focused', o===z);
-      o.classList.toggle('blurred', o!==z);
-    });
-  });
+function runAndy(){
+  setState('working','Processing…');
+  setTimeout(()=>{
+    processed++;
+    document.getElementById('processed').innerText=processed;
+    setState('done','Complete');
+  },1500);
+}
 
-  z.querySelector('.expand').addEventListener('click',e=>{
-    e.stopPropagation();
-    zones.forEach(o=>{
-      o.classList.remove('focused','blurred');
-    });
-  });
-});
+function dryRun(){
+  setState('working','Simulating…');
+  setTimeout(()=>{
+    setState('idle','Idle');
+  },900);
+}
 
-/* background click resets */
-document.body.addEventListener('click',e=>{
-  if(!e.target.closest('.zone')){
-    zones.forEach(z=>z.classList.remove('focused','blurred'));
-  }
-});
+function setState(state,label){
+  const dot=document.getElementById('dot');
+  dot.className='dot '+state;
+  document.getElementById('statusText').innerText=label;
+}
 </script>
 
 </body>
