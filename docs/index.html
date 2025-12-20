@@ -1,39 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>OTOS · Parent Core Control</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <title>OTOS · Parent · Core Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root{
-  --bg:#0b1020;
-  --panel:#121a2f;
-  --panel-soft:#0f1628;
-  --ink:#e6ebff;
-  --muted:#9aa4d1;
-  --accent:#3b82f6;
-  --good:#22c55e;
-  --border:rgba(255,255,255,.08);
-  --radius:16px;
-}
+  <!-- Base styles -->
+  <link rel="stylesheet" href="styles.css" />
 
-/* Reset */
-*{box-sizing:border-box}
-html,body{height:100%}
+  <style>
+    /* =========================================================
+       LIGHT ADHD COCKPIT BASELINE — LOCKABLE
+       ========================================================= */
 
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
-  background:radial-gradient(1200px 600px at 50% -200px,#1b2550,var(--bg));
-  color:var(--ink);
-}
+    :root {
+      --bg-main: #eef4fb;
+      --bg-panel: #ffffff;
+      --bg-soft: #f6f9fd;
 
-/* Header */
-header{
-  height:56px;
-  display:flex;
-  align-items:center;
+      --ink-main: #0f172a;
+      --ink-soft: #475569;
+      --ink-muted: #64748b;
+
+      --border-soft: rgba(15, 23, 42, 0.08);
+
+      --accent-parent: #2563eb;
+      --accent-agent: #16a34a;
+      --accent-focus: #0ea5e9;
+
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
+      color: var(--ink-main);
+      background:
+        radial-gradient(900px 400px at 50% -200px, #dbeafe, transparent),
+        var(--bg-main);
+    }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 22px;
+      background: linear-gradient(
+        to bottom,
+        #ffffff,
+        #f1f5f9
+      );
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    header .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    header .right {
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    /* =========================================================
+       MAIN GRID
+       ========================================================= */
+
+    main {
+      padding: 26px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* =========================================================
+       CARDS
+       ========================================================= */
+
+    .card {
+      background: var(--bg-panel);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      border: 1px solid var(--border-soft);
+      box-shadow:
+        0 1px 2px rgba(0,0,0,0.04),
+        0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .card.parent {
+      border-left: 4px solid var(--accent-parent);
+    }
+
+    .card.focus {
+      border-left: 4px solid var(--accent-focus);
+    }
+
+    .card.agent {
+      border-left: 4px solid var(--accent-agent);
+    }
+
+    .title {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+    }
+
+    .value {
+      font-size: 15px;
+      color: var(--ink-main);
+    }
+
+    /* =========================================================
+       INPUTS / BUTTONS
+       ========================================================= */
+
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+      background: #ffffff;
+      cursor: default;
+      font-size: 14px;
+    }
+
+    button.primary {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 1200px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="left">
+    <strong>OTOS</strong>
+    <span>Parent · Core Control</span>
+  </div>
+  <div class="right">
+    System idle · No execution tokens issued
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+
+    <!-- ================= LEFT: PARENT ================= -->
+    <section class="column">
+
+      <div class="card parent">
+        <div class="title">Parent Node</div>
+        <div class="value">Authority · Read / Lock / Authorise</div>
+      </div>
+
+      <div class="card">
+        <div class="title">Reality Radar</div>
+        <div class="value">Mode <strong>GUIDED</strong><br/>Temp 4</div>
+      </div>
+
+      <div class="card">
+        <div class="title">System State</div>
+        <div class="value">
+          Locks <strong>Enforced</strong><br/>
+          Memory <strong>Tiered</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="title">Execution Tokens</div>
+        <div class="value">
+          Andy cannot act without explicit tokens.
+        </div>
+        <button>Issue token</button>
+        <button>Revoke</button>
+      </div>
+
+      <div class="card">
+        <div class="title">Notes</div>
+        <input type="text" placeholder="Quick notes (local only)" disabled />
+      </div>
+
+    </section>
+
+    <!-- ================= CENTER: FOCUS ================= -->
+    <section class="column">
+
+      <div class="card focus">
+        <div class="title">Focus</div>
+        <div class="value">One action · Projects</div>
+      </div>
+
+      <div class="card">
+        <div class="title">One Action</div>
+        <div class="value">Wire Andy intake + stats safely (token-gated)</div>
+      </div>
+
+      <div class="card">
+        <div class="title">Projects</div>
+        <div class="value">(Locked — loads next layer)</div>
+      </div>
+
+    </section>
+
+    <!-- ================= RIGHT: ANDY ================= -->
+    <section class="column">
+
+      <div class="card agent">
+        <div class="title">Andy · Execution Agent</div>
+        <div class="value">Feeder · Intake + extraction (no promotion)</div>
+      </div>
+
+      <div class="card">
+        <div class="title">Intake</div>
+        <input type="file" disabled />
+        <input type="text" placeholder="Command: A / G / R / C / T" disabled />
+        <button class="primary" disabled>Ingest batch</button>
+        <div class="value" style="margin-top:10px">
+          A analyse · G golden · R revenue · C canon · T tasks · ? notable
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="title">Stats</div>
+        <div class="value">Processed 0<br/>Queue 0</div>
+        <button>Export Tier-3 Archive (JSON)</button>
+      </div>
+
+      <div class="card">
+        <div class="title">Running Highlight Report</div>
+        <div class="value">Andy engine ready (idle)</div>
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+</body>
+</html>
   justify-content:space-between;
   padding:0 24px;
   background:linear-gradient(180deg,#0e1428,#090e1d);
