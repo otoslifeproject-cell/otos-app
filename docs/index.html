@@ -7,227 +7,250 @@
 
 <style>
 :root{
-  --bg:#eef3f8;
+  --bg:#eef2f7;
   --card:#ffffff;
   --ink:#0f172a;
-
-  /* SHADOW TONES – turned up slightly */
-  --shadow-deep: rgba(15,23,42,.32);
-  --shadow-mid:  rgba(15,23,42,.20);
-  --shadow-soft: rgba(15,23,42,.12);
-
-  --radius:22px;
-
-  /* TEXT SCALE */
-  --h2:1.3rem;
-  --p:1.05rem;
+  --muted:#64748b;
+  --border:rgba(15,23,42,.08);
+  --shadow-soft:0 8px 24px rgba(15,23,42,.08);
+  --shadow-focus:0 18px 48px rgba(15,23,42,.18);
+  --radius:18px;
+  --text-scale:1.2;
 }
 
+/* ---------- Base ---------- */
 *{box-sizing:border-box}
-
 body{
   margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-  background:
-    radial-gradient(circle at center,
-      rgba(255,165,0,.04),
-      transparent 60%),
-    var(--bg);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);
   color:var(--ink);
-  min-height:100vh;
-  padding:28px;
 }
 
-/* SUBTLE BRAIN WATERMARK */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:url("./assets/brain-watermark.svg") center center no-repeat;
-  background-size:65%;
-  opacity:.045; /* slightly stronger */
-  pointer-events:none;
-  z-index:0;
-}
-
+/* ---------- Layout ---------- */
 .cockpit{
   display:grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap:28px;
-  position:relative;
-  z-index:1;
+  grid-template-columns:1fr 1.2fr 1fr;
+  gap:20px;
+  padding:20px;
+  height:100vh;
 }
 
-/* ZONE CARD */
+/* ---------- Zones ---------- */
 .zone{
-  position:relative;
   background:var(--card);
   border-radius:var(--radius);
-  padding:30px 28px 42px;
-
-  /* DEPTH + EDGE */
-  box-shadow:
-    inset 0 1px 0 rgba(15,23,42,.18),
-    inset 0 0 0 1px rgba(15,23,42,.08),
-    0 20px 44px var(--shadow-soft);
-
+  padding:20px;
+  box-shadow:var(--shadow-soft);
+  border:1px solid var(--border);
+  position:relative;
   transition:
-    transform .22s cubic-bezier(.2,.8,.2,1),
-    box-shadow .22s ease,
-    opacity .22s ease,
-    filter .22s ease;
+    box-shadow .25s ease,
+    transform .25s ease,
+    opacity .25s ease;
+  font-size:calc(1rem * var(--text-scale));
+}
 
+.zone h2{
+  margin:0 0 8px 0;
+  font-size:1.05em;
+}
+
+.zone p{
+  margin:0 0 14px 0;
+  color:var(--muted);
+  font-size:.9em;
+}
+
+/* ---------- Focus system ---------- */
+.zone-focused{
+  z-index:5;
+  transform:translateY(-6px);
+  box-shadow:var(--shadow-focus);
+}
+
+.zone-dimmed{
+  opacity:.55;
+  filter:blur(.2px);
+}
+
+/* ---------- Fullscreen ---------- */
+.zone-fullscreen{
+  position:fixed;
+  inset:16px;
+  z-index:10;
+  transform:none;
+}
+
+/* ---------- Handles ---------- */
+.zone-handle{
+  position:absolute;
+  top:10px;
+  right:10px;
+  display:flex;
+  gap:10px;
+}
+
+.zone-btn{
+  padding:8px 14px;
+  font-size:.85em;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#f8fafc;
   cursor:pointer;
 }
 
-/* SINGLE, REWARDING LIFT */
-.zone:hover{
-  transform: translateY(-10px);
-  box-shadow:
-    inset 0 1px 0 rgba(15,23,42,.22),
-    inset 0 0 0 1px rgba(15,23,42,.10),
-    0 26px 56px var(--shadow-mid);
-}
-
-/* FOCUS MODE */
-.cockpit.focus-active .zone{
-  opacity:.28;
-  filter:blur(.6px);
-  transform:none;
-  box-shadow:
-    inset 0 1px 0 rgba(15,23,42,.10),
-    inset 0 0 0 1px rgba(15,23,42,.04),
-    0 10px 18px var(--shadow-soft);
-}
-
-.cockpit.focus-active .zone.focused{
-  opacity:1;
-  filter:none;
-  transform: translateY(-14px) scale(1.03);
-  box-shadow:
-    inset 0 1px 0 rgba(15,23,42,.28),
-    inset 0 0 0 1px rgba(15,23,42,.14),
-    0 34px 72px var(--shadow-deep);
-  z-index:3;
-}
-
-/* HEADINGS */
-h2{
-  margin:0 0 10px 0;
-  font-size:var(--h2);
-  letter-spacing:.3px;
-}
-
-p{
-  margin:0;
-  font-size:var(--p);
-  line-height:1.45;
-  opacity:.85;
-}
-
-/* BIG ND-FRIENDLY HANDLE */
-.handle{
-  position:absolute;
-  right:16px;
-  bottom:14px;
-  width:48px;
-  height:48px;
-  border-radius:14px;
-  background:rgba(15,23,42,.06);
+/* ---------- Andy internals ---------- */
+.andy-stack{
   display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:22px;
-  font-weight:600;
-  color:rgba(15,23,42,.65);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.6),
-    0 6px 14px rgba(15,23,42,.18);
-  transition:all .2s ease;
+  flex-direction:column;
+  gap:16px;
 }
 
-.zone:hover .handle{
-  background:rgba(15,23,42,.10);
-  transform:scale(1.05);
+.andy-block{
+  background:#f9fafb;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
 }
 
-.handle::before{
-  content:"⤢"; /* expand glyph */
+.andy-block h3{
+  margin:0 0 6px 0;
+  font-size:.95em;
 }
 
-/* ENV PANEL (visual only) */
-.env{
-  position:fixed;
-  right:24px;
-  bottom:24px;
-  background:#fff;
-  border-radius:18px;
-  padding:16px 18px;
-  box-shadow:0 14px 34px rgba(15,23,42,.18);
-  font-size:.85rem;
-  z-index:2;
+.andy-input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  font-size:1em;
 }
 
-.env label{
-  display:block;
-  margin:8px 0 4px;
-  opacity:.7;
+.andy-actions{
+  display:flex;
+  gap:12px;
+  margin-top:10px;
 }
 
-.env input{
-  width:150px;
+.andy-actions button{
+  padding:10px 16px;
+  border-radius:12px;
+  border:none;
+  background:#2563eb;
+  color:#fff;
+  font-size:.9em;
+  cursor:pointer;
+}
+
+.stats-row{
+  display:flex;
+  justify-content:space-between;
+  font-size:.85em;
 }
 </style>
 </head>
 
 <body>
 
-<div class="cockpit" id="cockpit">
-  <div class="zone">
+<div class="cockpit">
+
+  <!-- PARENT -->
+  <section class="zone">
+    <div class="zone-handle">
+      <button class="zone-btn focus">Focus</button>
+      <button class="zone-btn expand">Expand</button>
+    </div>
     <h2>PARENT</h2>
     <p>Authority · Read · Lock · Authorise</p>
-    <div class="handle"></div>
-  </div>
+  </section>
 
-  <div class="zone">
+  <!-- CORE -->
+  <section class="zone">
+    <div class="zone-handle">
+      <button class="zone-btn focus">Focus</button>
+      <button class="zone-btn expand">Expand</button>
+    </div>
     <h2>CORE</h2>
     <p>One action. Calm surface. Primary focus zone.</p>
-    <div class="handle"></div>
-  </div>
+  </section>
 
-  <div class="zone">
+  <!-- ANDY -->
+  <section class="zone">
+    <div class="zone-handle">
+      <button class="zone-btn focus">Focus</button>
+      <button class="zone-btn expand">Expand</button>
+    </div>
+
     <h2>ANDY</h2>
     <p>Execution agent (token-gated)</p>
-    <div class="handle"></div>
-  </div>
-</div>
 
-<div class="env">
-  <strong>Environment</strong>
-  <label>Warmth</label>
-  <input type="range" min="0" max="100" />
-  <label>Saturation</label>
-  <input type="range" min="0" max="100" />
-  <label>Contrast</label>
-  <input type="range" min="0" max="100" />
+    <div class="andy-stack">
+
+      <div class="andy-block">
+        <h3>Intake</h3>
+        <input class="andy-input" placeholder="Drop file or paste text (visual only)" />
+      </div>
+
+      <div class="andy-block">
+        <h3>Command</h3>
+        <input class="andy-input" placeholder="A / G / R / C / T" />
+        <div class="andy-actions">
+          <button>Ingest</button>
+          <button>Dry run</button>
+        </div>
+      </div>
+
+      <div class="andy-block">
+        <h3>Stats</h3>
+        <div class="stats-row"><span>Processed</span><strong>0</strong></div>
+        <div class="stats-row"><span>Queue</span><strong>0</strong></div>
+      </div>
+
+    </div>
+  </section>
+
 </div>
 
 <script>
-const cockpit = document.getElementById("cockpit");
-const zones = document.querySelectorAll(".zone");
+/* ---------- Focus + fullscreen (single lift) ---------- */
+const zones = document.querySelectorAll('.zone');
+
+function focusZone(target){
+  zones.forEach(z=>{
+    z.classList.add('zone-dimmed');
+    z.classList.remove('zone-focused');
+  });
+  target.classList.remove('zone-dimmed');
+  target.classList.add('zone-focused');
+}
+
+function clearFocus(){
+  zones.forEach(z=>{
+    z.classList.remove('zone-focused','zone-dimmed','zone-fullscreen');
+  });
+}
 
 zones.forEach(zone=>{
-  zone.addEventListener("click",e=>{
-    e.stopPropagation();
-    cockpit.classList.add("focus-active");
-    zones.forEach(z=>z.classList.remove("focused"));
-    zone.classList.add("focused");
+  zone.addEventListener('click',e=>{
+    if(e.target.closest('.zone-btn')) return;
+    focusZone(zone);
   });
+
+  zone.querySelector('.focus').onclick=e=>{
+    e.stopPropagation();
+    focusZone(zone);
+  };
+
+  zone.querySelector('.expand').onclick=e=>{
+    e.stopPropagation();
+    clearFocus();
+    zone.classList.add('zone-fullscreen');
+  };
 });
 
-document.body.addEventListener("click",()=>{
-  cockpit.classList.remove("focus-active");
-  zones.forEach(z=>z.classList.remove("focused"));
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') clearFocus();
 });
 </script>
 
