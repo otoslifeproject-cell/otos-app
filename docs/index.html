@@ -1,207 +1,235 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>OTOS • Cockpit</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<title>OTOS • Cockpit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <style>
-    :root{
-      --bg:#eef3f8;
-      --card:#ffffff;
-      --ink:#0f172a;
+<style>
+:root{
+  --bg:#eef3f8;
+  --card:#ffffff;
+  --ink:#0f172a;
 
-      /* SHADOW TONES */
-      --shadow-dark: rgba(15,23,42,.22);
-      --shadow-mid: rgba(15,23,42,.14);
-      --shadow-soft: rgba(15,23,42,.08);
+  /* SHADOW TONES – turned up slightly */
+  --shadow-deep: rgba(15,23,42,.32);
+  --shadow-mid:  rgba(15,23,42,.20);
+  --shadow-soft: rgba(15,23,42,.12);
 
-      --radius:22px;
+  --radius:22px;
 
-      /* TEXT SCALE */
-      --h2:1.25rem;
-      --p:1.05rem;
-    }
+  /* TEXT SCALE */
+  --h2:1.3rem;
+  --p:1.05rem;
+}
 
-    *{box-sizing:border-box}
+*{box-sizing:border-box}
 
-    body{
-      margin:0;
-      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-      background:
-        radial-gradient(circle at center,
-          rgba(255,165,0,.035),
-          transparent 60%),
-        var(--bg);
-      color:var(--ink);
-      min-height:100vh;
-      padding:28px;
-    }
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  background:
+    radial-gradient(circle at center,
+      rgba(255,165,0,.04),
+      transparent 60%),
+    var(--bg);
+  color:var(--ink);
+  min-height:100vh;
+  padding:28px;
+}
 
-    /* SUBTLE BRAIN WATERMARK */
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      background:url("./assets/brain-watermark.svg") center center no-repeat;
-      background-size:65%;
-      opacity:.035;
-      pointer-events:none;
-      z-index:0;
-    }
+/* SUBTLE BRAIN WATERMARK */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:url("./assets/brain-watermark.svg") center center no-repeat;
+  background-size:65%;
+  opacity:.045; /* slightly stronger */
+  pointer-events:none;
+  z-index:0;
+}
 
-    .cockpit{
-      display:grid;
-      grid-template-columns: 1fr 1.2fr 1fr;
-      gap:28px;
-      position:relative;
-      z-index:1;
-    }
+.cockpit{
+  display:grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap:28px;
+  position:relative;
+  z-index:1;
+}
 
-    .zone{
-      background:var(--card);
-      border-radius:var(--radius);
-      padding:28px;
+/* ZONE CARD */
+.zone{
+  position:relative;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:30px 28px 42px;
 
-      /* MAIN SHADOW */
-      box-shadow:
-        0 18px 40px var(--shadow-soft);
+  /* DEPTH + EDGE */
+  box-shadow:
+    inset 0 1px 0 rgba(15,23,42,.18),
+    inset 0 0 0 1px rgba(15,23,42,.08),
+    0 20px 44px var(--shadow-soft);
 
-      /* SUBTLE DEPTH EDGE */
-      outline: 1px solid transparent;
-      outline-offset: -1px;
-      box-shadow:
-        inset 0 1px 0 rgba(15,23,42,.12),
-        inset 0 0 0 1px rgba(15,23,42,.04),
-        0 18px 40px var(--shadow-soft);
+  transition:
+    transform .22s cubic-bezier(.2,.8,.2,1),
+    box-shadow .22s ease,
+    opacity .22s ease,
+    filter .22s ease;
 
-      transition:
-        transform .18s ease,
-        box-shadow .18s ease,
-        opacity .18s ease,
-        filter .18s ease;
+  cursor:pointer;
+}
 
-      cursor:pointer;
-      position:relative;
-      z-index:1;
-    }
+/* SINGLE, REWARDING LIFT */
+.zone:hover{
+  transform: translateY(-10px);
+  box-shadow:
+    inset 0 1px 0 rgba(15,23,42,.22),
+    inset 0 0 0 1px rgba(15,23,42,.10),
+    0 26px 56px var(--shadow-mid);
+}
 
-    /* ORIGINAL SINGLE LIFT */
-    .zone:hover{
-      transform: translateY(-8px);
-      box-shadow:
-        inset 0 1px 0 rgba(15,23,42,.16),
-        inset 0 0 0 1px rgba(15,23,42,.06),
-        0 22px 46px var(--shadow-mid);
-    }
+/* FOCUS MODE */
+.cockpit.focus-active .zone{
+  opacity:.28;
+  filter:blur(.6px);
+  transform:none;
+  box-shadow:
+    inset 0 1px 0 rgba(15,23,42,.10),
+    inset 0 0 0 1px rgba(15,23,42,.04),
+    0 10px 18px var(--shadow-soft);
+}
 
-    /* FOCUS MODE */
-    .cockpit.focus-active .zone{
-      opacity:.35;
-      filter:blur(.4px);
-      transform:none;
-      box-shadow:
-        inset 0 1px 0 rgba(15,23,42,.08),
-        inset 0 0 0 1px rgba(15,23,42,.03),
-        0 8px 16px var(--shadow-soft);
-    }
+.cockpit.focus-active .zone.focused{
+  opacity:1;
+  filter:none;
+  transform: translateY(-14px) scale(1.03);
+  box-shadow:
+    inset 0 1px 0 rgba(15,23,42,.28),
+    inset 0 0 0 1px rgba(15,23,42,.14),
+    0 34px 72px var(--shadow-deep);
+  z-index:3;
+}
 
-    .cockpit.focus-active .zone.focused{
-      opacity:1;
-      filter:none;
-      transform: translateY(-12px) scale(1.015);
-      box-shadow:
-        inset 0 1px 0 rgba(15,23,42,.22),
-        inset 0 0 0 1px rgba(15,23,42,.08),
-        0 28px 56px var(--shadow-dark);
-      z-index:3;
-    }
+/* HEADINGS */
+h2{
+  margin:0 0 10px 0;
+  font-size:var(--h2);
+  letter-spacing:.3px;
+}
 
-    h2{
-      margin:0 0 10px 0;
-      font-size:var(--h2);
-      letter-spacing:.2px;
-    }
+p{
+  margin:0;
+  font-size:var(--p);
+  line-height:1.45;
+  opacity:.85;
+}
 
-    p{
-      margin:0;
-      font-size:var(--p);
-      line-height:1.45;
-      opacity:.85;
-    }
+/* BIG ND-FRIENDLY HANDLE */
+.handle{
+  position:absolute;
+  right:16px;
+  bottom:14px;
+  width:48px;
+  height:48px;
+  border-radius:14px;
+  background:rgba(15,23,42,.06);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  font-weight:600;
+  color:rgba(15,23,42,.65);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.6),
+    0 6px 14px rgba(15,23,42,.18);
+  transition:all .2s ease;
+}
 
-    /* ENVIRONMENT PANEL (visual only) */
-    .env{
-      position:fixed;
-      right:24px;
-      bottom:24px;
-      background:#fff;
-      border-radius:18px;
-      padding:16px 18px;
-      box-shadow:0 12px 30px rgba(15,23,42,.12);
-      font-size:.85rem;
-      z-index:2;
-    }
+.zone:hover .handle{
+  background:rgba(15,23,42,.10);
+  transform:scale(1.05);
+}
 
-    .env label{
-      display:block;
-      margin:8px 0 4px;
-      opacity:.7;
-    }
+.handle::before{
+  content:"⤢"; /* expand glyph */
+}
 
-    .env input{
-      width:140px;
-    }
-  </style>
+/* ENV PANEL (visual only) */
+.env{
+  position:fixed;
+  right:24px;
+  bottom:24px;
+  background:#fff;
+  border-radius:18px;
+  padding:16px 18px;
+  box-shadow:0 14px 34px rgba(15,23,42,.18);
+  font-size:.85rem;
+  z-index:2;
+}
+
+.env label{
+  display:block;
+  margin:8px 0 4px;
+  opacity:.7;
+}
+
+.env input{
+  width:150px;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="cockpit" id="cockpit">
-    <div class="zone">
-      <h2>PARENT</h2>
-      <p>Authority · Read · Lock · Authorise</p>
-    </div>
-
-    <div class="zone">
-      <h2>CORE</h2>
-      <p>One action. Calm surface. Primary focus zone.</p>
-    </div>
-
-    <div class="zone">
-      <h2>ANDY</h2>
-      <p>Execution agent (token-gated)</p>
-    </div>
+<div class="cockpit" id="cockpit">
+  <div class="zone">
+    <h2>PARENT</h2>
+    <p>Authority · Read · Lock · Authorise</p>
+    <div class="handle"></div>
   </div>
 
-  <div class="env">
-    <strong>Environment</strong>
-    <label>Warmth</label>
-    <input type="range" min="0" max="100" />
-    <label>Saturation</label>
-    <input type="range" min="0" max="100" />
-    <label>Contrast</label>
-    <input type="range" min="0" max="100" />
+  <div class="zone">
+    <h2>CORE</h2>
+    <p>One action. Calm surface. Primary focus zone.</p>
+    <div class="handle"></div>
   </div>
 
-  <script>
-    const cockpit = document.getElementById("cockpit");
-    const zones = document.querySelectorAll(".zone");
+  <div class="zone">
+    <h2>ANDY</h2>
+    <p>Execution agent (token-gated)</p>
+    <div class="handle"></div>
+  </div>
+</div>
 
-    zones.forEach(zone => {
-      zone.addEventListener("click", e => {
-        e.stopPropagation();
-        cockpit.classList.add("focus-active");
-        zones.forEach(z => z.classList.remove("focused"));
-        zone.classList.add("focused");
-      });
-    });
+<div class="env">
+  <strong>Environment</strong>
+  <label>Warmth</label>
+  <input type="range" min="0" max="100" />
+  <label>Saturation</label>
+  <input type="range" min="0" max="100" />
+  <label>Contrast</label>
+  <input type="range" min="0" max="100" />
+</div>
 
-    document.body.addEventListener("click", () => {
-      cockpit.classList.remove("focus-active");
-      zones.forEach(z => z.classList.remove("focused"));
-    });
-  </script>
+<script>
+const cockpit = document.getElementById("cockpit");
+const zones = document.querySelectorAll(".zone");
+
+zones.forEach(zone=>{
+  zone.addEventListener("click",e=>{
+    e.stopPropagation();
+    cockpit.classList.add("focus-active");
+    zones.forEach(z=>z.classList.remove("focused"));
+    zone.classList.add("focused");
+  });
+});
+
+document.body.addEventListener("click",()=>{
+  cockpit.classList.remove("focus-active");
+  zones.forEach(z=>z.classList.remove("focused"));
+});
+</script>
 
 </body>
 </html>
