@@ -2,249 +2,120 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS · Parent Core Control</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OTOS · Parent Core Control</title>
 
-  <style>
-    :root{
-      --bg:#eef4fb;
-      --card:#ffffff;
-      --ink:#0f172a;
-      --muted:#475569;
-      --border:rgba(0,0,0,.08);
-      --blue:#3b82f6;
-    }
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="./styles.css" />
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      color:var(--ink);
-      background:radial-gradient(circle at bottom right,#dbeafe,var(--bg));
-    }
-
-    /* TOP BAR */
-    header{
-      height:56px;
-      background:linear-gradient(90deg,#020617,#020617);
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:0 20px;
-      font-size:14px;
-    }
-
-    header .left{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:600;
-    }
-
-    header .status{
-      font-size:12px;
-      opacity:.8;
-    }
-
-    /* LAYOUT */
-    #app{
-      max-width:1400px;
-      margin:24px auto;
-      padding:0 24px 40px;
-      display:grid;
-      grid-template-columns:320px 1fr 320px;
-      gap:24px;
-    }
-
-    .column{
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-    }
-
-    .card{
-      background:var(--card);
-      border-radius:14px;
-      padding:16px;
-      box-shadow:0 10px 25px rgba(0,0,0,.06);
-    }
-
-    .card h3{
-      margin:0 0 6px 0;
-      font-size:15px;
-    }
-
-    .muted{color:var(--muted);font-size:13px}
-
-    /* SLIDER */
-    input[type=range]{
-      width:100%;
-      margin-top:8px;
-    }
-
-    /* BUTTONS */
-    button{
-      border:1px solid var(--border);
-      background:#f8fafc;
-      padding:6px 10px;
-      border-radius:8px;
-      cursor:pointer;
-      font-size:12px;
-    }
-
-    button.primary{
-      background:var(--blue);
-      color:#fff;
-      border:none;
-    }
-
-    button.small{
-      font-size:11px;
-      padding:4px 8px;
-    }
-
-    /* INPUTS */
-    input[type=text]{
-      width:100%;
-      padding:6px 8px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      font-size:12px;
-      margin-top:6px;
-    }
-
-    textarea{
-      width:100%;
-      min-height:80px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      padding:8px;
-      font-size:12px;
-    }
-
-    /* STATS */
-    .stat{
-      display:flex;
-      justify-content:space-between;
-      font-size:13px;
-      margin-top:4px;
-    }
-
-    /* HIGHLIGHT */
-    .highlight{
-      font-size:12px;
-    }
-
-    /* RESPONSIVE */
-    @media(max-width:1100px){
-      #app{grid-template-columns:1fr}
-    }
-  </style>
 </head>
-
 <body>
 
-<header>
-  <div class="left">
-    <span>OTOS</span>
-    <span>Parent · Core Control</span>
-  </div>
-  <div class="status">System idle · No execution tokens issued</div>
-</header>
-
-<main id="app">
-
-  <!-- LEFT -->
-  <div class="column">
-
-    <div class="card">
-      <h3>Parent Node</h3>
-      <div class="muted">Authority · Read / Lock / Authorise</div>
+  <!-- HEADER -->
+  <header class="top-bar">
+    <div class="brand">
+      <img src="./brand/logo/otos-logo-400.png" alt="OTOS" />
+      <span>Parent · Core Control</span>
     </div>
-
-    <div class="card">
-      <h3>Reality Radar</h3>
-      <div class="muted">Mode <b>GUIDED</b></div>
-      <div class="muted">Temp 4</div>
-      <input type="range" min="1" max="10" value="4" />
+    <div class="system-status">
+      System idle · No execution tokens issued
     </div>
+  </header>
 
-    <div class="card">
-      <h3>System State</h3>
-      <div class="stat"><span>Locks</span><b>Enforced</b></div>
-      <div class="stat"><span>Memory</span><b>Tiered</b></div>
-    </div>
+  <!-- APP ROOT -->
+  <main id="app">
 
-    <div class="card">
-      <h3>Execution Tokens</h3>
-      <button class="small">Issue token: INGEST + READ + SUGGEST</button>
-      <button class="small">Revoke tokens</button>
-      <div class="muted" style="margin-top:6px">
-        Andy cannot act without explicit tokens.
+    <!-- LEFT COLUMN -->
+    <section class="column column-left">
+
+      <div class="card">
+        <h3>Parent Node</h3>
+        <p>Authority · Read / Lock / Authorise</p>
       </div>
-    </div>
 
-    <div class="card">
-      <h3>Notes</h3>
-      <textarea placeholder="Quick notes (local only)"></textarea>
-    </div>
-
-  </div>
-
-  <!-- CENTER -->
-  <div class="column">
-
-    <div class="card">
-      <h3>Focus</h3>
-      <div class="muted">One action · Projects</div>
-    </div>
-
-    <div class="card">
-      <h3>One Action</h3>
-      <div class="muted">Wire Andy intake + stats safely (token-gated)</div>
-    </div>
-
-    <div class="card">
-      <h3>Projects</h3>
-      <div class="muted">(Locked — loads next layer)</div>
-    </div>
-
-  </div>
-
-  <!-- RIGHT -->
-  <div class="column">
-
-    <div class="card">
-      <h3>Andy · Execution Agent</h3>
-      <div class="muted">Feeder · Intake + extraction (no promotion)</div>
-    </div>
-
-    <div class="card">
-      <h3>Intake</h3>
-      <input type="file" />
-      <input type="text" placeholder="Command: A / G / R / C / T" />
-      <button class="primary small" style="margin-top:6px">Ingest batch</button>
-      <div class="muted" style="margin-top:6px">
-        A analyse · G golden · R revenue · C canon · T tasks · ? notable
+      <div class="card">
+        <h3>Reality Radar</h3>
+        <p>Mode <strong>GUIDED</strong></p>
+        <p>Temp 4</p>
+        <input type="range" min="1" max="10" value="4" />
       </div>
-    </div>
 
-    <div class="card">
-      <h3>Stats</h3>
-      <div class="stat"><span>Processed</span><b>0</b></div>
-      <div class="stat"><span>Queue</span><b>0</b></div>
-      <button class="small" style="margin-top:6px">Export Tier-3 Archive (JSON)</button>
-    </div>
+      <div class="card">
+        <h3>System State</h3>
+        <p>Locks <strong>Enforced</strong></p>
+        <p>Memory <strong>Tiered</strong></p>
+      </div>
 
-    <div class="card">
-      <h3>Running Highlight Report</h3>
-      <div class="highlight">Andy engine ready (idle)</div>
-    </div>
+      <div class="card">
+        <h3>Execution Tokens</h3>
+        <button id="issueTokens">Issue token: INGEST + READ + SUGGEST</button>
+        <button id="revokeTokens">Revoke tokens</button>
+        <p class="hint">Andy cannot act without explicit tokens.</p>
+      </div>
 
-  </div>
+      <div class="card">
+        <h3>Notes</h3>
+        <textarea placeholder="Quick notes (local only)"></textarea>
+      </div>
 
-</main>
+    </section>
+
+    <!-- CENTER COLUMN -->
+    <section class="column column-center">
+
+      <div class="card">
+        <h3>Focus</h3>
+        <p>One action · Projects</p>
+      </div>
+
+      <div class="card">
+        <h3>One Action</h3>
+        <p>Wire Andy intake + stats safely (token-gated)</p>
+      </div>
+
+      <div class="card">
+        <h3>Projects</h3>
+        <p>(Locked — loads next layer)</p>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN -->
+    <section class="column column-right">
+
+      <div class="card">
+        <h3>Andy · Execution Agent</h3>
+        <p>Feeder · Intake + extraction (no promotion)</p>
+      </div>
+
+      <div class="card">
+        <h3>Intake</h3>
+        <input type="file" id="intakeFiles" multiple />
+        <input type="text" placeholder="Command: A / G / R / C / T" />
+        <button id="ingestBtn">Ingest batch</button>
+        <p class="hint">
+          A analyse · G golden · R revenue · C canon · T tasks · ? notable
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Stats</h3>
+        <p>Processed <strong id="statProcessed">0</strong></p>
+        <p>Queue <strong id="statQueue">0</strong></p>
+        <button id="exportArchive">Export Tier-3 Archive (JSON)</button>
+      </div>
+
+      <div class="card">
+        <h3>Running Highlight Report</h3>
+        <p id="engineStatus">Andy engine ready (idle)</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- CORE ENGINE -->
+  <script src="./app.js"></script>
 
 </body>
 </html>
