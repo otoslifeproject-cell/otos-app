@@ -1,66 +1,142 @@
 /**
  * feeder.js
- * Andy Intake Feeder – Tier-1 (local, non-destructive)
- * ND-safe: explicit actions, no auto side-effects
+ * Andy Execution Feeder
+ *
+ * HARD GUARANTEES:
+ * - No execution without explicit Parent-issued token
+ * - Deterministic, ND-safe behaviour
+ * - One action at a time
  */
 
 (() => {
-  // ---- State ----
-  const state = {
-    processed: 0,
-    queue: 0,
-    lastCommand: null,
-    lastFile: null
-  };
-
-  // ---- Helpers ----
+  // -------------------------------
+  // Utilities
+  // -------------------------------
   const $ = (id) => document.getElementById(id);
-  const text = (id, value) => { if ($(id)) $(id).textContent = value; };
 
   function log(msg) {
     console.log(`[ANDY][FEEDER] ${msg}`);
-    text("highlight-report", msg);
+    const report = $("highlight-report");
+    if (report) report.textContent = msg;
   }
 
-  function parseCommand(raw) {
-    if (!raw) return null;
-    const c = raw.trim().toUpperCase();
-    const map = {
-      A: "ANALYSE",
-      G: "GOLDEN",
-      R: "REVENUE",
-      C: "CANON",
-      T: "TASKS"
+  // -------------------------------
+  // Token Gate (HARD)
+  // -------------------------------
+  function tokenAllowed() {
+    if (!window.ANDY_TOKEN || !window.ANDY_TOKEN.canExecute()) {
+      log("Blocked: No execution token issued");
+      return false;
+    }
+    return true;
+  }
+
+  // -------------------------------
+  // State
+  // -------------------------------
+  const STATE = {
+    processing: false,
+    processed: 0,
+    queue: 0
+  };
+
+  function updateStats() {
+    const p = $("stat-processed");
+    const q = $("stat-queue");
+    if (p) p.textContent = STATE.processed;
+    if (q) q.textContent = STATE.queue;
+  }
+
+  // -------------------------------
+  // Command Parsing
+  // -------------------------------
+  function parseCommand(cmd) {
+    return {
+      analyse: cmd.includes("A"),
+      golden: cmd.includes("G"),
+      revenue: cmd.includes("R"),
+      canon: cmd.includes("C"),
+      tasks: cmd.includes("T")
     };
-    return map[c] || null;
   }
 
-  // ---- DOM Bindings ----
-  const fileInput = $("intake-file");
-  const commandInput = $("intake-command");
-  const ingestBtn = $("ingest-btn");
+  // -------------------------------
+  // Core Ingest
+  // -------------------------------
+  async function ingest(file, command) {
+    if (STATE.processing) {
+      log("Busy: ingestion already running");
+      return;
+    }
 
-  if (!fileInput || !commandInput || !ingestBtn) {
-    console.warn("Andy feeder bindings not found");
+    if (!tokenAllowed()) return;
+
+    STATE.processing = true;
+    STATE.queue = 1;
+    updateStats();
+
+    log("Ingest started");
+
+    try {
+      const text = await file.text();
+      const intent = parseCommand(command);
+
+      // ---- Simulated extraction pipeline ----
+      await new Promise((r) => setTimeout(r, 400));
+
+      const payload = {
+        filename: file.name,
+        size: file.size,
+        intent,
+        preview: text.slice(0, 500)
+      };
+
+      console.log("[ANDY][PAYLOAD]", payload);
+
+      STATE.processed += 1;
+      STATE.queue = 0;
+
+      log("Ingest complete (idle)");
+
+    } catch (err) {
+      console.error(err);
+      log("Error during ingest");
+    } finally {
+      STATE.processing = false;
+      updateStats();
+    }
+  }
+
+  // -------------------------------
+  // Wire UI
+  // -------------------------------
+  const ingestBtn = $("ingest-btn");
+  const fileInput = $("file-input");
+  const commandInput = $("command-input");
+
+  if (!ingestBtn || !fileInput || !commandInput) {
+    console.warn("Feeder UI elements missing");
     return;
   }
 
-  // ---- UI State ----
-  function updateStats() {
-    text("stats-processed", state.processed);
-    text("stats-queue", state.queue);
-  }
-
-  function enableIngest(enabled) {
-    ingestBtn.disabled = !enabled;
-  }
-
-  // ---- Events ----
-  fileInput.addEventListener("change", () => {
+  ingestBtn.addEventListener("click", () => {
     const file = fileInput.files[0];
-    state.lastFile = file || null;
-    log(file ? `File selected: ${file.name}` : "No file selected");
-    enableIngest(!!file);
+    const command = commandInput.value || "";
+
+    if (!file) {
+      log("No file selected");
+      return;
+    }
+
+    ingest(file, command.toUpperCase());
+  });
+
+  // -------------------------------
+  // Boot
+  // -------------------------------
+  updateStats();
+  log("Andy engine ready (idle)");
+})();
   });
 
   ingestBtn.addEventListener("click", () => {
