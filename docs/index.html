@@ -10,12 +10,15 @@
       --bg:#eef3f8;
       --card:#ffffff;
       --ink:#0f172a;
-      --border:rgba(15,23,42,.08);
-      --shadow:0 18px 40px rgba(15,23,42,.12);
-      --lift:translateY(-8px);
+
+      /* SHADOW TONES */
+      --shadow-dark: rgba(15,23,42,.22);
+      --shadow-mid: rgba(15,23,42,.14);
+      --shadow-soft: rgba(15,23,42,.08);
+
       --radius:22px;
 
-      /* TEXT SCALE — 120% */
+      /* TEXT SCALE */
       --h2:1.25rem;
       --p:1.05rem;
     }
@@ -59,13 +62,25 @@
       background:var(--card);
       border-radius:var(--radius);
       padding:28px;
-      border:1px solid var(--border);
-      box-shadow:0 10px 24px rgba(15,23,42,.08);
+
+      /* MAIN SHADOW */
+      box-shadow:
+        0 18px 40px var(--shadow-soft);
+
+      /* SUBTLE DEPTH EDGE */
+      outline: 1px solid transparent;
+      outline-offset: -1px;
+      box-shadow:
+        inset 0 1px 0 rgba(15,23,42,.12),
+        inset 0 0 0 1px rgba(15,23,42,.04),
+        0 18px 40px var(--shadow-soft);
+
       transition:
         transform .18s ease,
         box-shadow .18s ease,
         opacity .18s ease,
         filter .18s ease;
+
       cursor:pointer;
       position:relative;
       z-index:1;
@@ -73,8 +88,11 @@
 
     /* ORIGINAL SINGLE LIFT */
     .zone:hover{
-      transform:var(--lift);
-      box-shadow:var(--shadow);
+      transform: translateY(-8px);
+      box-shadow:
+        inset 0 1px 0 rgba(15,23,42,.16),
+        inset 0 0 0 1px rgba(15,23,42,.06),
+        0 22px 46px var(--shadow-mid);
     }
 
     /* FOCUS MODE */
@@ -82,14 +100,20 @@
       opacity:.35;
       filter:blur(.4px);
       transform:none;
-      box-shadow:0 6px 14px rgba(15,23,42,.06);
+      box-shadow:
+        inset 0 1px 0 rgba(15,23,42,.08),
+        inset 0 0 0 1px rgba(15,23,42,.03),
+        0 8px 16px var(--shadow-soft);
     }
 
     .cockpit.focus-active .zone.focused{
       opacity:1;
       filter:none;
-      transform:translateY(-12px) scale(1.015);
-      box-shadow:0 22px 50px rgba(15,23,42,.18);
+      transform: translateY(-12px) scale(1.015);
+      box-shadow:
+        inset 0 1px 0 rgba(15,23,42,.22),
+        inset 0 0 0 1px rgba(15,23,42,.08),
+        0 28px 56px var(--shadow-dark);
       z-index:3;
     }
 
