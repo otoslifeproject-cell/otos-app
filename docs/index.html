@@ -5,7 +5,6 @@
   <title>OTOS · Parent Core Control</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Base Styles -->
   <style>
     :root{
       --bg:#0b1020;
@@ -29,7 +28,7 @@
       color:var(--ink);
     }
 
-    /* Top Bar */
+    /* Header */
     header{
       height:56px;
       display:flex;
@@ -44,16 +43,15 @@
     header .left{
       display:flex;
       align-items:center;
-      gap:12px;
+      gap:10px;
       font-weight:600;
     }
 
     header .right{
       color:var(--muted);
-      font-weight:500;
     }
 
-    /* App Grid */
+    /* Layout */
     main{
       padding:24px;
     }
@@ -92,48 +90,31 @@
       line-height:1.5;
     }
 
-    /* Slider */
-    input[type=range]{
-      width:100%;
-      margin-top:10px;
-    }
-
-    /* Buttons */
-    button{
+    /* Controls */
+    input[type=range]{width:100%}
+    input,textarea,button{
       background:#0b1225;
       color:var(--ink);
       border:1px solid var(--border);
       border-radius:8px;
-      padding:8px 12px;
-      cursor:pointer;
+      padding:8px;
       font-size:12px;
     }
+
+    textarea{min-height:60px}
 
     button.primary{
       background:linear-gradient(180deg,#2563eb,#1d4ed8);
       border:none;
     }
 
+    button{cursor:pointer}
     button + button{margin-left:8px}
 
-    /* Inputs */
-    input[type=text],textarea{
-      width:100%;
-      background:#0b1225;
-      border:1px solid var(--border);
-      border-radius:8px;
-      color:var(--ink);
-      padding:8px;
-      font-size:12px;
-    }
-
-    textarea{min-height:60px;resize:vertical}
-
-    /* Pulse (engine ready) */
+    /* Andy pulse */
     .pulse{
       position:relative;
     }
-
     .pulse::after{
       content:"";
       position:absolute;
@@ -141,7 +122,6 @@
       border-radius:inherit;
       animation:pulse 2s ease-out infinite;
     }
-
     @keyframes pulse{
       0%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
       60%{box-shadow:0 0 0 12px rgba(34,197,94,.12)}
@@ -154,7 +134,7 @@
 
 <header>
   <div class="left">
-    <span>OTOS</span>
+    <strong>OTOS</strong>
     <span style="opacity:.6">Parent · Core Control</span>
   </div>
   <div class="right">
@@ -187,12 +167,10 @@
 
       <div class="card">
         <div class="title">Execution Tokens</div>
-        <div class="value">
-          Andy cannot act without explicit tokens.
-        </div>
+        <div class="value">Andy cannot act without explicit tokens.</div>
         <div style="margin-top:10px">
-          <button>Issue token: INGEST + READ + SUGGEST</button>
-          <button>Revoke tokens</button>
+          <button>Issue token</button>
+          <button>Revoke</button>
         </div>
       </div>
 
@@ -211,9 +189,7 @@
 
       <div class="card">
         <div class="title">One Action</div>
-        <div class="value">
-          Wire Andy intake + stats safely (token-gated)
-        </div>
+        <div class="value">Wire Andy intake + stats safely (token-gated)</div>
       </div>
 
       <div class="card">
@@ -226,18 +202,14 @@
     <section>
       <div class="card pulse">
         <div class="title">Andy · Execution Agent</div>
-        <div class="value">
-          Feeder · Intake + extraction (no promotion)
-        </div>
+        <div class="value">Feeder · Intake + extraction (no promotion)</div>
       </div>
 
       <div class="card">
         <div class="title">Intake</div>
         <input type="file" disabled />
         <input type="text" placeholder="Command: A / G / R / C / T" disabled />
-        <div style="margin-top:10px">
-          <button class="primary" disabled>Ingest batch</button>
-        </div>
+        <button class="primary" disabled style="margin-top:10px">Ingest batch</button>
         <div class="value" style="margin-top:8px">
           A analyse · G golden · R revenue · C canon · T tasks · ? notable
         </div>
@@ -247,9 +219,7 @@
         <div class="title">Stats</div>
         <div class="value">Processed 0</div>
         <div class="value">Queue 0</div>
-        <div style="margin-top:10px">
-          <button>Export Tier-3 Archive (JSON)</button>
-        </div>
+        <button style="margin-top:10px">Export Tier-3 Archive (JSON)</button>
       </div>
 
       <div class="card">
