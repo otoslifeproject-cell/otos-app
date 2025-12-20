@@ -1,1 +1,282 @@
-Restore zone grabbers, expanders, glow slider + enable Andy drag-drop intake
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>OTOS – Cockpit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+:root{
+  --bg:#eef3f7;
+  --card:#ffffff;
+  --ink:#0f172a;
+  --muted:#64748b;
+  --accent:#ff7a1a;
+  --shadow-outer: 0 18px 40px rgba(15,23,42,.18);
+  --shadow-hover: 0 22px 52px rgba(15,23,42,.22);
+  --shadow-inner: inset 0 1px 1px rgba(255,255,255,.6);
+  --blur: blur(6px);
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  background: radial-gradient(circle at top, #f8fafc, var(--bg));
+  color:var(--ink);
+  overflow:hidden;
+}
+
+.cockpit{
+  display:grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap:28px;
+  padding:28px;
+  height:100vh;
+}
+
+.zone{
+  position:relative;
+  background:var(--card);
+  border-radius:18px;
+  padding:22px 22px 26px;
+  box-shadow: var(--shadow-outer), var(--shadow-inner);
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    filter .25s ease,
+    opacity .25s ease;
+  cursor:grab;
+}
+
+.zone:hover{
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover), var(--shadow-inner);
+}
+
+.zone.active{
+  transform: translateY(-12px) scale(1.02);
+  z-index:5;
+}
+
+.zone.blurred{
+  filter: var(--blur);
+  opacity:.35;
+}
+
+.zone-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+
+.zone h2{
+  font-size:1.05rem;
+  margin:0;
+  letter-spacing:.04em;
+}
+
+.zone p{
+  margin:6px 0 0;
+  font-size:.95rem;
+  color:var(--muted);
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+}
+
+.icon-btn{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  border:none;
+  background:#f1f5f9;
+  box-shadow: inset 2px 2px 4px rgba(255,255,255,.8),
+              inset -2px -2px 4px rgba(0,0,0,.08);
+  cursor:pointer;
+  font-size:16px;
+}
+
+.icon-btn:hover{
+  box-shadow:
+    0 6px 16px rgba(15,23,42,.25),
+    inset 1px 1px 2px rgba(255,255,255,.7);
+}
+
+.expand::before{content:"⤢"}
+.collapse::before{content:"⤡"}
+
+button.primary{
+  background: linear-gradient(180deg,#ff8a33,#ff6a00);
+  border:none;
+  border-radius:14px;
+  padding:12px 18px;
+  color:#fff;
+  font-weight:600;
+  box-shadow:
+    0 10px 24px rgba(255,122,26,.45),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  cursor:pointer;
+}
+
+button.primary:hover{
+  box-shadow:
+    0 14px 30px rgba(255,122,26,.55),
+    inset 0 1px 0 rgba(255,255,255,.45);
+}
+
+.slider-wrap{
+  margin-top:18px;
+}
+
+input[type=range]{
+  width:100%;
+  appearance:none;
+  height:6px;
+  border-radius:6px;
+  background: linear-gradient(90deg,var(--accent),#ffd1ad);
+  outline:none;
+}
+
+input[type=range]::-webkit-slider-thumb{
+  appearance:none;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 0 8px rgba(255,122,26,.25);
+  cursor:pointer;
+}
+
+.dropzone{
+  margin-top:16px;
+  padding:18px;
+  border-radius:14px;
+  background:#f8fafc;
+  border:2px dashed #cbd5e1;
+  text-align:center;
+  color:#64748b;
+  transition:.2s;
+}
+
+.dropzone.drag{
+  background:#fff7ed;
+  border-color:var(--accent);
+  color:#9a3412;
+}
+
+.status{
+  display:flex;
+  justify-content:space-between;
+  margin-top:12px;
+  font-size:.85rem;
+  color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+
+<div class="cockpit" id="cockpit">
+
+  <div class="zone" data-zone>
+    <div class="zone-header">
+      <h2>PARENT</h2>
+      <div class="controls">
+        <button class="icon-btn expand"></button>
+      </div>
+    </div>
+    <p>Authority · Read · Lock · Authorise</p>
+  </div>
+
+  <div class="zone" data-zone>
+    <div class="zone-header">
+      <h2>CORE</h2>
+      <div class="controls">
+        <button class="icon-btn expand"></button>
+      </div>
+    </div>
+    <p>One action. Calm surface. Primary focus zone.</p>
+  </div>
+
+  <div class="zone" data-zone id="andy">
+    <div class="zone-header">
+      <h2>ANDY</h2>
+      <div class="controls">
+        <button class="icon-btn expand"></button>
+      </div>
+    </div>
+
+    <p>Execution agent (token-gated)</p>
+
+    <div class="dropzone" id="dropzone">
+      Drop file or paste text (visual only)
+    </div>
+
+    <div class="slider-wrap">
+      <strong>Run Action</strong>
+      <input type="range" min="0" max="100" value="0" />
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:18px;">
+      <button class="primary">Ingest</button>
+      <button class="primary" style="opacity:.7">Dry run</button>
+    </div>
+
+    <div class="status">
+      <span>Idle</span>
+      <span>Processed: 0 · Queue: 0</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const zones = document.querySelectorAll('[data-zone]');
+const cockpit = document.getElementById('cockpit');
+
+zones.forEach(z=>{
+  z.addEventListener('click',e=>{
+    if(e.target.closest('.icon-btn')) return;
+    zones.forEach(o=>{
+      o.classList.toggle('blurred', o!==z);
+      o.classList.toggle('active', o===z);
+    });
+  });
+
+  z.querySelector('.expand').addEventListener('click',e=>{
+    e.stopPropagation();
+    zones.forEach(o=>{
+      o.classList.toggle('blurred', o!==z);
+      o.classList.toggle('active', o===z);
+    });
+  });
+});
+
+cockpit.addEventListener('click',e=>{
+  if(e.target===cockpit){
+    zones.forEach(z=>{
+      z.classList.remove('active','blurred');
+    });
+  }
+});
+
+const drop = document.getElementById('dropzone');
+drop.addEventListener('dragover',e=>{
+  e.preventDefault();
+  drop.classList.add('drag');
+});
+drop.addEventListener('dragleave',()=>drop.classList.remove('drag'));
+drop.addEventListener('drop',e=>{
+  e.preventDefault();
+  drop.classList.remove('drag');
+  drop.textContent = "Item received (visual only)";
+});
+</script>
+
+</body>
+</html>
