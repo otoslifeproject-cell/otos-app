@@ -3,102 +3,263 @@
 <head>
   <meta charset="UTF-8" />
   <title>OTOS · Parent Core Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Viewport -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Base Styles -->
+  <style>
+    :root{
+      --bg:#0b1020;
+      --panel:#121a2f;
+      --panel-soft:#0f1628;
+      --ink:#e6ebff;
+      --muted:#9aa4d1;
+      --accent:#3b82f6;
+      --good:#22c55e;
+      --border:rgba(255,255,255,.08);
+      --radius:16px;
+    }
 
-  <!-- Core Styles -->
-  <link rel="stylesheet" href="./styles.css" />
-  <link rel="stylesheet" href="./ui/assets/css/ui-polish.css" />
+    *{box-sizing:border-box}
+    html,body{height:100%}
 
-  <!-- Favicon / Logo -->
-  <link rel="icon" href="./brand/logo/otos-logo-400.png" />
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;
+      background:radial-gradient(1200px 600px at 50% -200px,#1b2550,var(--bg));
+      color:var(--ink);
+    }
 
-  <!-- Safety: prevent registry crash killing UI -->
-  <script>
-    window.OTOS_CONFIG = {
-      basePath: "./",
-      registryPath: "./registry.json",
-      mode: "parent",
-      allowRegistryFailSoft: true
-    };
-  </script>
+    /* Top Bar */
+    header{
+      height:56px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 20px;
+      background:linear-gradient(180deg,#0e1428,#090e1d);
+      border-bottom:1px solid var(--border);
+      font-size:13px;
+    }
+
+    header .left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:600;
+    }
+
+    header .right{
+      color:var(--muted);
+      font-weight:500;
+    }
+
+    /* App Grid */
+    main{
+      padding:24px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    @media (max-width:1200px){
+      .grid{grid-template-columns:1fr}
+    }
+
+    /* Cards */
+    .card{
+      background:linear-gradient(180deg,var(--panel),var(--panel-soft));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:0 10px 40px rgba(0,0,0,.35);
+    }
+
+    .card + .card{margin-top:16px}
+
+    .title{
+      font-size:11px;
+      letter-spacing:.14em;
+      color:var(--muted);
+      margin-bottom:8px;
+    }
+
+    .value{
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    /* Slider */
+    input[type=range]{
+      width:100%;
+      margin-top:10px;
+    }
+
+    /* Buttons */
+    button{
+      background:#0b1225;
+      color:var(--ink);
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:8px 12px;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    button.primary{
+      background:linear-gradient(180deg,#2563eb,#1d4ed8);
+      border:none;
+    }
+
+    button + button{margin-left:8px}
+
+    /* Inputs */
+    input[type=text],textarea{
+      width:100%;
+      background:#0b1225;
+      border:1px solid var(--border);
+      border-radius:8px;
+      color:var(--ink);
+      padding:8px;
+      font-size:12px;
+    }
+
+    textarea{min-height:60px;resize:vertical}
+
+    /* Pulse (engine ready) */
+    .pulse{
+      position:relative;
+    }
+
+    .pulse::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius:inherit;
+      animation:pulse 2s ease-out infinite;
+    }
+
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+      60%{box-shadow:0 0 0 12px rgba(34,197,94,.12)}
+      100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+    }
+  </style>
 </head>
 
 <body>
-  <!-- ========================================================= -->
-  <!-- TOP BAR -->
-  <!-- ========================================================= -->
-  <header class="top-bar">
-    <div class="brand">
-      <img src="./brand/logo/otos-logo-400.png" alt="OTOS" />
-      <span>Parent · Core Control</span>
-    </div>
-    <div class="status">
-      System idle · No execution tokens issued
-    </div>
-  </header>
 
-  <!-- ========================================================= -->
-  <!-- APP ROOT -->
-  <!-- ========================================================= -->
-  <main id="app">
-    <!-- UI renders here -->
-  </main>
+<header>
+  <div class="left">
+    <span>OTOS</span>
+    <span style="opacity:.6">Parent · Core Control</span>
+  </div>
+  <div class="right">
+    System idle · No execution tokens issued
+  </div>
+</header>
 
-  <!-- ========================================================= -->
-  <!-- CORE BOOT ORDER (DO NOT REORDER) -->
-  <!-- ========================================================= -->
+<main>
+  <div class="grid">
 
-  <!-- Registry (fail-soft) -->
-  <script src="./registry-engine.js"></script>
+    <!-- LEFT · PARENT -->
+    <section>
+      <div class="card">
+        <div class="title">Parent Node</div>
+        <div class="value">Authority · Read / Lock / Authorise</div>
+      </div>
 
-  <!-- Core State -->
-  <script src="./core/state.js"></script>
+      <div class="card">
+        <div class="title">Reality Radar</div>
+        <div class="value">Mode <strong>GUIDED</strong></div>
+        <div class="value">Temp 4</div>
+        <input type="range" min="1" max="7" value="4" disabled />
+      </div>
 
-  <!-- UI Core -->
-  <script src="./ui-card-focus.js"></script>
-  <script src="./ui-command-palette.js"></script>
-  <script src="./ui-drag-snap.js"></script>
-  <script src="./ui-drag-persist.js"></script>
-  <script src="./ui-polish-premium.js"></script>
+      <div class="card">
+        <div class="title">System State</div>
+        <div class="value">Locks <strong>Enforced</strong></div>
+        <div class="value">Memory <strong>Tiered</strong></div>
+      </div>
 
-  <!-- Andy Core -->
-  <script src="./andy-engine.js"></script>
-  <script src="./andy-feeder.js"></script>
-  <script src="./andy-pulse.js"></script>
-  <script src="./andy-queue-monitor.js"></script>
+      <div class="card">
+        <div class="title">Execution Tokens</div>
+        <div class="value">
+          Andy cannot act without explicit tokens.
+        </div>
+        <div style="margin-top:10px">
+          <button>Issue token: INGEST + READ + SUGGEST</button>
+          <button>Revoke tokens</button>
+        </div>
+      </div>
 
-  <!-- Notion Adapter (safe idle) -->
-  <script src="./andy-notion-adapter.js"></script>
+      <div class="card">
+        <div class="title">Notes</div>
+        <textarea placeholder="Quick notes (local only)"></textarea>
+      </div>
+    </section>
 
-  <!-- ========================================================= -->
-  <!-- FINAL BOOTSTRAP -->
-  <!-- ========================================================= -->
-  <script>
-    (function boot() {
-      try {
-        if (window.RegistryEngine) {
-          RegistryEngine.init({
-            path: window.OTOS_CONFIG.registryPath,
-            failSoft: true
-          });
-        }
+    <!-- CENTER · FOCUS -->
+    <section>
+      <div class="card">
+        <div class="title">Focus</div>
+        <div class="value">One action · Projects</div>
+      </div>
 
-        if (window.AndyEngine) {
-          AndyEngine.init({
-            mode: "intake",
-            ui: true,
-            stats: true,
-            live: false
-          });
-        }
+      <div class="card">
+        <div class="title">One Action</div>
+        <div class="value">
+          Wire Andy intake + stats safely (token-gated)
+        </div>
+      </div>
 
-        console.log("OTOS boot complete");
-      } catch (e) {
-        console.error("OTOS boot error:", e);
-      }
-    })();
-  </script>
+      <div class="card">
+        <div class="title">Projects</div>
+        <div class="value">(Locked — loads next layer)</div>
+      </div>
+    </section>
+
+    <!-- RIGHT · ANDY -->
+    <section>
+      <div class="card pulse">
+        <div class="title">Andy · Execution Agent</div>
+        <div class="value">
+          Feeder · Intake + extraction (no promotion)
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="title">Intake</div>
+        <input type="file" disabled />
+        <input type="text" placeholder="Command: A / G / R / C / T" disabled />
+        <div style="margin-top:10px">
+          <button class="primary" disabled>Ingest batch</button>
+        </div>
+        <div class="value" style="margin-top:8px">
+          A analyse · G golden · R revenue · C canon · T tasks · ? notable
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="title">Stats</div>
+        <div class="value">Processed 0</div>
+        <div class="value">Queue 0</div>
+        <div style="margin-top:10px">
+          <button>Export Tier-3 Archive (JSON)</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="title">Running Highlight Report</div>
+        <div class="value">Andy engine ready (idle)</div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
 </body>
 </html>
