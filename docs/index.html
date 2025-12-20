@@ -1,296 +1,106 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OTOS · Cockpit</title>
-  <link rel="stylesheet" href="./styles.css" />
+<meta charset="UTF-8" />
+<title>OTOS Cockpit</title>
+
+<style>
+:root {
+  --warmth: 0deg;
+  --saturation: 100%;
+  --contrast: 100%;
+  --bg-base: #eef2f7;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background:
+    url("./assets/brain-watermark.png") center / 60% no-repeat,
+    var(--bg-base);
+  filter:
+    hue-rotate(var(--warmth))
+    saturate(var(--saturation))
+    contrast(var(--contrast));
+  transition: filter 0.3s ease;
+}
+
+/* Watermark safety */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("./assets/brain-watermark.png") center / 60% no-repeat;
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Cockpit content sits above */
+#cockpit {
+  position: relative;
+  z-index: 1;
+}
+
+/* Palette Control */
+.palette-control {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  font-size: 12px;
+}
+
+.palette-control label {
+  display: block;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.palette-control input[type="range"] {
+  width: 160px;
+}
+</style>
 </head>
 
 <body>
-  <!-- TOP BAR -->
-  <header class="topbar" role="banner">
-    <div class="brand">
-      <img class="brand__logo" src="./brand/logo/otos-logo-400.png" alt="OTOS" />
-      <div class="brand__text">
-        <div class="brand__title">OTOS</div>
-        <div class="brand__sub">Cockpit · Parent Node</div>
-      </div>
-    </div>
 
-    <div class="topbar__status" aria-live="polite">
-      <span class="pill pill--sky">SKYHAWK</span>
-      <span id="skyhawkLine">Signals nominal · Latency: 14ms · Feeds: 6 active · No anomalies detected</span>
-    </div>
+<div id="cockpit">
+  <!-- EXISTING COCKPIT HTML GOES HERE -->
+</div>
 
-    <div class="topbar__right">
-      <span id="systemLine" class="muted">System idle · No execution tokens issued</span>
-    </div>
-  </header>
+<div class="palette-control">
+  <strong>Environment</strong>
 
-  <!-- START / DESTINATION OVERLAY -->
-  <div id="startOverlay" class="overlay" role="dialog" aria-modal="true" aria-label="Enter cockpit">
-    <div class="overlay__panel">
-      <div class="overlay__title">Enter OTOS Cockpit</div>
-      <div class="overlay__subtitle">
-        Choose where you’re going. Nothing runs without your explicit action.
-      </div>
+  <label>Warmth</label>
+  <input id="warmth" type="range" min="-30" max="30" value="0">
 
-      <div class="overlay__grid">
-        <button class="bigbtn" data-dest="core">
-          <div class="bigbtn__title">Core Cockpit</div>
-          <div class="bigbtn__sub">Focus + one action + visibility</div>
-        </button>
+  <label>Saturation</label>
+  <input id="saturation" type="range" min="70" max="130" value="100">
 
-        <button class="bigbtn" data-dest="feeder">
-          <div class="bigbtn__title">Feeder</div>
-          <div class="bigbtn__sub">Ingest + classify + calm feedback</div>
-        </button>
+  <label>Contrast</label>
+  <input id="contrast" type="range" min="85" max="120" value="100">
+</div>
 
-        <button class="bigbtn" data-dest="monitor">
-          <div class="bigbtn__title">Monitoring</div>
-          <div class="bigbtn__sub">Behaviour + health prompts (quiet)</div>
-        </button>
+<script>
+const root = document.documentElement;
 
-        <button class="bigbtn bigbtn--dev" data-dest="dev">
-          <div class="bigbtn__title">Dev Sandbox</div>
-          <div class="bigbtn__sub">Quarantined build area</div>
-        </button>
-      </div>
+document.getElementById("warmth").addEventListener("input", e => {
+  root.style.setProperty("--warmth", e.target.value + "deg");
+});
 
-      <div class="overlay__foot">
-        <label class="chk">
-          <input id="skipStart" type="checkbox" />
-          <span>Don’t show this again</span>
-        </label>
-        <button id="enterDefault" class="btn primary">Enter</button>
-      </div>
-    </div>
-  </div>
+document.getElementById("saturation").addEventListener("input", e => {
+  root.style.setProperty("--saturation", e.target.value + "%");
+});
 
-  <!-- MAIN -->
-  <main class="stage" role="main">
-    <!-- ZONE STRIP (subtle “room” feeling) -->
-    <div class="zonestrip" aria-hidden="true">
-      <div class="zonestrip__seg zonestrip__seg--parent">Parent</div>
-      <div class="zonestrip__seg zonestrip__seg--core">Core</div>
-      <div class="zonestrip__seg zonestrip__seg--andy">Andy</div>
-      <div class="zonestrip__seg zonestrip__seg--dev">Dev</div>
-    </div>
+document.getElementById("contrast").addEventListener("input", e => {
+  root.style.setProperty("--contrast", e.target.value + "%");
+});
+</script>
 
-    <!-- GRID -->
-    <section class="grid">
-      <!-- LEFT: PARENT NODE ZONE -->
-      <section id="zoneParent" class="column zone zone--parent" aria-label="Parent Node Zone">
-        <div class="card drag" data-draggable="true" id="cardParent">
-          <div class="card__top drag-handle">
-            <div class="kicker">PARENT NODE</div>
-            <div class="chip chip--parent">Authority</div>
-          </div>
-          <div class="title">Authority · Read / Lock / Authorise</div>
-          <div class="value muted">Deterministic. No hidden behaviour.</div>
-
-          <div class="row">
-            <button id="toggleMove" class="btn">Layout: Locked</button>
-            <button id="resetLayout" class="btn">Reset layout</button>
-          </div>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardRadar">
-          <div class="card__top drag-handle">
-            <div class="kicker">REALITY RADAR</div>
-            <div class="chip chip--core">Guided</div>
-          </div>
-          <div class="value"><strong>Mode</strong> GUIDED</div>
-          <div class="value"><strong>Temp</strong> 4</div>
-          <input class="range" type="range" min="0" max="10" value="4" aria-label="Tempo" />
-          <div class="muted small">Stable UI · no motion chaos</div>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardState">
-          <div class="card__top drag-handle">
-            <div class="kicker">SYSTEM STATE</div>
-            <div class="chip chip--ok">Locked</div>
-          </div>
-          <div class="value">Locks <strong>Enforced</strong></div>
-          <div class="value">Memory <strong>Tiered</strong></div>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardTokens">
-          <div class="card__top drag-handle">
-            <div class="kicker">EXECUTION TOKENS</div>
-            <div id="tokenChip" class="chip chip--warn">None</div>
-          </div>
-          <div class="value">Andy cannot act without explicit tokens.</div>
-          <div class="row">
-            <button id="issueToken" class="btn primary">Issue token</button>
-            <button id="revokeToken" class="btn">Revoke</button>
-          </div>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardNotes">
-          <div class="card__top drag-handle">
-            <div class="kicker">NOTES</div>
-            <div class="chip chip--muted">Local</div>
-          </div>
-          <textarea class="textarea" placeholder="Quick notes (local only)"></textarea>
-        </div>
-      </section>
-
-      <!-- CENTRE: CORE ZONE -->
-      <section id="zoneCore" class="column zone zone--core" aria-label="Core Zone">
-        <div class="card hero drag" data-draggable="true" id="cardFocus">
-          <div class="card__top drag-handle">
-            <div class="kicker">FOCUS</div>
-            <div class="chip chip--core">One thing</div>
-          </div>
-          <div class="title">One action · Projects</div>
-          <div class="value muted">Keep it simple. One visible priority.</div>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardOneAction">
-          <div class="card__top drag-handle">
-            <div class="kicker">ONE ACTION</div>
-            <div class="chip chip--ok">Safe</div>
-          </div>
-          <div class="value">Wire Andy intake + stats safely (token-gated)</div>
-          <div class="row">
-            <button class="btn">Open “Next Action”</button>
-            <button class="btn">Pin</button>
-          </div>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardProjects">
-          <div class="card__top drag-handle">
-            <div class="kicker">PROJECTS</div>
-            <div class="chip chip--muted">Layered</div>
-          </div>
-          <div class="value">(Locked — loads next layer)</div>
-        </div>
-
-        <!-- BIG CANVAS: “room” feeling (stats / reports / dashboards later) -->
-        <div class="canvas drag" data-draggable="true" id="canvasMain" aria-label="Main canvas">
-          <div class="canvas__top drag-handle">
-            <div class="kicker">CANVAS</div>
-            <div class="chip chip--muted">Reserved</div>
-          </div>
-          <div class="canvas__body">
-            <div class="canvas__headline">Big space for: Stats · Reports · Maps · Dashboards</div>
-            <div class="canvas__sub muted">
-              This stays calm and readable. We’ll add depth + “pop” without adding chaos.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- RIGHT: ANDY ZONE -->
-      <section id="zoneAndy" class="column zone zone--andy" aria-label="Andy Zone">
-        <div class="card agent drag" data-draggable="true" id="cardAndy">
-          <div class="card__top drag-handle">
-            <div class="kicker">ANDY · EXECUTION AGENT</div>
-            <div class="chip chip--andy">Present</div>
-          </div>
-          <div class="title">Feeder · Intake + extraction (no promotion)</div>
-          <div class="value muted">Runs only when you explicitly authorise.</div>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardIntake">
-          <div class="card__top drag-handle">
-            <div class="kicker">INTAKE</div>
-            <div class="chip chip--warn">Token-gated</div>
-          </div>
-
-          <div class="field">
-            <label class="label" for="fileInput">File</label>
-            <input id="fileInput" type="file" disabled />
-          </div>
-
-          <div class="field">
-            <label class="label" for="commandInput">Command</label>
-            <input id="commandInput" type="text" placeholder="A / G / R / C / T" disabled />
-          </div>
-
-          <div class="row">
-            <button id="ingestBtn" class="btn primary" disabled>Ingest batch</button>
-            <button id="dryRunBtn" class="btn" disabled>Dry run</button>
-          </div>
-
-          <div class="value small">
-            A analyse · G golden · R revenue · C canon · T tasks · ? notable
-          </div>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardStats">
-          <div class="card__top drag-handle">
-            <div class="kicker">STATS</div>
-            <div class="chip chip--muted">Live</div>
-          </div>
-          <div class="value">Processed <strong id="processedCount">0</strong></div>
-          <div class="value">Queue <strong id="queueCount">0</strong></div>
-          <button id="exportBtn" class="btn">Export Tier-3 Archive (JSON)</button>
-        </div>
-
-        <div class="card drag" data-draggable="true" id="cardHighlight">
-          <div class="card__top drag-handle">
-            <div class="kicker">RUNNING HIGHLIGHT REPORT</div>
-            <div class="chip chip--ok">Calm</div>
-          </div>
-          <div id="highlightLine" class="value">Andy engine ready (idle)</div>
-        </div>
-
-        <!-- 3rd “YOU” INSTANCE SLOT (UI placeholder) -->
-        <div class="card chat drag" data-draggable="true" id="cardChat">
-          <div class="card__top drag-handle">
-            <div class="kicker">OPERATOR CHAT</div>
-            <div class="chip chip--muted">Placeholder</div>
-          </div>
-          <div class="value muted">
-            This is where “you-with-me” will live inside the cockpit later (embedded / linked / routed).
-          </div>
-          <textarea class="textarea" placeholder="Drop prompts / snippets here for now…"></textarea>
-        </div>
-      </section>
-
-      <!-- DEV: QUARANTINED ZONE -->
-      <section id="zoneDev" class="column zone zone--dev" aria-label="Dev Zone (Quarantined)">
-        <div class="card devshell drag" data-draggable="true" id="cardDevShell">
-          <div class="card__top drag-handle">
-            <div class="kicker">DEV SANDBOX</div>
-            <div class="chip chip--dev">Quarantined</div>
-          </div>
-          <div class="title">Build / test modules here (isolated)</div>
-          <div class="value muted">Not connected to core pathways until you explicitly connect it.</div>
-
-          <div class="devdock">
-            <button class="btn">Develop</button>
-            <button class="btn">Test</button>
-            <button class="btn">Rewind</button>
-            <button class="btn">Record</button>
-          </div>
-
-          <div class="value small muted">
-            Later: module list, IDE bridge, component library, safe preview frames.
-          </div>
-        </div>
-      </section>
-    </section>
-
-    <!-- BOTTOM “OPERATOR STRIP” (optional future DJ controls) -->
-    <footer class="operatorbar" role="contentinfo" aria-label="Operator controls">
-      <div class="operatorbar__left">
-        <span class="muted small">Operator</span>
-        <span class="pill pill--core">One action</span>
-      </div>
-      <div class="operatorbar__mid muted small">
-        Calm feedback · no surprise execution · explicit authority
-      </div>
-      <div class="operatorbar__right">
-        <button class="btn btn--tiny">Help</button>
-        <button class="btn btn--tiny">Shortcuts</button>
-      </div>
-    </footer>
-  </main>
-
-  <script src="./app.js"></script>
 </body>
 </html>
