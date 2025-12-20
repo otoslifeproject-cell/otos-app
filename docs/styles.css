@@ -1,29 +1,26 @@
 /* =========================================================
-   OTOS UI – LIGHT ADHD COCKPIT BASELINE (LOCKED)
-   Purpose: Calm, readable, non-fatiguing control surface
+   OTOS — LIGHT ADHD COCKPIT BASELINE (LOCKABLE)
+   Replaces ALL dark theming
    ========================================================= */
 
 :root {
-  --bg-main: #f5f8fc;
+  --bg-main: #eef4fb;
   --bg-panel: #ffffff;
-  --bg-panel-soft: #f0f4f9;
+  --bg-soft: #f6f9fd;
 
   --ink-main: #0f172a;
-  --ink-muted: #475569;
+  --ink-soft: #475569;
+  --ink-muted: #64748b;
 
   --border-soft: rgba(15, 23, 42, 0.08);
 
   --accent-parent: #2563eb;
-  --accent-focus: #0ea5e9;
   --accent-agent: #16a34a;
+  --accent-focus: #0ea5e9;
 
   --radius: 14px;
-  --radius-soft: 10px;
-  --shadow-soft: 0 8px 24px rgba(15, 23, 42, 0.06);
-  --shadow-hover: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
-/* RESET */
 * {
   box-sizing: border-box;
 }
@@ -32,70 +29,61 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif;
   color: var(--ink-main);
-  background: radial-gradient(
-    circle at top right,
-    #e8f0ff,
-    var(--bg-main)
-  );
+  background:
+    radial-gradient(900px 400px at 50% -200px, #dbeafe, transparent),
+    var(--bg-main);
 }
 
-/* HEADER */
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 header {
-  height: 56px;
-  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ffffff;
+  padding: 14px 22px;
+  background: linear-gradient(to bottom, #ffffff, #f1f5f9);
   border-bottom: 1px solid var(--border-soft);
 }
 
-header strong {
-  font-weight: 600;
-}
+/* =========================================================
+   GRID
+   ========================================================= */
 
-header .status {
-  font-size: 13px;
-  color: var(--ink-muted);
-}
-
-/* MAIN GRID */
 main {
-  padding: 24px;
+  padding: 26px;
 }
 
-#app {
+.grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap: 20px;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 22px;
   align-items: start;
 }
 
-/* COLUMNS */
 .column {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* PANELS / CARDS */
+/* =========================================================
+   CARDS
+   ========================================================= */
+
 .card {
   background: var(--bg-panel);
   border-radius: var(--radius);
   padding: 16px 18px;
-  box-shadow: var(--shadow-soft);
   border: 1px solid var(--border-soft);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 6px 18px rgba(0,0,0,0.05);
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
-}
-
-/* ROLE ACCENTS */
 .card.parent {
   border-left: 4px solid var(--accent-parent);
 }
@@ -108,7 +96,6 @@ main {
   border-left: 4px solid var(--accent-agent);
 }
 
-/* TITLES */
 .title {
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -119,55 +106,51 @@ main {
 
 .value {
   font-size: 15px;
-  line-height: 1.45;
+  color: var(--ink-main);
 }
 
-/* INPUTS */
+/* =========================================================
+   INPUTS / BUTTONS
+   ========================================================= */
+
+input,
+button {
+  font-family: inherit;
+}
+
 input[type="text"],
-input[type="file"],
-textarea {
+input[type="file"] {
   width: 100%;
-  padding: 10px 12px;
-  border-radius: var(--radius-soft);
+  padding: 8px 10px;
+  margin-top: 6px;
+  border-radius: 8px;
   border: 1px solid var(--border-soft);
-  background: var(--bg-panel-soft);
+  font-size: 14px;
+  background: #ffffff;
+  color: var(--ink-main);
+}
+
+button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: #ffffff;
   font-size: 14px;
 }
 
-textarea {
-  resize: vertical;
-  min-height: 70px;
-}
-
-/* BUTTONS */
-button {
-  padding: 8px 14px;
-  border-radius: var(--radius-soft);
-  border: 1px solid var(--border-soft);
-  background: #ffffff;
-  cursor: pointer;
-  font-size: 13px;
-}
-
 button.primary {
-  background: var(--accent-focus);
+  background: #2563eb;
   color: #ffffff;
-  border-color: var(--accent-focus);
+  border-color: #2563eb;
 }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
 
-/* SLIDER */
-input[type="range"] {
-  width: 100%;
-}
-
-/* RESPONSIVE */
-@media (max-width: 1100px) {
-  #app {
+@media (max-width: 1200px) {
+  .grid {
     grid-template-columns: 1fr;
   }
 }
