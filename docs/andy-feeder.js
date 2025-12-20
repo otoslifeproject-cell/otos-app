@@ -1,39 +1,91 @@
-/* =========================================================
-   OTOS — ANDY FEEDER v1.0
-   DRAG & DROP INTAKE + STATUS (NO NOTION WRITE)
-   Purpose: Accept files, stage them, show progress
-   Location: otos-app/docs/andy-feeder.js
-   FULL SCRIPT REPLACEMENT
-   ========================================================= */
+/**
+ * andy-feeder.js
+ * Token-gated feeder intake + analysis
+ *
+ * HARD RULES:
+ * - Andy cannot execute without Parent token
+ * - Token is consumed on first successful run
+ * - No background / silent execution
+ * - ND-safe: explicit, deterministic, inspectable
+ */
 
 (() => {
+  function log(msg) {
+    console.log(`[ANDY][FEEDER] ${msg}`);
+  }
 
-  /* ---------- GUARD ---------- */
-  if (window.OTOS_ANDY_FEEDER_ACTIVE) return;
-  window.OTOS_ANDY_FEEDER_ACTIVE = true;
+  function error(msg) {
+    console.error(`[ANDY][BLOCKED] ${msg}`);
+    alert(`Andy blocked:\n${msg}`);
+  }
 
-  /* ---------- STATE ---------- */
-  const KEY = "OTOS_STAGED_DOCS";
-  const staged = JSON.parse(localStorage.getItem(KEY) || "[]");
+  // -------------------------------
+  // Core execution entry
+  // -------------------------------
+  function runFeeder({ file, command }) {
+    // HARD GATE — token check
+    if (!window.ANDY_TOKEN || !window.ANDY_TOKEN.canExecute()) {
+      error("No valid execution token. Parent authorisation required.");
+      return;
+    }
 
-  const save = () => localStorage.setItem(KEY, JSON.stringify(staged));
+    // Consume token immediately (single-use)
+    if (!window.ANDY_TOKEN.consume()) {
+      error("Execution token could not be consumed.");
+      return;
+    }
 
-  /* ---------- HOST ---------- */
-  const host =
-    document.getElementById("center") ||
-    document.getElementById("left") ||
-    document.body;
+    // -------------------------------
+    // Execution begins (explicit)
+    // -------------------------------
+    log("Execution authorised");
+    log(`Command: ${command || "none"}`);
+    log(`File: ${file ? file.name : "none"}`);
 
-  /* ---------- UI ---------- */
-  const wrap = document.createElement("div");
-  wrap.style.padding = "16px";
-  wrap.style.borderRadius = "16px";
-  wrap.style.background = "#020617";
-  wrap.style.color = "#e5e7eb";
-  wrap.style.boxShadow = "0 20px 40px rgba(0,0,0,.35)";
-  wrap.style.marginBottom = "14px";
+    // Placeholder for real pipeline
+    // (analysis, extraction, classification)
+    simulateProcessing(file, command);
+  }
 
-  const title = document.createElement("div");
+  // -------------------------------
+  // Simulated processing (safe stub)
+  // -------------------------------
+  function simulateProcessing(file, command) {
+    const statsProcessed = document.getElementById("stat-processed");
+    const statsQueue = document.getElementById("stat-queue");
+    const highlight = document.getElementById("highlight-status");
+
+    if (highlight) {
+      highlight.textContent = "Processing batch…";
+    }
+
+    setTimeout(() => {
+      if (statsProcessed) statsProcessed.textContent = "1";
+      if (statsQueue) statsQueue.textContent = "0";
+      if (highlight) highlight.textContent = "Andy run complete";
+
+      log("Processing complete");
+    }, 900);
+  }
+
+  // -------------------------------
+  // Wire UI (if present)
+  // -------------------------------
+  const ingestBtn = document.getElementById("ingest-btn");
+  const fileInput = document.getElementById("file-input");
+  const commandInput = document.getElementById("command-input");
+
+  if (ingestBtn) {
+    ingestBtn.addEventListener("click", () => {
+      runFeeder({
+        file: fileInput?.files?.[0] || null,
+        command: commandInput?.value || ""
+      });
+    });
+  }
+
+  log("Feeder ready (token-gated, idle)");
+})();
   title.textContent = "Andy · Intake";
   title.style.fontWeight = "700";
   title.style.marginBottom = "10px";
