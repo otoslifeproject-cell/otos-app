@@ -1,39 +1,240 @@
 <!-- FILE: docs/index.html
-     LAYER: 3 (Behaviour restored: drag/snap/focus/collapse->go-home)
-     NOTE: No persistence, no agents, no RAG, no background processes. This is UI-only.
+     LAYER: 3.1 (Parent secured)
+     NOTE: UI-only. No persistence, no agents, no RAG, no background processes.
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cockpit • Environment</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8" />
+<title>Cockpit • Environment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    :root{
-      /* Blue-leaning “plane” */
-      --bg0:#eef5ff;
-      --bg1:#eaf2fb;
-      --bg2:#f6f9ff;
+<style>
+:root{
+  --bg0:#eef5ff; --bg1:#eaf2fb; --bg2:#f6f9ff;
+  --ink:#0f172a; --muted:#475569;
+  --accent:#f97316; --accent2:#ff8a3d;
+  --shadow-1: rgba(15,23,42,.10);
+  --shadow-2: rgba(15,23,42,.16);
+  --shadow-3: rgba(15,23,42,.22);
+  --r:22px; --ease:cubic-bezier(.22,.61,.36,1);
+  --dur:180ms; --dur2:260ms;
+  --grid:24px; --blur:10px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--ink);
+  background:radial-gradient(1200px 800px at 50% -10%,var(--bg2) 0%,var(--bg0) 40%,var(--bg1) 100%);
+  overflow:hidden;
+}
+.frame{
+  position:fixed; inset:12px; border-radius:28px;
+  background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.06));
+  box-shadow:0 18px 70px rgba(15,23,42,.14), inset 1px 1px 0 rgba(255,255,255,.55);
+  overflow:hidden;
+}
+.watermark{
+  position:absolute; inset:-40px; pointer-events:none; opacity:.14;
+  background:repeating-linear-gradient(135deg,rgba(15,23,42,.06) 0 2px,transparent 2px 22px);
+}
+.watermark::after{
+  content:"COCKPIT"; position:absolute; left:6%; bottom:6%;
+  font-weight:800; letter-spacing:.12em;
+  font-size:clamp(72px,13vw,200px);
+  color:rgba(15,23,42,.10); transform:skewX(-6deg);
+}
+.veil{
+  position:absolute; inset:0;
+  background:rgba(238,245,255,.38);
+  backdrop-filter:blur(3px);
+  opacity:0; pointer-events:none;
+  transition:opacity var(--dur2) var(--ease);
+  z-index:2;
+}
+.veil.on{opacity:1; pointer-events:auto}
+.stage{position:absolute; inset:0; z-index:3}
 
-      --ink:#0f172a;
-      --muted:#475569;
+.zone{
+  position:absolute; border-radius:var(--r);
+  padding:18px 20px; min-width:260px;
+  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.78));
+  box-shadow:inset 1px 1px 0 rgba(255,255,255,.85),
+             inset 0 0 0 1px rgba(255,255,255,.40);
+  transition:transform var(--dur) var(--ease), filter var(--dur) var(--ease);
+}
+.zone::after{
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  pointer-events:none;
+  box-shadow:10px 18px 40px var(--shadow-1),
+             16px 26px 60px rgba(15,23,42,.08);
+}
+.zone.focused{transform:translateY(-6px); z-index:50}
+.zone.blurred{filter:blur(var(--blur)); pointer-events:none}
+.zone.dragging{transition:none!important; cursor:grabbing; z-index:80}
 
-      /* OTOS orange (buttons only) */
-      --accent:#f97316;
-      --accent2:#ff8a3d;
+.zone.locked{
+  outline:2px solid rgba(249,115,22,.35);
+  pointer-events:auto;
+}
+.zone.locked .header{cursor:default}
 
-      /* Depth — asymmetric (bottom/right) */
-      --shadow-1: rgba(15,23,42,.10);
-      --shadow-2: rgba(15,23,42,.16);
-      --shadow-3: rgba(15,23,42,.22);
+.header{
+  display:flex; justify-content:space-between;
+  cursor:grab; user-select:none;
+}
+.title{margin:0;font-size:1rem}
+.subtitle{margin:4px 0 0;color:var(--muted)}
 
-      --r: 22px;
-      --ease: cubic-bezier(.22,.61,.36,1);
-      --dur: 180ms;
-      --dur2: 260ms;
+.controls{display:flex;gap:8px}
+.iconBtn{
+  width:34px;height:34px;border-radius:999px;
+  display:grid;place-items:center;
+  background:#fff;border:none;cursor:pointer;
+  box-shadow:6px 10px 22px rgba(15,23,42,.10);
+}
 
-      --grid: 24px;
+.content{margin-top:14px}
+.status{
+  font-size:.85rem; margin-top:10px;
+  color:rgba(15,23,42,.75)
+}
+.lockState{
+  margin-top:6px;
+  font-weight:600;
+  color:var(--accent);
+}
+</style>
+</head>
+
+<body>
+<div class="frame">
+  <div class="watermark"></div>
+  <div class="veil" id="veil"></div>
+  <div class="stage" id="stage"></div>
+</div>
+
+<script>
+const stage=document.getElementById('stage');
+const veil=document.getElementById('veil');
+const GRID=24,PADDING=24;
+
+const ZONES=[
+ {id:'parent',title:'PARENT',subtitle:'Authority · Contract · Lock',w:380,h:180,home:{x:36,y:28}},
+ {id:'core',title:'CORE',subtitle:'Primary action surface',w:420,h:160,home:{x:460,y:28}},
+ {id:'andy',title:'ANDY',subtitle:'Execution agent (OFF)',w:420,h:240,home:{x:910,y:28}},
+ {id:'status',title:'STATUS',subtitle:'Install · Constraints · Visibility',w:820,h:300,home:{x:170,y:220}}
+];
+
+const zoneEls=[];
+let parentLocked=true;
+
+function snap(n){return Math.round(n/GRID)*GRID}
+function clamp(x,y,el){
+ const r=stage.getBoundingClientRect();
+ return {
+  x:Math.max(PADDING,Math.min(r.width-el.offsetWidth-PADDING,x)),
+  y:Math.max(PADDING,Math.min(r.height-el.offsetHeight-PADDING,y))
+ }
+}
+
+function buildZone(z){
+ const el=document.createElement('section');
+ el.className='zone'; el.id=z.id;
+ el.style.width=z.w+'px'; el.style.height=z.h+'px';
+ el.style.left=z.home.x+'px'; el.style.top=z.home.y+'px';
+
+ const h=document.createElement('div');h.className='header';
+ const l=document.createElement('div');
+ l.innerHTML=`<h2 class="title">${z.title}</h2><p class="subtitle">${z.subtitle}</p>`;
+ const c=document.createElement('div');c.className='controls';
+
+ if(z.id==='parent'){
+   const lockBtn=document.createElement('button');
+   lockBtn.className='iconBtn'; lockBtn.textContent='🔒';
+   lockBtn.onclick=(e)=>{
+     e.stopPropagation();
+     parentLocked=!parentLocked;
+     el.classList.toggle('locked',parentLocked);
+     lockState.textContent=parentLocked?'LOCKED':'UNLOCKED';
+   };
+   c.appendChild(lockBtn);
+ }
+
+ h.appendChild(l);h.appendChild(c);
+ el.appendChild(h);
+
+ const body=document.createElement('div');body.className='content';
+
+ if(z.id==='parent'){
+   body.innerHTML=`
+     <div class="status">Root authority surface.</div>
+     <div class="lockState" id="lockState">LOCKED</div>
+   `;
+ }
+
+ el.appendChild(body);
+
+ el.addEventListener('click',()=>setFocus(el));
+
+ if(z.id!=='parent') enableDrag(el,h);
+
+ if(z.id==='parent'){ el.classList.add('locked','focused'); }
+
+ return el;
+}
+
+function setFocus(t){
+ zoneEls.forEach(z=>{
+  if(z.id==='parent'){ z.classList.add('focused'); return }
+  z.classList.toggle('focused',z===t);
+  z.classList.toggle('blurred',z!==t && parentLocked);
+ });
+ veil.classList.add('on');
+}
+
+function clearFocus(){
+ zoneEls.forEach(z=>z.classList.remove('focused','blurred'));
+ if(parentLocked) document.getElementById('parent').classList.add('focused');
+ veil.classList.remove('on');
+}
+
+veil.onclick=clearFocus;
+
+function enableDrag(el,handle){
+ let d=false,sx=0,sy=0,ox=0,oy=0;
+ handle.onmousedown=e=>{
+  if(e.button!==0)return;
+  d=true; el.classList.add('dragging');
+  const r=el.getBoundingClientRect(), sr=stage.getBoundingClientRect();
+  ox=r.left-sr.left; oy=r.top-sr.top;
+  sx=e.clientX; sy=e.clientY;
+ };
+ window.onmousemove=e=>{
+  if(!d)return;
+  const p=clamp(ox+e.clientX-sx,oy+e.clientY-sy,el);
+  el.style.left=p.x+'px'; el.style.top=p.y+'px';
+ };
+ window.onmouseup=()=>{
+  if(!d)return;
+  d=false; el.classList.remove('dragging');
+  const p=clamp(snap(parseFloat(el.style.left)),snap(parseFloat(el.style.top)),el);
+  el.style.left=p.x+'px'; el.style.top=p.y+'px';
+ };
+}
+
+ZONES.forEach(z=>{
+ const el=buildZone(z);
+ zoneEls.push(el);
+ stage.appendChild(el);
+});
+
+clearFocus();
+</script>
+</body>
+</html>
       --blur: 10px;
     }
 
