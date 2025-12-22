@@ -1,0 +1,55 @@
+name: OTOS Agent Daemon (Notion + Status)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+  push:
+    paths:
+      - "inbox/**"
+      - "scripts/**"
+      - "notion.config.json"
+      - ".github/workflows/agent-daemon.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: otos-agent-daemon
+  cancel-in-progress: false
+
+jobs:
+  run-agent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install deps
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run agent (process inbox + write Notion + update status)
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          OTOS_NOTION_CONFIG: ${{ secrets.OTOS_NOTION_CONFIG }}
+        run: |
+          node scripts/agent-daemon/run.js
+
+      - name: Commit status.json back to repo (proof for Cockpit)
+        run: |
+          git config user.name "otos-agent-daemon"
+          git config user.email "otos-agent-daemon@users.noreply.github.com"
+          git add docs/status.json
+          git diff --cached --quiet || git commit -m "agent: update status.json"
+          git push
