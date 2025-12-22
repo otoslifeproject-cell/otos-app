@@ -1,256 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>OTOS • Cockpit</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<style>
-:root{
-  /* background + surfaces */
-  --bg:#e9f0f6;
-  --bg-soft:#eef4f9;
-  --card:#fdfefe;
-
-  /* text */
-  --ink:#0f172a;
-  --muted:#4b5563;
-
-  /* OTOS accent (kept minimal) */
-  --accent:#f97316;
-
-  /* depth */
-  --shadow-deep:rgba(15,23,42,.28);
-  --shadow-mid:rgba(15,23,42,.18);
-  --shadow-soft:rgba(15,23,42,.08);
-  --inner-light:rgba(255,255,255,.95);
-}
-
-*{box-sizing:border-box}
-
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  background:radial-gradient(circle at top,var(--bg-soft),var(--bg));
-  color:var(--ink);
-}
-
-/* layout */
-.cockpit{
-  display:grid;
-  grid-template-columns:1fr 1.3fr 1fr;
-  gap:26px;
-  padding:34px;
-  min-height:100vh;
-}
-
-/* tiles */
-.zone{
-  position:relative;
-  background:var(--card);
-  border-radius:20px;
-  padding:22px 24px;
-  box-shadow:
-    0 22px 48px var(--shadow-soft),
-    inset 0 1px 0 var(--inner-light);
-  transition:
-    transform .25s ease,
-    box-shadow .25s ease,
-    filter .25s ease;
-}
-
-/* hover offer */
-.zone:hover{
-  transform:translateY(-7px);
-  box-shadow:
-    0 30px 60px var(--shadow-mid),
-    inset 0 1px 0 var(--inner-light);
-}
-
-/* focused */
-.zone.focused{
-  transform:scale(1.035) translateY(-10px);
-  box-shadow:
-    0 40px 80px var(--shadow-deep),
-    inset 0 1px 0 var(--inner-light);
-  z-index:10;
-}
-
-/* blur others */
-.zone.blurred{
-  filter:blur(3px) brightness(.96);
-  pointer-events:none;
-}
-
-/* headings */
-.zone h2{
-  margin:0 0 6px;
-  font-size:1.05rem;
-  letter-spacing:.02em;
-}
-.zone p{
-  margin:0;
-  font-size:1rem;
-  color:var(--muted);
-}
-
-/* expand icon */
-.expand{
-  position:absolute;
-  top:14px;
-  right:14px;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  background:var(--card);
-  box-shadow:
-    0 6px 14px var(--shadow-soft),
-    inset 0 1px 0 var(--inner-light);
-  font-size:18px;
-  transition:transform .2s ease, box-shadow .2s ease;
-}
-.expand:hover{
-  transform:scale(1.08);
-  box-shadow:
-    0 10px 22px var(--shadow-mid),
-    inset 0 1px 0 var(--inner-light);
-}
-
-/* ANDY */
-.panel{
-  margin-top:18px;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
-
-/* inputs */
-.input{
-  padding:14px 16px;
-  border-radius:14px;
-  background:var(--bg-soft);
-  box-shadow:
-    inset 4px 4px 8px rgba(15,23,42,.12),
-    inset -4px -4px 8px rgba(255,255,255,.9);
-  font-size:1rem;
-  border:none;
-  outline:none;
-}
-
-/* buttons */
-.button-row{
-  display:flex;
-  gap:12px;
-}
-.btn{
-  flex:1;
-  padding:14px 0;
-  border-radius:16px;
-  font-weight:600;
-  font-size:1rem;
-  cursor:pointer;
-  border:none;
-  background:linear-gradient(180deg,#ffb37a,var(--accent));
-  color:#fff;
-  box-shadow:
-    0 8px 18px rgba(249,115,22,.35),
-    inset 0 1px 0 rgba(255,255,255,.45);
-  transition:transform .15s ease, box-shadow .15s ease;
-}
-.btn.secondary{
-  background:var(--card);
-  color:var(--ink);
-  box-shadow:
-    0 8px 18px var(--shadow-soft),
-    inset 0 1px 0 var(--inner-light);
-}
-.btn:hover{
-  transform:translateY(-2px);
-}
-.btn:active{
-  transform:translateY(1px);
-  box-shadow:
-    0 4px 10px rgba(0,0,0,.22),
-    inset 0 2px 6px rgba(0,0,0,.25);
-}
-
-/* stats */
-.stats{
-  margin-top:10px;
-  font-size:.95rem;
-  display:flex;
-  justify-content:space-between;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>OTOS • Cockpit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
+  <div class="cockpit" id="cockpit">
+    <!-- PARENT -->
+    <section class="zone" id="zone-parent" data-zone="parent" tabindex="0" aria-label="Parent zone">
+      <button class="expand" type="button" data-action="reset" aria-label="Reset focus & layout">⤢</button>
+      <div class="grab" aria-hidden="true" title="Drag">⋮⋮</div>
 
-<div class="cockpit">
+      <header class="zone-head">
+        <h2>PARENT</h2>
+        <p>Authority · Read · Lock · Authorise</p>
+      </header>
 
-  <div class="zone" id="parent">
-    <div class="expand">⤢</div>
-    <h2>PARENT</h2>
-    <p>Authority · Read · Lock · Authorise</p>
-  </div>
-
-  <div class="zone" id="core">
-    <div class="expand">⤢</div>
-    <h2>CORE</h2>
-    <p>One action. Calm surface. Primary focus zone.</p>
-  </div>
-
-  <div class="zone" id="andy">
-    <div class="expand">⤢</div>
-    <h2>ANDY</h2>
-    <p>Execution agent (token-gated)</p>
-
-    <div class="panel">
-      <input class="input" placeholder="Drop file or paste text (visual only)" />
-      <input class="input" placeholder="Command: A / G / R / C / T" />
-
-      <div class="button-row">
-        <button class="btn">Ingest</button>
-        <button class="btn secondary">Dry run</button>
+      <div class="zone-body">
+        <!-- intentionally blank for now -->
       </div>
+    </section>
 
-      <div class="stats">
-        <span>Processed: 0</span>
-        <span>Queue: 0</span>
+    <!-- CORE -->
+    <section class="zone" id="zone-core" data-zone="core" tabindex="0" aria-label="Core zone">
+      <button class="expand" type="button" data-action="reset" aria-label="Reset focus & layout">⤢</button>
+      <div class="grab" aria-hidden="true" title="Drag">⋮⋮</div>
+
+      <header class="zone-head">
+        <h2>CORE</h2>
+        <p>One action. Calm surface. Primary focus zone.</p>
+      </header>
+
+      <div class="zone-body">
+        <!-- intentionally blank for now -->
       </div>
-    </div>
-  </div>
+    </section>
 
-</div>
+    <!-- ANDY -->
+    <section class="zone" id="zone-andy" data-zone="andy" tabindex="0" aria-label="Andy zone">
+      <button class="expand" type="button" data-action="reset" aria-label="Reset focus & layout">⤢</button>
+      <div class="grab" aria-hidden="true" title="Drag">⋮⋮</div>
+
+      <header class="zone-head">
+        <h2>ANDY</h2>
+        <p>Execution agent (token-gated)</p>
+      </header>
+
+      <div class="zone-body">
+        <div class="panel">
+          <div class="drop" id="andyDrop" aria-label="Drop files here">
+            Drop file or paste text (visual only)
+          </div>
+
+          <input class="input" id="andyCommand" placeholder="Command: A / G / R / C / T" />
+
+          <div class="button-row">
+            <button class="btn" type="button" id="btnIngest">Ingest</button>
+            <button class="btn secondary" type="button" id="btnDry">Dry run</button>
+          </div>
+
+          <div class="status-row">
+            <span class="dot idle" id="runDot"></span>
+            <span id="runState">Idle</span>
+          </div>
+
+          <div class="stats">
+            <span>Processed: <strong id="processed">0</strong></span>
+            <span>Queue: <strong id="queue">0</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 
 <script>
-const zones = document.querySelectorAll('.zone');
+(() => {
+  const cockpit = document.getElementById('cockpit');
+  const zones = Array.from(document.querySelectorAll('.zone'));
 
-zones.forEach(z=>{
-  z.addEventListener('click',e=>{
-    if(e.target.classList.contains('expand')) return;
-    zones.forEach(o=>{
-      o.classList.toggle('focused', o===z);
-      o.classList.toggle('blurred', o!==z);
+  // -----------------------------
+  // Focus / Blur (2-stage)
+  // -----------------------------
+  function clearFocus() {
+    zones.forEach(z => {
+      z.classList.remove('focused');
+      z.classList.remove('blurred');
+    });
+    document.body.classList.remove('has-focus');
+  }
+
+  function setFocus(target) {
+    zones.forEach(z => {
+      const isTarget = z === target;
+      z.classList.toggle('focused', isTarget);
+      z.classList.toggle('blurred', !isTarget);
+    });
+    document.body.classList.add('has-focus');
+  }
+
+  zones.forEach(zone => {
+    zone.addEventListener('click', (e) => {
+      // Reset button
+      if (e.target && e.target.matches('[data-action="reset"]')) {
+        e.stopPropagation();
+        clearFocus();
+        resetLayout(); // also resets positions
+        return;
+      }
+
+      // If clicking inside inputs/buttons, don't change focus
+      if (e.target.closest('input, button, textarea, select')) return;
+
+      // Click focuses zone
+      setFocus(zone);
+    });
+
+    // Keyboard focus support (Enter/Space)
+    zone.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setFocus(zone);
+      }
+      if (e.key === 'Escape') {
+        clearFocus();
+      }
     });
   });
 
-  z.querySelector('.expand').addEventListener('click',e=>{
-    e.stopPropagation();
-    zones.forEach(o=>o.classList.remove('focused','blurred'));
+  // Background click clears focus
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.zone')) clearFocus();
   });
-});
 
-document.body.addEventListener('click',e=>{
-  if(!e.target.closest('.zone')){
-    zones.forEach(z=>z.classList.remove('focused','blurred'));
+  // -----------------------------
+  // Drag (click & hold anywhere on tile, except controls)
+  // + Soft snap on drop
+  // -----------------------------
+  const GRID = 24; // snap size
+  const dragState = {
+    active: null,
+    startX: 0, startY: 0,
+    baseLeft: 0, baseTop: 0,
+    moved: false
+  };
+
+  // Initial "default grid" positions are handled by CSS grid.
+  // Once user drags a tile, we convert it to absolute positioning.
+  function ensureAbsolute(zone) {
+    if (zone.dataset.abs === '1') return;
+
+    // compute current on-screen position relative to cockpit
+    const cRect = cockpit.getBoundingClientRect();
+    const zRect = zone.getBoundingClientRect();
+
+    const left = zRect.left - cRect.left;
+    const top  = zRect.top  - cRect.top;
+
+    zone.style.left = `${left}px`;
+    zone.style.top  = `${top}px`;
+    zone.style.width = `${zRect.width}px`; // keep size stable
+
+    zone.classList.add('is-abs');
+    zone.dataset.abs = '1';
   }
-});
-</script>
 
+  function snap(n) {
+    return Math.round(n / GRID) * GRID;
+  }
+
+  function onPointerDown(e) {
+    const zone = e.target.closest('.zone');
+    if (!zone) return;
+
+    // don't start drag from controls
+    if (e.target.closest('input, button, textarea, select')) return;
+
+    // prevent accidental drag on simple click; require hold + move threshold
+    ensureAbsolute(zone);
+
+    const cRect = cockpit.getBoundingClientRect();
+    const left = parseFloat(zone.style.left || 0);
+    const top  = parseFloat(zone.style.top  || 0);
+
+    dragState.active = zone;
+    dragState.startX = e.clientX;
+    dragState.startY = e.clientY;
+    dragState.baseLeft = left;
+    dragState.baseTop = top;
+    dragState.moved = false;
+
+    zone.setPointerCapture(e.pointerId);
+    zone.classList.add('dragging');
+  }
+
+  function onPointerMove(e) {
+    if (!dragState.active) return;
+
+    const dx = e.clientX - dragState.startX;
+    const dy = e.clientY - dragState.startY;
+
+    // movement threshold
+    if (!dragState.moved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
+      dragState.moved = true;
+      // while dragging, keep focus if already focused; otherwise don't force focus
+    }
+
+    const zone = dragState.active;
+    const cRect = cockpit.getBoundingClientRect();
+    const zRect = zone.getBoundingClientRect();
+
+    // compute raw new position
+    let newLeft = dragState.baseLeft + dx;
+    let newTop  = dragState.baseTop + dy;
+
+    // clamp inside cockpit
+    const maxLeft = cRect.width - zRect.width;
+    const maxTop  = cRect.height - zRect.height;
+
+    newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+    newTop  = Math.max(0, Math.min(maxTop, newTop));
+
+    zone.style.left = `${newLeft}px`;
+    zone.style.top  = `${newTop}px`;
+  }
+
+  function onPointerUp(e) {
+    if (!dragState.active) return;
+
+    const zone = dragState.active;
+
+    // snap to grid on drop
+    const left = parseFloat(zone.style.left || 0);
+    const top  = parseFloat(zone.style.top  || 0);
+
+    zone.style.left = `${snap(left)}px`;
+    zone.style.top  = `${snap(top)}px`;
+
+    zone.classList.remove('dragging');
+    dragState.active = null;
+  }
+
+  cockpit.addEventListener('pointerdown', onPointerDown);
+  cockpit.addEventListener('pointermove', onPointerMove);
+  cockpit.addEventListener('pointerup', onPointerUp);
+  cockpit.addEventListener('pointercancel', onPointerUp);
+
+  // -----------------------------
+  // Reset Layout (back to grid)
+  // -----------------------------
+  function resetLayout() {
+    zones.forEach(z => {
+      z.classList.remove('is-abs', 'dragging');
+      z.dataset.abs = '0';
+      z.style.left = '';
+      z.style.top = '';
+      z.style.width = '';
+    });
+  }
+
+  // -----------------------------
+  // ANDY demo status (visual only)
+  // -----------------------------
+  const runDot = document.getElementById('runDot');
+  const runState = document.getElementById('runState');
+  const processed = document.getElementById('processed');
+  const queue = document.getElementById('queue');
+
+  function setRunState(state) {
+    runState.textContent = state;
+    runDot.classList.remove('idle', 'complete');
+    if (state === 'Idle') runDot.classList.add('idle');
+    else runDot.classList.add('complete');
+  }
+
+  document.getElementById('btnIngest').addEventListener('click', () => {
+    setRunState('Complete');
+    processed.textContent = String(Number(processed.textContent || '0') + 1);
+  });
+
+  document.getElementById('btnDry').addEventListener('click', () => {
+    setRunState('Complete');
+    queue.textContent = '0';
+  });
+
+  // Drop area visual feedback
+  const andyDrop = document.getElementById('andyDrop');
+  ['dragenter','dragover'].forEach(evt => {
+    andyDrop.addEventListener(evt, (e) => {
+      e.preventDefault();
+      andyDrop.classList.add('hot');
+    });
+  });
+  ['dragleave','drop'].forEach(evt => {
+    andyDrop.addEventListener(evt, (e) => {
+      e.preventDefault();
+      andyDrop.classList.remove('hot');
+    });
+  });
+
+})();
+</script>
 </body>
 </html>
