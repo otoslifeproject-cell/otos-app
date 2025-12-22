@@ -2,282 +2,212 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>OTOS – Cockpit</title>
+<title>OTOS Cockpit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
 :root{
-  --bg:#eef3f7;
+  --bg:#eef4fb;
   --card:#ffffff;
   --ink:#0f172a;
-  --muted:#64748b;
-  --accent:#ff7a1a;
-  --shadow-outer: 0 18px 40px rgba(15,23,42,.18);
-  --shadow-hover: 0 22px 52px rgba(15,23,42,.22);
-  --shadow-inner: inset 0 1px 1px rgba(255,255,255,.6);
-  --blur: blur(6px);
+  --muted:#475569;
+  --accent:#ff7a18;
+  --radius:18px;
+  --blur:6px;
 }
 
 *{box-sizing:border-box}
 
 body{
   margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
-  background: radial-gradient(circle at top, #f8fafc, var(--bg));
+  font-family: system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:radial-gradient(circle at top, #f7fbff, var(--bg));
   color:var(--ink);
+  height:100vh;
   overflow:hidden;
 }
 
-.cockpit{
-  display:grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap:28px;
-  padding:28px;
-  height:100vh;
-}
-
-.zone{
-  position:relative;
-  background:var(--card);
-  border-radius:18px;
-  padding:22px 22px 26px;
-  box-shadow: var(--shadow-outer), var(--shadow-inner);
-  transition:
-    transform .25s ease,
-    box-shadow .25s ease,
-    filter .25s ease,
-    opacity .25s ease;
-  cursor:grab;
-}
-
-.zone:hover{
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-hover), var(--shadow-inner);
-}
-
-.zone.active{
-  transform: translateY(-12px) scale(1.02);
-  z-index:5;
-}
-
-.zone.blurred{
-  filter: var(--blur);
-  opacity:.35;
-}
-
-.zone-header{
+/* ====== STAGE ====== */
+.stage{
   display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:14px;
+  gap:24px;
+  padding:40px;
+  height:100%;
+  align-items:flex-start;
+  transition:filter .35s ease;
 }
 
-.zone h2{
-  font-size:1.05rem;
-  margin:0;
-  letter-spacing:.04em;
+.stage.blurred{
+  filter: blur(var(--blur));
 }
 
-.zone p{
-  margin:6px 0 0;
-  font-size:.95rem;
+/* ====== TILE ====== */
+.tile{
+  flex:1;
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:28px;
+  min-height:280px;
+  box-shadow:0 14px 32px rgba(0,0,0,.12);
+  transition:
+    transform .35s ease,
+    box-shadow .35s ease,
+    z-index .35s ease;
+  position:relative;
+  cursor:pointer;
+}
+
+.tile:hover{
+  transform:translateY(-18px) scale(1.01);
+  box-shadow:0 26px 60px rgba(0,0,0,.18);
+}
+
+.tile.focused{
+  transform:translateY(-34px) scale(1.03);
+  box-shadow:0 40px 90px rgba(0,0,0,.25);
+  z-index:10;
+}
+
+/* ====== HEADERS ====== */
+.tile h2{
+  margin:0 0 6px;
+  font-size:18px;
+  letter-spacing:.02em;
+}
+
+.sub{
+  font-size:14px;
   color:var(--muted);
 }
 
-.controls{
+/* ====== ANDY ====== */
+.andy-box{
+  margin-top:22px;
   display:flex;
-  gap:10px;
+  flex-direction:column;
+  gap:14px;
 }
 
-.icon-btn{
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  border:none;
-  background:#f1f5f9;
-  box-shadow: inset 2px 2px 4px rgba(255,255,255,.8),
-              inset -2px -2px 4px rgba(0,0,0,.08);
-  cursor:pointer;
-  font-size:16px;
+.andy-box input{
+  padding:14px 16px;
+  border-radius:12px;
+  border:1px solid #e2e8f0;
+  font-size:14px;
 }
 
-.icon-btn:hover{
-  box-shadow:
-    0 6px 16px rgba(15,23,42,.25),
-    inset 1px 1px 2px rgba(255,255,255,.7);
+.actions{
+  display:flex;
+  gap:14px;
 }
 
-.expand::before{content:"⤢"}
-.collapse::before{content:"⤡"}
-
-button.primary{
-  background: linear-gradient(180deg,#ff8a33,#ff6a00);
+button{
+  flex:1;
+  padding:14px 18px;
   border:none;
   border-radius:14px;
-  padding:12px 18px;
+  background:linear-gradient(180deg,#ff8a2b,#ff6a00);
   color:#fff;
   font-weight:600;
-  box-shadow:
-    0 10px 24px rgba(255,122,26,.45),
-    inset 0 1px 0 rgba(255,255,255,.35);
+  font-size:14px;
   cursor:pointer;
-}
-
-button.primary:hover{
-  box-shadow:
-    0 14px 30px rgba(255,122,26,.55),
-    inset 0 1px 0 rgba(255,255,255,.45);
-}
-
-.slider-wrap{
-  margin-top:18px;
-}
-
-input[type=range]{
-  width:100%;
-  appearance:none;
-  height:6px;
-  border-radius:6px;
-  background: linear-gradient(90deg,var(--accent),#ffd1ad);
-  outline:none;
-}
-
-input[type=range]::-webkit-slider-thumb{
-  appearance:none;
-  width:22px;
-  height:22px;
-  border-radius:50%;
-  background:var(--accent);
-  box-shadow:0 0 0 8px rgba(255,122,26,.25);
-  cursor:pointer;
-}
-
-.dropzone{
-  margin-top:16px;
-  padding:18px;
-  border-radius:14px;
-  background:#f8fafc;
-  border:2px dashed #cbd5e1;
-  text-align:center;
-  color:#64748b;
-  transition:.2s;
-}
-
-.dropzone.drag{
-  background:#fff7ed;
-  border-color:var(--accent);
-  color:#9a3412;
 }
 
 .status{
   display:flex;
-  justify-content:space-between;
-  margin-top:12px;
-  font-size:.85rem;
-  color:var(--muted);
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  color:#334155;
+}
+
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#22c55e;
+}
+
+/* ====== OVERLAY ====== */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(240,245,255,.55);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease;
+}
+
+.overlay.active{
+  opacity:1;
+  pointer-events:auto;
 }
 </style>
 </head>
 
 <body>
 
-<div class="cockpit" id="cockpit">
+<div class="overlay" id="overlay"></div>
 
-  <div class="zone" data-zone>
-    <div class="zone-header">
-      <h2>PARENT</h2>
-      <div class="controls">
-        <button class="icon-btn expand"></button>
-      </div>
-    </div>
-    <p>Authority · Read · Lock · Authorise</p>
+<div class="stage" id="stage">
+
+  <!-- PARENT -->
+  <div class="tile" data-tile>
+    <h2>PARENT</h2>
+    <div class="sub">Authority · Read · Lock · Authorise</div>
   </div>
 
-  <div class="zone" data-zone>
-    <div class="zone-header">
-      <h2>CORE</h2>
-      <div class="controls">
-        <button class="icon-btn expand"></button>
-      </div>
-    </div>
-    <p>One action. Calm surface. Primary focus zone.</p>
+  <!-- CORE -->
+  <div class="tile" data-tile>
+    <h2>CORE</h2>
+    <div class="sub">One action. Calm surface. Primary focus zone.</div>
   </div>
 
-  <div class="zone" data-zone id="andy">
-    <div class="zone-header">
-      <h2>ANDY</h2>
-      <div class="controls">
-        <button class="icon-btn expand"></button>
+  <!-- ANDY -->
+  <div class="tile" data-tile>
+    <h2>ANDY</h2>
+    <div class="sub">Execution agent (token-gated)</div>
+
+    <div class="andy-box">
+      <input placeholder="Drop file or paste text (visual only)" />
+      <input placeholder="Command: A / G / R / C / T" />
+
+      <div class="actions">
+        <button>Ingest</button>
+        <button>Dry run</button>
       </div>
-    </div>
 
-    <p>Execution agent (token-gated)</p>
-
-    <div class="dropzone" id="dropzone">
-      Drop file or paste text (visual only)
-    </div>
-
-    <div class="slider-wrap">
-      <strong>Run Action</strong>
-      <input type="range" min="0" max="100" value="0" />
-    </div>
-
-    <div style="display:flex; gap:12px; margin-top:18px;">
-      <button class="primary">Ingest</button>
-      <button class="primary" style="opacity:.7">Dry run</button>
-    </div>
-
-    <div class="status">
-      <span>Idle</span>
-      <span>Processed: 0 · Queue: 0</span>
+      <div class="status">
+        <span class="dot"></span>
+        Complete
+        <span style="margin-left:auto">Processed: 6</span>
+        <span>Queue: 0</span>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
-const zones = document.querySelectorAll('[data-zone]');
-const cockpit = document.getElementById('cockpit');
+const tiles = document.querySelectorAll('[data-tile]');
+const stage = document.getElementById('stage');
+const overlay = document.getElementById('overlay');
 
-zones.forEach(z=>{
-  z.addEventListener('click',e=>{
-    if(e.target.closest('.icon-btn')) return;
-    zones.forEach(o=>{
-      o.classList.toggle('blurred', o!==z);
-      o.classList.toggle('active', o===z);
-    });
-  });
-
-  z.querySelector('.expand').addEventListener('click',e=>{
+tiles.forEach(tile=>{
+  tile.addEventListener('click', e=>{
     e.stopPropagation();
-    zones.forEach(o=>{
-      o.classList.toggle('blurred', o!==z);
-      o.classList.toggle('active', o===z);
-    });
+    tiles.forEach(t=>t.classList.remove('focused'));
+    tile.classList.add('focused');
+    stage.classList.add('blurred');
+    overlay.classList.add('active');
   });
 });
 
-cockpit.addEventListener('click',e=>{
-  if(e.target===cockpit){
-    zones.forEach(z=>{
-      z.classList.remove('active','blurred');
-    });
-  }
-});
-
-const drop = document.getElementById('dropzone');
-drop.addEventListener('dragover',e=>{
-  e.preventDefault();
-  drop.classList.add('drag');
-});
-drop.addEventListener('dragleave',()=>drop.classList.remove('drag'));
-drop.addEventListener('drop',e=>{
-  e.preventDefault();
-  drop.classList.remove('drag');
-  drop.textContent = "Item received (visual only)";
+overlay.addEventListener('click', ()=>{
+  tiles.forEach(t=>t.classList.remove('focused'));
+  stage.classList.remove('blurred');
+  overlay.classList.remove('active');
 });
 </script>
 
 </body>
 </html>
-
