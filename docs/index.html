@@ -1,66 +1,47 @@
-<!-- FILE: docs/index.html
-     PURPOSE: Restore smooth 2-stage focus WITHOUT scale; depth via shadow only; no “tile float” line; anchored top/left plane feel.
-     DROP-IN: Replace entire docs/index.html with this file.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS • Cockpit</title>
+  <title>Cockpit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     :root{
-      /* Blue-leaning “plane” like your perfect screenshot */
       --bg0:#eef5ff;
       --bg1:#eaf2fb;
       --bg2:#f6f9ff;
 
-      /* Card surface: not flat white-on-grey; slight cool tint */
       --card: rgba(255,255,255,.86);
-      --card-solid:#ffffff;
 
       --ink:#0f172a;
       --muted:#475569;
 
-      /* OTOS orange (kept for buttons only, NO glow halos) */
       --accent:#f97316;
       --accent2:#ff8a3d;
 
-      /* Plane separators */
-      --hair: rgba(15,23,42,.06);
-
-      /* Depth — asymmetric (bottom/right) only */
       --shadow-1: rgba(15,23,42,.10);
       --shadow-2: rgba(15,23,42,.16);
       --shadow-3: rgba(15,23,42,.22);
 
-      /* Focus blur */
       --blur: 10px;
-
-      /* Motion */
       --ease: cubic-bezier(.22,.61,.36,1);
       --dur: 200ms;
       --dur2: 260ms;
-
-      /* Roundness */
       --r: 22px;
     }
 
     *{ box-sizing:border-box; }
-    html, body { height:100%; }
+    html,body{ height:100%; }
+
     body{
       margin:0;
       font-family: system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
       color:var(--ink);
-
-      /* “Plane” background: bluish with soft falloff */
       background:
         radial-gradient(1200px 800px at 50% -10%, var(--bg2) 0%, var(--bg0) 40%, var(--bg1) 100%);
       overflow-x:hidden;
     }
 
-    /* Cockpit layout (3 columns baseline) */
     .cockpit{
       display:grid;
       grid-template-columns: 1fr 1.3fr 1fr;
@@ -70,7 +51,6 @@
       align-items:start;
     }
 
-    /* Dimmer overlay (subtle, keeps “plane” visible) */
     .veil{
       position:fixed;
       inset:0;
@@ -81,83 +61,56 @@
       transition: opacity var(--dur2) var(--ease);
       z-index:1;
     }
-    .veil.on{
-      opacity:1;
-      pointer-events:auto; /* allow click-to-reset */
-    }
+    .veil.on{ opacity:1; pointer-events:auto; }
 
-    /* Zone “surface”, anchored: NO scale, NO borders, NO neon */
     .zone{
       position:relative;
-      z-index:2; /* above veil */
+      z-index:2;
       border-radius: var(--r);
       padding:20px 22px;
 
-      /* Surface: tinted glass-like to avoid white tile-on-grey look */
       background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
-      /* Subtle plane separation ONLY top/left (hairline), not a full border */
+
       box-shadow:
-        /* top/left “attachment” highlight */
         inset 1px 1px 0 rgba(255,255,255,.85),
         inset 0 0 0 1px rgba(255,255,255,.40);
 
-      /* Create own layer early to remove first-click jank */
       transform: translateZ(0);
       will-change: box-shadow, filter, transform;
-
-      transition:
-        filter var(--dur) var(--ease),
-        transform var(--dur) var(--ease);
+      transition: filter var(--dur) var(--ease), transform var(--dur) var(--ease);
     }
 
-    /* Asymmetric depth: rendered via pseudo-element so it stays attached (no bottom “line”) */
     .zone::after{
       content:"";
       position:absolute;
       inset:0;
       border-radius: inherit;
       pointer-events:none;
-
-      /* Depth only bottom/right */
       box-shadow:
         10px 18px 40px var(--shadow-1),
         16px 26px 60px rgba(15,23,42,.08);
-
-      opacity:.95;
-      transition:
-        box-shadow var(--dur2) var(--ease),
-        opacity var(--dur2) var(--ease);
+      transition: box-shadow var(--dur2) var(--ease);
     }
 
-    /* Hover = “offer itself up” (shadow deepen). Small translate ONLY (no scale) */
-    .zone:hover{
-      transform: translateY(-2px) translateZ(0);
-    }
+    .zone:hover{ transform: translateY(-2px); }
     .zone:hover::after{
       box-shadow:
         12px 22px 52px var(--shadow-2),
         18px 34px 78px rgba(15,23,42,.10);
-      opacity:1;
     }
 
-    /* Focused = forward without tile float: NO scale, slightly more lift + deeper asymmetric shadow */
-    .zone.focused{
-      transform: translateY(-6px) translateZ(0);
-    }
+    .zone.focused{ transform: translateY(-6px); }
     .zone.focused::after{
       box-shadow:
         14px 28px 70px var(--shadow-3),
         22px 44px 110px rgba(15,23,42,.12);
-      opacity:1;
     }
 
-    /* Blur only non-focused zones */
     .zone.blurred{
-      filter: blur(var(--blur)) brightness(.98) saturate(.98);
+      filter: blur(var(--blur)) brightness(.98);
       pointer-events:none;
     }
 
-    /* Headers */
     .zone h2{
       margin:0 0 6px;
       font-size:1.05rem;
@@ -165,11 +118,9 @@
     }
     .zone p{
       margin:0;
-      font-size:1rem;
       color:var(--muted);
     }
 
-    /* Expand button (kept) */
     .expand{
       position:absolute;
       top:14px;
@@ -181,23 +132,11 @@
       align-items:center;
       justify-content:center;
       cursor:pointer;
-
       background: rgba(255,255,255,.92);
-      box-shadow:
-        6px 10px 22px rgba(15,23,42,.10),
-        inset 1px 1px 0 rgba(255,255,255,.85);
-
+      box-shadow: 6px 10px 22px rgba(15,23,42,.10);
       font-size:18px;
-      transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
-    }
-    .expand:hover{
-      transform: translateY(-1px);
-      box-shadow:
-        8px 14px 28px rgba(15,23,42,.14),
-        inset 1px 1px 0 rgba(255,255,255,.88);
     }
 
-    /* ANDY controls */
     .panel{
       margin-top:18px;
       display:flex;
@@ -205,7 +144,6 @@
       gap:14px;
     }
 
-    /* Inputs: deep but calm (ND-friendly), no harsh borders */
     .input{
       padding:14px 16px;
       border-radius:14px;
@@ -213,153 +151,133 @@
       box-shadow:
         inset 5px 5px 10px rgba(15,23,42,.10),
         inset -5px -5px 10px rgba(255,255,255,.85);
-      font-size:1rem;
       border:none;
       outline:none;
-      color:var(--ink);
-    }
-    .input::placeholder{ color: rgba(71,85,105,.85); }
-
-    .button-row{
-      display:flex;
-      gap:12px;
+      font-size:1rem;
     }
 
-    /* Buttons: depth yes, neon glow NO */
+    .button-row{ display:flex; gap:12px; }
+
     .btn{
       flex:1;
       padding:14px 0;
       border-radius:16px;
-      font-weight:650;
-      font-size:1rem;
-      cursor:pointer;
       border:none;
-
+      font-weight:650;
+      cursor:pointer;
       background: linear-gradient(180deg, var(--accent2), var(--accent));
       color:#fff;
-
-      /* Depth without glow */
-      box-shadow:
-        0 10px 22px rgba(15,23,42,.16),
-        inset 0 1px 0 rgba(255,255,255,.55);
-
-      transition: transform 140ms var(--ease), box-shadow 160ms var(--ease), filter 160ms var(--ease);
-    }
-    .btn:hover{
-      transform: translateY(-2px);
-      box-shadow:
-        0 14px 30px rgba(15,23,42,.18),
-        inset 0 1px 0 rgba(255,255,255,.55);
-    }
-    .btn:active{
-      transform: translateY(1px);
-      box-shadow:
-        0 8px 18px rgba(15,23,42,.20),
-        inset 0 2px 8px rgba(15,23,42,.20);
+      box-shadow: 0 10px 22px rgba(15,23,42,.16);
     }
     .btn.secondary{
       background: rgba(255,255,255,.92);
       color:var(--ink);
-      box-shadow:
-        0 10px 22px rgba(15,23,42,.12),
-        inset 1px 1px 0 rgba(255,255,255,.85);
     }
 
-    /* Stats */
-    .stats{
-      margin-top:10px;
-      font-size:.95rem;
-      display:flex;
-      justify-content:space-between;
-      color: rgba(71,85,105,.95);
+    pre{
+      margin-top:14px;
+      padding:14px;
+      border-radius:14px;
+      background: rgba(238,245,255,.7);
+      box-shadow: inset 4px 4px 10px rgba(15,23,42,.08);
+      font-size:.85rem;
+      line-height:1.4;
+      max-height:240px;
+      overflow:auto;
     }
 
-    /* Responsive: stack at smaller widths */
-    @media (max-width: 980px){
+    @media (max-width:980px){
       .cockpit{ grid-template-columns:1fr; }
     }
   </style>
 </head>
 
 <body>
-  <div class="veil" id="veil" title="Click to clear focus"></div>
 
-  <div class="cockpit" id="cockpit">
-    <section class="zone" id="parent" data-zone="parent">
-      <div class="expand" title="Clear focus">⤢</div>
-      <h2>PARENT</h2>
-      <p>Authority · Read · Lock · Authorise</p>
-    </section>
+<div class="veil" id="veil"></div>
 
-    <section class="zone" id="core" data-zone="core">
-      <div class="expand" title="Clear focus">⤢</div>
-      <h2>CORE</h2>
-      <p>One action. Calm surface. Primary focus zone.</p>
-    </section>
+<div class="cockpit">
 
-    <section class="zone" id="andy" data-zone="andy">
-      <div class="expand" title="Clear focus">⤢</div>
-      <h2>ANDY</h2>
-      <p>Execution agent (token-gated)</p>
+  <section class="zone" id="parent">
+    <div class="expand">⤢</div>
+    <h2>PARENT</h2>
+    <p>Authority · Contract · Lock</p>
+  </section>
 
-      <div class="panel">
-        <input class="input" placeholder="Drop file or paste text (visual only)" />
-        <input class="input" placeholder="Command: A / G / R / C / T" />
+  <section class="zone" id="core">
+    <div class="expand">⤢</div>
+    <h2>CORE</h2>
+    <p>Primary action surface</p>
+  </section>
 
-        <div class="button-row">
-          <button class="btn" type="button">Ingest</button>
-          <button class="btn secondary" type="button">Dry run</button>
-        </div>
+  <section class="zone" id="andy">
+    <div class="expand">⤢</div>
+    <h2>ANDY</h2>
+    <p>Execution agent (OFF)</p>
 
-        <div class="stats">
-          <span>Processed: 0</span>
-          <span>Queue: 0</span>
-        </div>
+    <div class="panel">
+      <input class="input" placeholder="Drop or paste (visual only)" />
+      <input class="input" placeholder="Command" />
+      <div class="button-row">
+        <button class="btn">Ingest</button>
+        <button class="btn secondary">Dry run</button>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
-  <script>
-    // Focus logic: keep focused zone SHARP; blur only others.
-    const zones = Array.from(document.querySelectorAll('.zone'));
-    const veil = document.getElementById('veil');
+  <section class="zone" id="status">
+    <div class="expand">⤢</div>
+    <h2>STATUS</h2>
+    <p>Install · Constraints · Visibility</p>
+    <pre id="statusPanel"></pre>
+  </section>
 
-    function clearFocus(){
-      zones.forEach(z => z.classList.remove('focused','blurred'));
-      veil.classList.remove('on');
-    }
+</div>
 
-    function setFocus(target){
-      zones.forEach(z => {
-        z.classList.toggle('focused', z === target);
-        z.classList.toggle('blurred', z !== target);
-      });
-      veil.classList.add('on');
-    }
+<script>
+  const zones = [...document.querySelectorAll('.zone')];
+  const veil = document.getElementById('veil');
 
-    // Click zone to focus (ignore expand click)
-    zones.forEach(z => {
-      z.addEventListener('click', (e) => {
-        if (e.target.closest('.expand')) return;
-        // If already focused, keep it (no toggle off) — veil / expand clears.
-        if (!z.classList.contains('focused')) setFocus(z);
-      });
-
-      // Expand button clears focus
-      const exp = z.querySelector('.expand');
-      exp.addEventListener('click', (e) => {
-        e.stopPropagation();
-        clearFocus();
-      });
+  function clearFocus(){
+    zones.forEach(z=>z.classList.remove('focused','blurred'));
+    veil.classList.remove('on');
+  }
+  function setFocus(t){
+    zones.forEach(z=>{
+      z.classList.toggle('focused', z===t);
+      z.classList.toggle('blurred', z!==t);
     });
+    veil.classList.add('on');
+  }
 
-    // Clicking veil clears focus
-    veil.addEventListener('click', clearFocus);
-
-    // Escape clears focus
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') clearFocus();
+  zones.forEach(z=>{
+    z.addEventListener('click',e=>{
+      if(e.target.closest('.expand')) return;
+      if(!z.classList.contains('focused')) setFocus(z);
     });
-  </script>
+    z.querySelector('.expand').onclick=e=>{
+      e.stopPropagation(); clearFocus();
+    };
+  });
+  veil.onclick=clearFocus;
+
+  const STATUS = {
+    install:"Phase 2 – Environment Wiring",
+    constraints:{
+      persistentAgent:false,
+      liveRAG:false,
+      backgroundProcess:false
+    },
+    memoryLayers:{
+      windowLog:"DEFINED",
+      notion:"DEFINED",
+      archive:"DEFINED"
+    },
+    hlr:"READY (manual GO only)"
+  };
+  document.getElementById("statusPanel").textContent =
+    JSON.stringify(STATUS,null,2);
+</script>
+
 </body>
 </html>
