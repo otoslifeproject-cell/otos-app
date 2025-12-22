@@ -1,247 +1,636 @@
+<!-- FILE: docs/index.html
+     LAYER: 3 (Behaviour restored: drag/snap/focus/collapse->go-home)
+     NOTE: No persistence, no agents, no RAG, no background processes. This is UI-only.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Cockpit</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <title>Cockpit • Environment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root{
-  --env-bg-1:#eef5ff;
-  --env-bg-2:#e6effa;
+  <style>
+    :root{
+      /* Blue-leaning “plane” */
+      --bg0:#eef5ff;
+      --bg1:#eaf2fb;
+      --bg2:#f6f9ff;
 
-  --ink:#0f172a;
-  --muted:#475569;
+      --ink:#0f172a;
+      --muted:#475569;
 
-  --card:rgba(255,255,255,.86);
+      /* OTOS orange (buttons only) */
+      --accent:#f97316;
+      --accent2:#ff8a3d;
 
-  --shadow-soft:0 24px 80px rgba(15,23,42,.12);
+      /* Depth — asymmetric (bottom/right) */
+      --shadow-1: rgba(15,23,42,.10);
+      --shadow-2: rgba(15,23,42,.16);
+      --shadow-3: rgba(15,23,42,.22);
 
-  --accent:#f97316;
-  --r:22px;
-}
+      --r: 22px;
+      --ease: cubic-bezier(.22,.61,.36,1);
+      --dur: 180ms;
+      --dur2: 260ms;
 
-*{box-sizing:border-box;}
-html,body{height:100%;margin:0;}
+      --grid: 24px;
+      --blur: 10px;
+    }
 
-body{
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  background:
-    radial-gradient(1400px 900px at 50% -20%, #f6f9ff 0%, var(--env-bg-1) 45%, var(--env-bg-2) 100%);
-  overflow:hidden;
-}
+    *{ box-sizing:border-box; }
+    html, body { height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      color:var(--ink);
+      background: radial-gradient(1200px 800px at 50% -10%, var(--bg2) 0%, var(--bg0) 40%, var(--bg1) 100%);
+      overflow:hidden; /* destination mode */
+    }
 
-/* =========================
-   ENVIRONMENT FRAME
-   ========================= */
+    /* Outer “Deans World” frame */
+    .frame{
+      position:fixed;
+      inset:12px;
+      border-radius:28px;
+      background:
+        radial-gradient(900px 700px at 40% 10%, rgba(255,255,255,.55), rgba(255,255,255,.0) 55%),
+        linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.06));
+      box-shadow:
+        0 18px 70px rgba(15,23,42,.14),
+        inset 1px 1px 0 rgba(255,255,255,.55);
+      overflow:hidden;
+    }
 
-.environment{
-  position:fixed;
-  inset:18px;
-  border-radius:28px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.25), rgba(255,255,255,.05)),
-    repeating-linear-gradient(
-      -35deg,
-      rgba(15,23,42,.02) 0px,
-      rgba(15,23,42,.02) 2px,
-      transparent 2px,
-      transparent 22px
-    );
-  box-shadow:
-    inset 0 0 0 1px rgba(15,23,42,.06),
-    0 40px 120px rgba(15,23,42,.18);
-  overflow:hidden;
-}
+    /* Watermark / unifier */
+    .watermark{
+      position:absolute;
+      inset:-40px;
+      pointer-events:none;
+      opacity:.14;
+      background:
+        repeating-linear-gradient(135deg, rgba(15,23,42,.06) 0 2px, transparent 2px 22px);
+      mix-blend-mode:multiply;
+    }
+    .watermark::after{
+      content:"COCKPIT";
+      position:absolute;
+      left:6%;
+      bottom:6%;
+      font-weight:800;
+      letter-spacing:.12em;
+      font-size: clamp(72px, 13vw, 200px);
+      color: rgba(15,23,42,.10);
+      transform: skewX(-6deg);
+      user-select:none;
+    }
 
-/* watermark plane */
-.environment::after{
-  content:"OTOS · COCKPIT";
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18vw;
-  font-weight:700;
-  letter-spacing:.08em;
-  color:rgba(15,23,42,.035);
-  pointer-events:none;
-  user-select:none;
-}
+    /* Click-to-clear focus veil */
+    .veil{
+      position:absolute;
+      inset:0;
+      background: rgba(238,245,255,.38);
+      backdrop-filter: blur(3px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity var(--dur2) var(--ease);
+      z-index:2;
+    }
+    .veil.on{
+      opacity:1;
+      pointer-events:auto;
+    }
 
-/* =========================
-   COCKPIT GRID
-   ========================= */
+    /* Stage is the coordinate system for draggable zones */
+    .stage{
+      position:absolute;
+      inset:0;
+      z-index:3;
+    }
 
-.cockpit{
-  position:relative;
-  z-index:2;
-  display:grid;
-  grid-template-columns:1fr 1.3fr 1fr;
-  grid-auto-rows:min-content;
-  gap:24px;
-  padding:32px;
-  height:100%;
-  overflow:auto;
-}
+    /* Zone surface: attached top/left, depth bottom/right (not a “tile border”) */
+    .zone{
+      position:absolute;
+      border-radius: var(--r);
+      padding:18px 20px;
+      min-width: 260px;
 
-/* =========================
-   ZONES
-   ========================= */
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
+      box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,.85),
+        inset 0 0 0 1px rgba(255,255,255,.40);
 
-.zone{
-  position:relative;
-  border-radius:var(--r);
-  padding:20px 22px;
-  background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(255,255,255,.80));
-  box-shadow:
-    inset 1px 1px 0 rgba(255,255,255,.85),
-    var(--shadow-soft);
-}
+      transform: translate3d(0,0,0);
+      will-change: transform, filter;
 
-.zone h2{
-  margin:0 0 6px;
-  font-size:1.05rem;
-}
-.zone p{
-  margin:0;
-  color:var(--muted);
-}
+      transition:
+        transform var(--dur) var(--ease),
+        filter var(--dur) var(--ease);
+      z-index:3;
+    }
 
-.expand{
-  position:absolute;
-  top:14px;
-  right:14px;
-  width:34px;
-  height:34px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(255,255,255,.95);
-  box-shadow:0 8px 22px rgba(15,23,42,.15);
-  cursor:default;
-  font-size:16px;
-}
+    /* Depth via pseudo-element so it stays “attached” */
+    .zone::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: inherit;
+      pointer-events:none;
+      box-shadow:
+        10px 18px 40px var(--shadow-1),
+        16px 26px 60px rgba(15,23,42,.08);
+      opacity:.95;
+      transition: box-shadow var(--dur2) var(--ease), opacity var(--dur2) var(--ease);
+    }
 
-/* =========================
-   INPUTS
-   ========================= */
+    .zone:hover{
+      transform: translate3d(0,-2px,0);
+    }
+    .zone:hover::after{
+      box-shadow:
+        12px 22px 52px var(--shadow-2),
+        18px 34px 78px rgba(15,23,42,.10);
+      opacity:1;
+    }
 
-.panel{
-  margin-top:16px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
+    .zone.focused{
+      transform: translate3d(0,-6px,0);
+      z-index:50;
+    }
+    .zone.focused::after{
+      box-shadow:
+        14px 28px 70px var(--shadow-3),
+        22px 44px 110px rgba(15,23,42,.12);
+      opacity:1;
+    }
 
-.input{
-  padding:14px 16px;
-  border-radius:14px;
-  border:none;
-  outline:none;
-  background:linear-gradient(180deg,#eef5ff,#e6effa);
-  box-shadow:inset 4px 4px 10px rgba(15,23,42,.08);
-}
+    .zone.blurred{
+      filter: blur(var(--blur)) brightness(.98) saturate(.98);
+      pointer-events:none;
+    }
 
-.buttons{
-  display:flex;
-  gap:10px;
-}
+    /* While dragging: kill transitions to remove “jolt” */
+    .zone.dragging{
+      transition:none !important;
+      cursor:grabbing;
+      z-index:80;
+    }
+    .zone.dragging::after{
+      transition:none !important;
+      opacity:1;
+      box-shadow:
+        14px 28px 70px var(--shadow-3),
+        22px 44px 110px rgba(15,23,42,.12);
+    }
 
-.btn{
-  flex:1;
-  padding:14px;
-  border-radius:16px;
-  border:none;
-  background:linear-gradient(180deg,#ff8a3d,#f97316);
-  color:#fff;
-  font-weight:600;
-}
+    /* Collapsed: content hides, zone shrinks, but stays anchored where it lives */
+    .zone.collapsed{
+      padding:14px 16px;
+    }
+    .zone.collapsed .content{
+      display:none;
+    }
+    .zone.collapsed .subtitle{
+      display:none;
+    }
 
-.btn.secondary{
-  background:#fff;
-  color:var(--ink);
-}
+    /* Header (drag handle) */
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      user-select:none;
+      cursor:grab;
+    }
+    .title{
+      margin:0;
+      font-size:1.0rem;
+      letter-spacing:.2px;
+    }
+    .subtitle{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:.98rem;
+    }
 
-/* =========================
-   STATUS PANEL
-   ========================= */
+    /* Controls */
+    .controls{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding-top:2px;
+    }
+    .iconBtn{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      border:none;
+      background: rgba(255,255,255,.92);
+      box-shadow:
+        6px 10px 22px rgba(15,23,42,.10),
+        inset 1px 1px 0 rgba(255,255,255,.85);
+      transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+      font-size:15px;
+      line-height:1;
+    }
+    .iconBtn:hover{
+      transform: translateY(-1px);
+      box-shadow:
+        8px 14px 28px rgba(15,23,42,.14),
+        inset 1px 1px 0 rgba(255,255,255,.88);
+    }
 
-pre{
-  margin-top:12px;
-  padding:14px;
-  border-radius:14px;
-  background:rgba(238,245,255,.8);
-  font-size:.85rem;
-  max-height:260px;
-  overflow:auto;
-}
+    /* Content body */
+    .content{
+      margin-top:14px;
+    }
 
-/* =========================
-   RESPONSIVE
-   ========================= */
+    /* Inputs */
+    .panel{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .input{
+      padding:14px 16px;
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(238,245,255,.85), rgba(234,242,251,.85));
+      box-shadow:
+        inset 5px 5px 10px rgba(15,23,42,.10),
+        inset -5px -5px 10px rgba(255,255,255,.85);
+      font-size:1rem;
+      border:none;
+      outline:none;
+      color:var(--ink);
+    }
+    .input::placeholder{ color: rgba(71,85,105,.85); }
 
-@media(max-width:1000px){
-  .cockpit{grid-template-columns:1fr;}
-}
-</style>
+    .button-row{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .btn{
+      flex:1;
+      padding:14px 0;
+      border-radius:16px;
+      font-weight:650;
+      font-size:1rem;
+      cursor:pointer;
+      border:none;
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
+      color:#fff;
+      box-shadow:
+        0 10px 22px rgba(15,23,42,.16),
+        inset 0 1px 0 rgba(255,255,255,.55);
+      transition: transform 140ms var(--ease), box-shadow 160ms var(--ease);
+    }
+    .btn:hover{
+      transform: translateY(-2px);
+      box-shadow:
+        0 14px 30px rgba(15,23,42,.18),
+        inset 0 1px 0 rgba(255,255,255,.55);
+    }
+    .btn:active{
+      transform: translateY(1px);
+      box-shadow:
+        0 8px 18px rgba(15,23,42,.20),
+        inset 0 2px 8px rgba(15,23,42,.20);
+    }
+    .btn.secondary{
+      background: rgba(255,255,255,.92);
+      color:var(--ink);
+      box-shadow:
+        0 10px 22px rgba(15,23,42,.12),
+        inset 1px 1px 0 rgba(255,255,255,.85);
+    }
+
+    /* Status JSON panel */
+    .statusBox{
+      width:100%;
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(238,245,255,.70), rgba(238,245,255,.55));
+      box-shadow:
+        inset 5px 5px 10px rgba(15,23,42,.08),
+        inset -5px -5px 10px rgba(255,255,255,.85);
+      padding:14px 14px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.45;
+      color: rgba(15,23,42,.88);
+      white-space: pre;
+      overflow:auto;
+      max-height: 220px;
+    }
+
+    /* Responsive safeguard */
+    @media (max-width: 980px){
+      body{ overflow:auto; }
+      .frame{ position:relative; inset:auto; margin:12px; height:auto; min-height: calc(100vh - 24px); }
+      .veil{ position:fixed; }
+      .stage{ position:relative; height: 900px; }
+    }
+  </style>
 </head>
 
 <body>
-
-<div class="environment">
-  <div class="cockpit">
-
-    <section class="zone">
-      <div class="expand">⤢</div>
-      <h2>PARENT</h2>
-      <p>Authority · Contract · Lock</p>
-    </section>
-
-    <section class="zone">
-      <div class="expand">⤢</div>
-      <h2>CORE</h2>
-      <p>Primary action surface</p>
-    </section>
-
-    <section class="zone">
-      <div class="expand">⤢</div>
-      <h2>ANDY</h2>
-      <p>Execution agent (OFF)</p>
-
-      <div class="panel">
-        <input class="input" placeholder="Drop or paste (visual only)" />
-        <input class="input" placeholder="Command" />
-        <div class="buttons">
-          <button class="btn">Ingest</button>
-          <button class="btn secondary">Dry run</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="zone" style="grid-column:1 / span 2;">
-      <div class="expand">⤢</div>
-      <h2>STATUS</h2>
-      <p>Install · Constraints · Visibility</p>
-      <pre>{
-  "constraints":{
-    "persistentAgent":false,
-    "liveRAG":false,
-    "backgroundProcess":false
-  },
-  "memoryLayers":{
-    "windowLog":"DEFINED",
-    "notion":"DEFINED",
-    "archive":"DEFINED"
-  },
-  "hlr":"READY (manual GO only)"
-}</pre>
-    </section>
-
+  <div class="frame" id="frame">
+    <div class="watermark" aria-hidden="true"></div>
+    <div class="veil" id="veil" title="Click to clear focus"></div>
+    <div class="stage" id="stage" aria-label="Cockpit stage"></div>
   </div>
-</div>
 
+  <script>
+    // =========================
+    // LAYER 3: UI BEHAVIOUR ONLY
+    // - Drag / snap / clamp
+    // - Focus / blur
+    // - Collapse -> go-home (self-tidy)
+    // No persistence, no agents, no background processes.
+    // =========================
+
+    const stage = document.getElementById('stage');
+    const veil  = document.getElementById('veil');
+
+    const GRID = 24;
+    const PADDING = 24; // soft clamp padding from edges
+
+    // Create zones as DOM nodes (absolute positioned)
+    const ZONES = [
+      { id:'parent', title:'PARENT', subtitle:'Authority · Contract · Lock', w: 380, h: 160, home:{ x: 36,  y: 28 } },
+      { id:'core',   title:'CORE',   subtitle:'Primary action surface',     w: 420, h: 160, home:{ x: 460, y: 28 } },
+      { id:'andy',   title:'ANDY',   subtitle:'Execution agent (OFF)',      w: 420, h: 240, home:{ x: 910, y: 28 } },
+      { id:'status', title:'STATUS', subtitle:'Install · Constraints · Visibility', w: 820, h: 300, home:{ x: 170, y: 220 } },
+    ];
+
+    function snap(n){ return Math.round(n / GRID) * GRID; }
+
+    function clampToStage(x, y, el){
+      const r = stage.getBoundingClientRect();
+      const w = el.offsetWidth;
+      const h = el.offsetHeight;
+
+      const minX = PADDING;
+      const minY = PADDING;
+      const maxX = (r.width  - w - PADDING);
+      const maxY = (r.height - h - PADDING);
+
+      return {
+        x: Math.max(minX, Math.min(maxX, x)),
+        y: Math.max(minY, Math.min(maxY, y))
+      };
+    }
+
+    function buildZone(z){
+      const el = document.createElement('section');
+      el.className = 'zone';
+      el.id = z.id;
+      el.dataset.zone = z.id;
+
+      // home anchor stored (for collapse->go-home)
+      el.dataset.homeX = String(z.home.x);
+      el.dataset.homeY = String(z.home.y);
+
+      el.style.width  = z.w + 'px';
+      el.style.height = z.h + 'px';
+      el.style.left   = z.home.x + 'px';
+      el.style.top    = z.home.y + 'px';
+
+      // Header (drag handle)
+      const header = document.createElement('div');
+      header.className = 'header';
+
+      const left = document.createElement('div');
+      const h2 = document.createElement('h2');
+      h2.className = 'title';
+      h2.textContent = z.title;
+
+      const p = document.createElement('p');
+      p.className = 'subtitle';
+      p.textContent = z.subtitle;
+
+      left.appendChild(h2);
+      left.appendChild(p);
+
+      const controls = document.createElement('div');
+      controls.className = 'controls';
+
+      // Collapse button (go home + collapse)
+      const collapseBtn = document.createElement('button');
+      collapseBtn.className = 'iconBtn';
+      collapseBtn.type = 'button';
+      collapseBtn.title = 'Collapse (returns home)';
+      collapseBtn.textContent = '–';
+
+      // Expand button (uncollapse)
+      const expandBtn = document.createElement('button');
+      expandBtn.className = 'iconBtn';
+      expandBtn.type = 'button';
+      expandBtn.title = 'Expand';
+      expandBtn.textContent = '⤢';
+
+      controls.appendChild(collapseBtn);
+      controls.appendChild(expandBtn);
+
+      header.appendChild(left);
+      header.appendChild(controls);
+
+      const content = document.createElement('div');
+      content.className = 'content';
+
+      // Zone-specific content
+      if (z.id === 'andy'){
+        content.innerHTML = `
+          <div class="panel">
+            <input class="input" placeholder="Drop or paste (visual only)" />
+            <input class="input" placeholder="Command" />
+            <div class="button-row">
+              <button class="btn" type="button">Ingest</button>
+              <button class="btn secondary" type="button">Dry run</button>
+            </div>
+          </div>
+        `;
+      } else if (z.id === 'status'){
+        const status = {
+          constraints: {
+            persistentAgent: false,
+            liveRAG: false,
+            backgroundProcess: false
+          },
+          memoryLayers: {
+            windowLog: "DEFINED (not running)",
+            notion: "DEFINED (not running)",
+            archive: "DEFINED (not running)"
+          },
+          cockpit: {
+            layer: "3 (UI behaviour only)",
+            persistence: "OFF (by design)",
+            goControl: "manual GO only"
+          }
+        };
+        content.innerHTML = `
+          <div class="statusBox" id="statusBox">${JSON.stringify(status, null, 2)}</div>
+        `;
+      } else {
+        content.innerHTML = `<div style="height:86px"></div>`;
+      }
+
+      el.appendChild(header);
+      el.appendChild(content);
+
+      // Focus behaviour
+      el.addEventListener('click', (e) => {
+        // clicking buttons shouldn't start focus-change weirdness
+        if (e.target.closest('button')) return;
+        setFocus(el);
+      });
+
+      // Collapse/Expand actions
+      collapseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goHomeAndCollapse(el);
+      });
+      expandBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        el.classList.remove('collapsed');
+        clearFocus(); // optional: keep it calm
+      });
+
+      // Drag (header only)
+      enableDrag(el, header);
+
+      return el;
+    }
+
+    // Build + mount zones
+    const zoneEls = ZONES.map(buildZone);
+    zoneEls.forEach(el => stage.appendChild(el));
+
+    // Ensure stage has height enough for clamp if viewport is tall
+    function sizeStage(){
+      const fr = document.getElementById('frame').getBoundingClientRect();
+      stage.style.width = fr.width + 'px';
+      stage.style.height = fr.height + 'px';
+    }
+    sizeStage();
+    window.addEventListener('resize', () => {
+      sizeStage();
+      // clamp everything after resize
+      zoneEls.forEach(el => {
+        const x = parseFloat(el.style.left || '0');
+        const y = parseFloat(el.style.top || '0');
+        const c = clampToStage(x, y, el);
+        el.style.left = c.x + 'px';
+        el.style.top  = c.y + 'px';
+      });
+    });
+
+    // Focus system
+    function clearFocus(){
+      zoneEls.forEach(z => z.classList.remove('focused','blurred'));
+      veil.classList.remove('on');
+    }
+    function setFocus(target){
+      zoneEls.forEach(z => {
+        z.classList.toggle('focused', z === target);
+        z.classList.toggle('blurred', z !== target);
+      });
+      veil.classList.add('on');
+    }
+    veil.addEventListener('click', clearFocus);
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') clearFocus(); });
+
+    // Drag system (no persistence)
+    function enableDrag(el, handle){
+      let dragging = false;
+      let startX = 0, startY = 0;
+      let origX  = 0, origY  = 0;
+      let raf = 0;
+      let pending = null;
+
+      const onMove = (clientX, clientY) => {
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        const nx = origX + dx;
+        const ny = origY + dy;
+
+        // schedule paint for smoothness
+        pending = { x: nx, y: ny };
+        if (!raf){
+          raf = requestAnimationFrame(() => {
+            raf = 0;
+            if (!pending) return;
+            const c = clampToStage(pending.x, pending.y, el);
+            el.style.left = c.x + 'px';
+            el.style.top  = c.y + 'px';
+          });
+        }
+      };
+
+      handle.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        // allow button clicks through
+        if (e.target.closest('button')) return;
+
+        dragging = true;
+        el.classList.add('dragging');
+        setFocus(el);
+
+        const rect = el.getBoundingClientRect();
+        const srect = stage.getBoundingClientRect();
+
+        // translate absolute left/top within stage coords
+        origX = rect.left - srect.left;
+        origY = rect.top  - srect.top;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!dragging) return;
+        onMove(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (!dragging) return;
+        dragging = false;
+        el.classList.remove('dragging');
+
+        // snap on drop
+        const x = snap(parseFloat(el.style.left || '0'));
+        const y = snap(parseFloat(el.style.top  || '0'));
+        const c = clampToStage(x, y, el);
+        el.style.left = c.x + 'px';
+        el.style.top  = c.y + 'px';
+      });
+    }
+
+    // Collapse -> go-home (self-tidy)
+    function goHomeAndCollapse(el){
+      const hx = parseFloat(el.dataset.homeX || '0');
+      const hy = parseFloat(el.dataset.homeY || '0');
+
+      // animate to home, then collapse
+      el.style.transition = `transform var(--dur) var(--ease), filter var(--dur) var(--ease), left var(--dur2) var(--ease), top var(--dur2) var(--ease)`;
+      el.style.left = hx + 'px';
+      el.style.top  = hy + 'px';
+
+      // after motion, collapse
+      window.setTimeout(() => {
+        el.classList.add('collapsed');
+        el.style.transition = ''; // return to CSS transitions
+        clearFocus();
+      }, 280);
+    }
+
+    // Initial calm (no forced focus)
+    clearFocus();
+  </script>
 </body>
 </html>
