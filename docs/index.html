@@ -2,225 +2,184 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>OTOS • Cockpit</title>
+<title>OTOS Cockpit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
 :root{
-  --bg:#eef3f7;
+  --bg:#eef4fb;
   --card:#ffffff;
   --ink:#0f172a;
   --muted:#475569;
-
-  /* OTOS orange (brain-derived) */
-  --accent:#f97316;
-  --accent-soft:rgba(249,115,22,.18);
-
-  /* depth tones */
-  --shadow-dark:rgba(15,23,42,.18);
-  --shadow-mid:rgba(15,23,42,.10);
-  --shadow-light:rgba(255,255,255,.9);
+  --accent:#ff7a18;
+  --radius:18px;
+  --blur:6px;
 }
 
-/* base */
 *{box-sizing:border-box}
+
 body{
   margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  background:radial-gradient(circle at top,#f8fafc,var(--bg));
+  font-family: system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:radial-gradient(circle at top, #f7fbff, var(--bg));
   color:var(--ink);
+  height:100vh;
+  overflow:hidden;
 }
 
-/* cockpit */
-.cockpit{
-  display:grid;
-  grid-template-columns:1fr 1.3fr 1fr;
+/* ====== STAGE ====== */
+.stage{
+  display:flex;
   gap:24px;
-  padding:32px;
-  min-height:100vh;
+  padding:40px;
+  height:100%;
+  align-items:flex-start;
+  transition:filter .35s ease;
 }
 
-/* zone */
-.zone{
-  position:relative;
+.stage.blurred{
+  filter: blur(var(--blur));
+}
+
+/* ====== TILE ====== */
+.tile{
+  flex:1;
   background:var(--card);
-  border-radius:18px;
-  padding:20px 22px;
+  border-radius:var(--radius);
+  padding:28px;
+  min-height:280px;
+  box-shadow:0 14px 32px rgba(0,0,0,.12);
   transition:
-    transform .25s ease,
-    box-shadow .25s ease,
-    filter .25s ease;
-  box-shadow:
-    0 18px 40px var(--shadow-mid),
-    inset 0 1px 0 var(--shadow-light);
+    transform .35s ease,
+    box-shadow .35s ease,
+    z-index .35s ease;
+  position:relative;
+  cursor:pointer;
 }
 
-/* hover lift (subtle, single stage) */
-.zone:hover{
-  transform:translateY(-6px);
-  box-shadow:
-    0 26px 55px var(--shadow-dark),
-    inset 0 1px 0 var(--shadow-light);
+.tile:hover{
+  transform:translateY(-18px) scale(1.01);
+  box-shadow:0 26px 60px rgba(0,0,0,.18);
 }
 
-/* focused zone */
-.zone.focused{
-  transform:scale(1.03) translateY(-8px);
-  box-shadow:
-    0 35px 70px rgba(15,23,42,.28),
-    inset 0 1px 0 var(--shadow-light);
+.tile.focused{
+  transform:translateY(-34px) scale(1.03);
+  box-shadow:0 40px 90px rgba(0,0,0,.25);
   z-index:10;
 }
 
-/* blur others */
-.zone.blurred{
-  filter:blur(3px) brightness(.95);
-  pointer-events:none;
+/* ====== HEADERS ====== */
+.tile h2{
+  margin:0 0 6px;
+  font-size:18px;
+  letter-spacing:.02em;
 }
 
-/* headers */
-.zone h2{
-  margin:0 0 6px;
-  font-size:1.1rem;
-}
-.zone p{
-  margin:0;
-  font-size:1rem;
+.sub{
+  font-size:14px;
   color:var(--muted);
 }
 
-/* expand button */
-.expand{
-  position:absolute;
-  top:14px;
-  right:14px;
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-
-  background:var(--card);
-  box-shadow:
-    0 6px 14px var(--shadow-mid),
-    inset 0 1px 0 var(--shadow-light);
-
-  font-size:18px;
-  transition:all .2s ease;
-}
-.expand:hover{
-  transform:scale(1.1);
-}
-
-/* ANDY controls */
-.panel{
-  margin-top:18px;
+/* ====== ANDY ====== */
+.andy-box{
+  margin-top:22px;
   display:flex;
   flex-direction:column;
   gap:14px;
 }
 
-/* deep neumorphic input */
-.input{
+.andy-box input{
   padding:14px 16px;
-  border-radius:14px;
-  background:var(--bg);
-  box-shadow:
-    inset 4px 4px 8px rgba(15,23,42,.12),
-    inset -4px -4px 8px rgba(255,255,255,.9);
-  font-size:1rem;
-  border:none;
-  outline:none;
+  border-radius:12px;
+  border:1px solid #e2e8f0;
+  font-size:14px;
 }
 
-/* buttons (true depth, modern) */
-.button-row{
+.actions{
   display:flex;
-  gap:12px;
+  gap:14px;
 }
-.btn{
+
+button{
   flex:1;
-  padding:14px 0;
-  border-radius:16px;
-  font-weight:600;
-  font-size:1rem;
-  cursor:pointer;
+  padding:14px 18px;
   border:none;
-
-  background:linear-gradient(
-    180deg,
-    #ff9f55,
-    var(--accent)
-  );
+  border-radius:14px;
+  background:linear-gradient(180deg,#ff8a2b,#ff6a00);
   color:#fff;
-
-  box-shadow:
-    0 10px 22px rgba(249,115,22,.45),
-    inset 0 1px 0 rgba(255,255,255,.5);
-
-  transition:transform .15s ease, box-shadow .15s ease;
-}
-.btn.secondary{
-  background:#fff;
-  color:var(--ink);
-  box-shadow:
-    0 8px 18px var(--shadow-mid),
-    inset 0 1px 0 var(--shadow-light);
-}
-.btn:hover{
-  transform:translateY(-2px);
-}
-.btn:active{
-  transform:translateY(1px);
-  box-shadow:
-    0 4px 10px rgba(0,0,0,.25),
-    inset 0 2px 6px rgba(0,0,0,.25);
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
 }
 
-/* stats */
-.stats{
-  margin-top:10px;
-  font-size:.95rem;
+.status{
   display:flex;
-  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  color:#334155;
+}
+
+.dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#22c55e;
+}
+
+/* ====== OVERLAY ====== */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(240,245,255,.55);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .35s ease;
+}
+
+.overlay.active{
+  opacity:1;
+  pointer-events:auto;
 }
 </style>
 </head>
 
 <body>
 
-<div class="cockpit">
+<div class="overlay" id="overlay"></div>
 
-  <div class="zone" id="parent">
-    <div class="expand">⤢</div>
+<div class="stage" id="stage">
+
+  <!-- PARENT -->
+  <div class="tile" data-tile>
     <h2>PARENT</h2>
-    <p>Authority · Read · Lock · Authorise</p>
+    <div class="sub">Authority · Read · Lock · Authorise</div>
   </div>
 
-  <div class="zone" id="core">
-    <div class="expand">⤢</div>
+  <!-- CORE -->
+  <div class="tile" data-tile>
     <h2>CORE</h2>
-    <p>One action. Calm surface. Primary focus zone.</p>
+    <div class="sub">One action. Calm surface. Primary focus zone.</div>
   </div>
 
-  <div class="zone" id="andy">
-    <div class="expand">⤢</div>
+  <!-- ANDY -->
+  <div class="tile" data-tile>
     <h2>ANDY</h2>
-    <p>Execution agent (token-gated)</p>
+    <div class="sub">Execution agent (token-gated)</div>
 
-    <div class="panel">
-      <input class="input" placeholder="Drop file or paste text (visual only)" />
-      <input class="input" placeholder="Command: A / G / R / C / T" />
+    <div class="andy-box">
+      <input placeholder="Drop file or paste text (visual only)" />
+      <input placeholder="Command: A / G / R / C / T" />
 
-      <div class="button-row">
-        <button class="btn">Ingest</button>
-        <button class="btn secondary">Dry run</button>
+      <div class="actions">
+        <button>Ingest</button>
+        <button>Dry run</button>
       </div>
 
-      <div class="stats">
-        <span>Processed: 0</span>
+      <div class="status">
+        <span class="dot"></span>
+        Complete
+        <span style="margin-left:auto">Processed: 6</span>
         <span>Queue: 0</span>
       </div>
     </div>
@@ -229,30 +188,24 @@ body{
 </div>
 
 <script>
-const zones = document.querySelectorAll('.zone');
+const tiles = document.querySelectorAll('[data-tile]');
+const stage = document.getElementById('stage');
+const overlay = document.getElementById('overlay');
 
-zones.forEach(z=>{
-  z.addEventListener('click',e=>{
-    if(e.target.classList.contains('expand')) return;
-    zones.forEach(o=>{
-      o.classList.toggle('focused', o===z);
-      o.classList.toggle('blurred', o!==z);
-    });
-  });
-
-  z.querySelector('.expand').addEventListener('click',e=>{
+tiles.forEach(tile=>{
+  tile.addEventListener('click', e=>{
     e.stopPropagation();
-    zones.forEach(o=>{
-      o.classList.remove('focused','blurred');
-    });
+    tiles.forEach(t=>t.classList.remove('focused'));
+    tile.classList.add('focused');
+    stage.classList.add('blurred');
+    overlay.classList.add('active');
   });
 });
 
-/* background click resets */
-document.body.addEventListener('click',e=>{
-  if(!e.target.closest('.zone')){
-    zones.forEach(z=>z.classList.remove('focused','blurred'));
-  }
+overlay.addEventListener('click', ()=>{
+  tiles.forEach(t=>t.classList.remove('focused'));
+  stage.classList.remove('blurred');
+  overlay.classList.remove('active');
 });
 </script>
 
