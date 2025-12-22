@@ -1,307 +1,365 @@
+<!-- FILE: docs/index.html
+     PURPOSE: Restore smooth 2-stage focus WITHOUT scale; depth via shadow only; no “tile float” line; anchored top/left plane feel.
+     DROP-IN: Replace entire docs/index.html with this file.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>OTOS • Cockpit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="./styles.css" />
+
+  <style>
+    :root{
+      /* Blue-leaning “plane” like your perfect screenshot */
+      --bg0:#eef5ff;
+      --bg1:#eaf2fb;
+      --bg2:#f6f9ff;
+
+      /* Card surface: not flat white-on-grey; slight cool tint */
+      --card: rgba(255,255,255,.86);
+      --card-solid:#ffffff;
+
+      --ink:#0f172a;
+      --muted:#475569;
+
+      /* OTOS orange (kept for buttons only, NO glow halos) */
+      --accent:#f97316;
+      --accent2:#ff8a3d;
+
+      /* Plane separators */
+      --hair: rgba(15,23,42,.06);
+
+      /* Depth — asymmetric (bottom/right) only */
+      --shadow-1: rgba(15,23,42,.10);
+      --shadow-2: rgba(15,23,42,.16);
+      --shadow-3: rgba(15,23,42,.22);
+
+      /* Focus blur */
+      --blur: 10px;
+
+      /* Motion */
+      --ease: cubic-bezier(.22,.61,.36,1);
+      --dur: 200ms;
+      --dur2: 260ms;
+
+      /* Roundness */
+      --r: 22px;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body { height:100%; }
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      color:var(--ink);
+
+      /* “Plane” background: bluish with soft falloff */
+      background:
+        radial-gradient(1200px 800px at 50% -10%, var(--bg2) 0%, var(--bg0) 40%, var(--bg1) 100%);
+      overflow-x:hidden;
+    }
+
+    /* Cockpit layout (3 columns baseline) */
+    .cockpit{
+      display:grid;
+      grid-template-columns: 1fr 1.3fr 1fr;
+      gap:24px;
+      padding:32px;
+      min-height:100vh;
+      align-items:start;
+    }
+
+    /* Dimmer overlay (subtle, keeps “plane” visible) */
+    .veil{
+      position:fixed;
+      inset:0;
+      background: rgba(238,245,255,.38);
+      backdrop-filter: blur(3px);
+      opacity:0;
+      pointer-events:none;
+      transition: opacity var(--dur2) var(--ease);
+      z-index:1;
+    }
+    .veil.on{
+      opacity:1;
+      pointer-events:auto; /* allow click-to-reset */
+    }
+
+    /* Zone “surface”, anchored: NO scale, NO borders, NO neon */
+    .zone{
+      position:relative;
+      z-index:2; /* above veil */
+      border-radius: var(--r);
+      padding:20px 22px;
+
+      /* Surface: tinted glass-like to avoid white tile-on-grey look */
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
+      /* Subtle plane separation ONLY top/left (hairline), not a full border */
+      box-shadow:
+        /* top/left “attachment” highlight */
+        inset 1px 1px 0 rgba(255,255,255,.85),
+        inset 0 0 0 1px rgba(255,255,255,.40);
+
+      /* Create own layer early to remove first-click jank */
+      transform: translateZ(0);
+      will-change: box-shadow, filter, transform;
+
+      transition:
+        filter var(--dur) var(--ease),
+        transform var(--dur) var(--ease);
+    }
+
+    /* Asymmetric depth: rendered via pseudo-element so it stays attached (no bottom “line”) */
+    .zone::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius: inherit;
+      pointer-events:none;
+
+      /* Depth only bottom/right */
+      box-shadow:
+        10px 18px 40px var(--shadow-1),
+        16px 26px 60px rgba(15,23,42,.08);
+
+      opacity:.95;
+      transition:
+        box-shadow var(--dur2) var(--ease),
+        opacity var(--dur2) var(--ease);
+    }
+
+    /* Hover = “offer itself up” (shadow deepen). Small translate ONLY (no scale) */
+    .zone:hover{
+      transform: translateY(-2px) translateZ(0);
+    }
+    .zone:hover::after{
+      box-shadow:
+        12px 22px 52px var(--shadow-2),
+        18px 34px 78px rgba(15,23,42,.10);
+      opacity:1;
+    }
+
+    /* Focused = forward without tile float: NO scale, slightly more lift + deeper asymmetric shadow */
+    .zone.focused{
+      transform: translateY(-6px) translateZ(0);
+    }
+    .zone.focused::after{
+      box-shadow:
+        14px 28px 70px var(--shadow-3),
+        22px 44px 110px rgba(15,23,42,.12);
+      opacity:1;
+    }
+
+    /* Blur only non-focused zones */
+    .zone.blurred{
+      filter: blur(var(--blur)) brightness(.98) saturate(.98);
+      pointer-events:none;
+    }
+
+    /* Headers */
+    .zone h2{
+      margin:0 0 6px;
+      font-size:1.05rem;
+      letter-spacing:.2px;
+    }
+    .zone p{
+      margin:0;
+      font-size:1rem;
+      color:var(--muted);
+    }
+
+    /* Expand button (kept) */
+    .expand{
+      position:absolute;
+      top:14px;
+      right:14px;
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+
+      background: rgba(255,255,255,.92);
+      box-shadow:
+        6px 10px 22px rgba(15,23,42,.10),
+        inset 1px 1px 0 rgba(255,255,255,.85);
+
+      font-size:18px;
+      transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+    }
+    .expand:hover{
+      transform: translateY(-1px);
+      box-shadow:
+        8px 14px 28px rgba(15,23,42,.14),
+        inset 1px 1px 0 rgba(255,255,255,.88);
+    }
+
+    /* ANDY controls */
+    .panel{
+      margin-top:18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    /* Inputs: deep but calm (ND-friendly), no harsh borders */
+    .input{
+      padding:14px 16px;
+      border-radius:14px;
+      background: linear-gradient(180deg, rgba(238,245,255,.85), rgba(234,242,251,.85));
+      box-shadow:
+        inset 5px 5px 10px rgba(15,23,42,.10),
+        inset -5px -5px 10px rgba(255,255,255,.85);
+      font-size:1rem;
+      border:none;
+      outline:none;
+      color:var(--ink);
+    }
+    .input::placeholder{ color: rgba(71,85,105,.85); }
+
+    .button-row{
+      display:flex;
+      gap:12px;
+    }
+
+    /* Buttons: depth yes, neon glow NO */
+    .btn{
+      flex:1;
+      padding:14px 0;
+      border-radius:16px;
+      font-weight:650;
+      font-size:1rem;
+      cursor:pointer;
+      border:none;
+
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
+      color:#fff;
+
+      /* Depth without glow */
+      box-shadow:
+        0 10px 22px rgba(15,23,42,.16),
+        inset 0 1px 0 rgba(255,255,255,.55);
+
+      transition: transform 140ms var(--ease), box-shadow 160ms var(--ease), filter 160ms var(--ease);
+    }
+    .btn:hover{
+      transform: translateY(-2px);
+      box-shadow:
+        0 14px 30px rgba(15,23,42,.18),
+        inset 0 1px 0 rgba(255,255,255,.55);
+    }
+    .btn:active{
+      transform: translateY(1px);
+      box-shadow:
+        0 8px 18px rgba(15,23,42,.20),
+        inset 0 2px 8px rgba(15,23,42,.20);
+    }
+    .btn.secondary{
+      background: rgba(255,255,255,.92);
+      color:var(--ink);
+      box-shadow:
+        0 10px 22px rgba(15,23,42,.12),
+        inset 1px 1px 0 rgba(255,255,255,.85);
+    }
+
+    /* Stats */
+    .stats{
+      margin-top:10px;
+      font-size:.95rem;
+      display:flex;
+      justify-content:space-between;
+      color: rgba(71,85,105,.95);
+    }
+
+    /* Responsive: stack at smaller widths */
+    @media (max-width: 980px){
+      .cockpit{ grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="veil" id="veil" title="Click to clear focus"></div>
+
   <div class="cockpit" id="cockpit">
-    <!-- PARENT -->
-    <section class="zone" id="zone-parent" data-zone="parent" tabindex="0" aria-label="Parent zone">
-      <button class="expand" type="button" data-action="reset" aria-label="Reset focus & layout">⤢</button>
-      <div class="grab" aria-hidden="true" title="Drag">⋮⋮</div>
-
-      <header class="zone-head">
-        <h2>PARENT</h2>
-        <p>Authority · Read · Lock · Authorise</p>
-      </header>
-
-      <div class="zone-body">
-        <!-- intentionally blank for now -->
-      </div>
+    <section class="zone" id="parent" data-zone="parent">
+      <div class="expand" title="Clear focus">⤢</div>
+      <h2>PARENT</h2>
+      <p>Authority · Read · Lock · Authorise</p>
     </section>
 
-    <!-- CORE -->
-    <section class="zone" id="zone-core" data-zone="core" tabindex="0" aria-label="Core zone">
-      <button class="expand" type="button" data-action="reset" aria-label="Reset focus & layout">⤢</button>
-      <div class="grab" aria-hidden="true" title="Drag">⋮⋮</div>
-
-      <header class="zone-head">
-        <h2>CORE</h2>
-        <p>One action. Calm surface. Primary focus zone.</p>
-      </header>
-
-      <div class="zone-body">
-        <!-- intentionally blank for now -->
-      </div>
+    <section class="zone" id="core" data-zone="core">
+      <div class="expand" title="Clear focus">⤢</div>
+      <h2>CORE</h2>
+      <p>One action. Calm surface. Primary focus zone.</p>
     </section>
 
-    <!-- ANDY -->
-    <section class="zone" id="zone-andy" data-zone="andy" tabindex="0" aria-label="Andy zone">
-      <button class="expand" type="button" data-action="reset" aria-label="Reset focus & layout">⤢</button>
-      <div class="grab" aria-hidden="true" title="Drag">⋮⋮</div>
+    <section class="zone" id="andy" data-zone="andy">
+      <div class="expand" title="Clear focus">⤢</div>
+      <h2>ANDY</h2>
+      <p>Execution agent (token-gated)</p>
 
-      <header class="zone-head">
-        <h2>ANDY</h2>
-        <p>Execution agent (token-gated)</p>
-      </header>
+      <div class="panel">
+        <input class="input" placeholder="Drop file or paste text (visual only)" />
+        <input class="input" placeholder="Command: A / G / R / C / T" />
 
-      <div class="zone-body">
-        <div class="panel">
-          <div class="drop" id="andyDrop" aria-label="Drop files here">
-            Drop file or paste text (visual only)
-          </div>
+        <div class="button-row">
+          <button class="btn" type="button">Ingest</button>
+          <button class="btn secondary" type="button">Dry run</button>
+        </div>
 
-          <input class="input" id="andyCommand" placeholder="Command: A / G / R / C / T" />
-
-          <div class="button-row">
-            <button class="btn" type="button" id="btnIngest">Ingest</button>
-            <button class="btn secondary" type="button" id="btnDry">Dry run</button>
-          </div>
-
-          <div class="status-row">
-            <span class="dot idle" id="runDot"></span>
-            <span id="runState">Idle</span>
-          </div>
-
-          <div class="stats">
-            <span>Processed: <strong id="processed">0</strong></span>
-            <span>Queue: <strong id="queue">0</strong></span>
-          </div>
+        <div class="stats">
+          <span>Processed: 0</span>
+          <span>Queue: 0</span>
         </div>
       </div>
     </section>
   </div>
 
-<script>
-(() => {
-  const cockpit = document.getElementById('cockpit');
-  const zones = Array.from(document.querySelectorAll('.zone'));
+  <script>
+    // Focus logic: keep focused zone SHARP; blur only others.
+    const zones = Array.from(document.querySelectorAll('.zone'));
+    const veil = document.getElementById('veil');
 
-  // -----------------------------
-  // Focus / Blur (2-stage)
-  // -----------------------------
-  function clearFocus() {
-    zones.forEach(z => {
-      z.classList.remove('focused');
-      z.classList.remove('blurred');
-    });
-    document.body.classList.remove('has-focus');
-  }
-
-  function setFocus(target) {
-    zones.forEach(z => {
-      const isTarget = z === target;
-      z.classList.toggle('focused', isTarget);
-      z.classList.toggle('blurred', !isTarget);
-    });
-    document.body.classList.add('has-focus');
-  }
-
-  zones.forEach(zone => {
-    zone.addEventListener('click', (e) => {
-      // Reset button
-      if (e.target && e.target.matches('[data-action="reset"]')) {
-        e.stopPropagation();
-        clearFocus();
-        resetLayout(); // also resets positions
-        return;
-      }
-
-      // If clicking inside inputs/buttons, don't change focus
-      if (e.target.closest('input, button, textarea, select')) return;
-
-      // Click focuses zone
-      setFocus(zone);
-    });
-
-    // Keyboard focus support (Enter/Space)
-    zone.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        setFocus(zone);
-      }
-      if (e.key === 'Escape') {
-        clearFocus();
-      }
-    });
-  });
-
-  // Background click clears focus
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.zone')) clearFocus();
-  });
-
-  // -----------------------------
-  // Drag (click & hold anywhere on tile, except controls)
-  // + Soft snap on drop
-  // -----------------------------
-  const GRID = 24; // snap size
-  const dragState = {
-    active: null,
-    startX: 0, startY: 0,
-    baseLeft: 0, baseTop: 0,
-    moved: false
-  };
-
-  // Initial "default grid" positions are handled by CSS grid.
-  // Once user drags a tile, we convert it to absolute positioning.
-  function ensureAbsolute(zone) {
-    if (zone.dataset.abs === '1') return;
-
-    // compute current on-screen position relative to cockpit
-    const cRect = cockpit.getBoundingClientRect();
-    const zRect = zone.getBoundingClientRect();
-
-    const left = zRect.left - cRect.left;
-    const top  = zRect.top  - cRect.top;
-
-    zone.style.left = `${left}px`;
-    zone.style.top  = `${top}px`;
-    zone.style.width = `${zRect.width}px`; // keep size stable
-
-    zone.classList.add('is-abs');
-    zone.dataset.abs = '1';
-  }
-
-  function snap(n) {
-    return Math.round(n / GRID) * GRID;
-  }
-
-  function onPointerDown(e) {
-    const zone = e.target.closest('.zone');
-    if (!zone) return;
-
-    // don't start drag from controls
-    if (e.target.closest('input, button, textarea, select')) return;
-
-    // prevent accidental drag on simple click; require hold + move threshold
-    ensureAbsolute(zone);
-
-    const cRect = cockpit.getBoundingClientRect();
-    const left = parseFloat(zone.style.left || 0);
-    const top  = parseFloat(zone.style.top  || 0);
-
-    dragState.active = zone;
-    dragState.startX = e.clientX;
-    dragState.startY = e.clientY;
-    dragState.baseLeft = left;
-    dragState.baseTop = top;
-    dragState.moved = false;
-
-    zone.setPointerCapture(e.pointerId);
-    zone.classList.add('dragging');
-  }
-
-  function onPointerMove(e) {
-    if (!dragState.active) return;
-
-    const dx = e.clientX - dragState.startX;
-    const dy = e.clientY - dragState.startY;
-
-    // movement threshold
-    if (!dragState.moved && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
-      dragState.moved = true;
-      // while dragging, keep focus if already focused; otherwise don't force focus
+    function clearFocus(){
+      zones.forEach(z => z.classList.remove('focused','blurred'));
+      veil.classList.remove('on');
     }
 
-    const zone = dragState.active;
-    const cRect = cockpit.getBoundingClientRect();
-    const zRect = zone.getBoundingClientRect();
+    function setFocus(target){
+      zones.forEach(z => {
+        z.classList.toggle('focused', z === target);
+        z.classList.toggle('blurred', z !== target);
+      });
+      veil.classList.add('on');
+    }
 
-    // compute raw new position
-    let newLeft = dragState.baseLeft + dx;
-    let newTop  = dragState.baseTop + dy;
-
-    // clamp inside cockpit
-    const maxLeft = cRect.width - zRect.width;
-    const maxTop  = cRect.height - zRect.height;
-
-    newLeft = Math.max(0, Math.min(maxLeft, newLeft));
-    newTop  = Math.max(0, Math.min(maxTop, newTop));
-
-    zone.style.left = `${newLeft}px`;
-    zone.style.top  = `${newTop}px`;
-  }
-
-  function onPointerUp(e) {
-    if (!dragState.active) return;
-
-    const zone = dragState.active;
-
-    // snap to grid on drop
-    const left = parseFloat(zone.style.left || 0);
-    const top  = parseFloat(zone.style.top  || 0);
-
-    zone.style.left = `${snap(left)}px`;
-    zone.style.top  = `${snap(top)}px`;
-
-    zone.classList.remove('dragging');
-    dragState.active = null;
-  }
-
-  cockpit.addEventListener('pointerdown', onPointerDown);
-  cockpit.addEventListener('pointermove', onPointerMove);
-  cockpit.addEventListener('pointerup', onPointerUp);
-  cockpit.addEventListener('pointercancel', onPointerUp);
-
-  // -----------------------------
-  // Reset Layout (back to grid)
-  // -----------------------------
-  function resetLayout() {
+    // Click zone to focus (ignore expand click)
     zones.forEach(z => {
-      z.classList.remove('is-abs', 'dragging');
-      z.dataset.abs = '0';
-      z.style.left = '';
-      z.style.top = '';
-      z.style.width = '';
+      z.addEventListener('click', (e) => {
+        if (e.target.closest('.expand')) return;
+        // If already focused, keep it (no toggle off) — veil / expand clears.
+        if (!z.classList.contains('focused')) setFocus(z);
+      });
+
+      // Expand button clears focus
+      const exp = z.querySelector('.expand');
+      exp.addEventListener('click', (e) => {
+        e.stopPropagation();
+        clearFocus();
+      });
     });
-  }
 
-  // -----------------------------
-  // ANDY demo status (visual only)
-  // -----------------------------
-  const runDot = document.getElementById('runDot');
-  const runState = document.getElementById('runState');
-  const processed = document.getElementById('processed');
-  const queue = document.getElementById('queue');
+    // Clicking veil clears focus
+    veil.addEventListener('click', clearFocus);
 
-  function setRunState(state) {
-    runState.textContent = state;
-    runDot.classList.remove('idle', 'complete');
-    if (state === 'Idle') runDot.classList.add('idle');
-    else runDot.classList.add('complete');
-  }
-
-  document.getElementById('btnIngest').addEventListener('click', () => {
-    setRunState('Complete');
-    processed.textContent = String(Number(processed.textContent || '0') + 1);
-  });
-
-  document.getElementById('btnDry').addEventListener('click', () => {
-    setRunState('Complete');
-    queue.textContent = '0';
-  });
-
-  // Drop area visual feedback
-  const andyDrop = document.getElementById('andyDrop');
-  ['dragenter','dragover'].forEach(evt => {
-    andyDrop.addEventListener(evt, (e) => {
-      e.preventDefault();
-      andyDrop.classList.add('hot');
+    // Escape clears focus
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') clearFocus();
     });
-  });
-  ['dragleave','drop'].forEach(evt => {
-    andyDrop.addEventListener(evt, (e) => {
-      e.preventDefault();
-      andyDrop.classList.remove('hot');
-    });
-  });
-
-})();
-</script>
+  </script>
 </body>
 </html>
