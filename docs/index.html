@@ -1,241 +1,46 @@
 <!-- FILE: docs/index.html
-     LAYER: 3.1 (Parent secured)
-     NOTE: UI-only. No persistence, no agents, no RAG, no background processes.
+     LAYER: 3.1 (HOTFIX)
+     PURPOSE:
+       1) FIX CSS LEAK (style text rendering on-screen)
+       2) SECURE PARENT (never blurred, never draggable, never moved by focus)
+       3) KEEP LAYER-3 BEHAVIOUR (drag/snap/focus/collapse->go-home for non-parent)
+     NOTE:
+       - No persistence
+       - No agents
+       - No RAG
+       - No background processes
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Cockpit • Environment</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8" />
+  <title>Cockpit • Environment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<style>
-:root{
-  --bg0:#eef5ff; --bg1:#eaf2fb; --bg2:#f6f9ff;
-  --ink:#0f172a; --muted:#475569;
-  --accent:#f97316; --accent2:#ff8a3d;
-  --shadow-1: rgba(15,23,42,.10);
-  --shadow-2: rgba(15,23,42,.16);
-  --shadow-3: rgba(15,23,42,.22);
-  --r:22px; --ease:cubic-bezier(.22,.61,.36,1);
-  --dur:180ms; --dur2:260ms;
-  --grid:24px; --blur:10px;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  color:var(--ink);
-  background:radial-gradient(1200px 800px at 50% -10%,var(--bg2) 0%,var(--bg0) 40%,var(--bg1) 100%);
-  overflow:hidden;
-}
-.frame{
-  position:fixed; inset:12px; border-radius:28px;
-  background:linear-gradient(180deg,rgba(255,255,255,.25),rgba(255,255,255,.06));
-  box-shadow:0 18px 70px rgba(15,23,42,.14), inset 1px 1px 0 rgba(255,255,255,.55);
-  overflow:hidden;
-}
-.watermark{
-  position:absolute; inset:-40px; pointer-events:none; opacity:.14;
-  background:repeating-linear-gradient(135deg,rgba(15,23,42,.06) 0 2px,transparent 2px 22px);
-}
-.watermark::after{
-  content:"COCKPIT"; position:absolute; left:6%; bottom:6%;
-  font-weight:800; letter-spacing:.12em;
-  font-size:clamp(72px,13vw,200px);
-  color:rgba(15,23,42,.10); transform:skewX(-6deg);
-}
-.veil{
-  position:absolute; inset:0;
-  background:rgba(238,245,255,.38);
-  backdrop-filter:blur(3px);
-  opacity:0; pointer-events:none;
-  transition:opacity var(--dur2) var(--ease);
-  z-index:2;
-}
-.veil.on{opacity:1; pointer-events:auto}
-.stage{position:absolute; inset:0; z-index:3}
+  <style>
+    :root{
+      --bg0:#eef5ff;
+      --bg1:#eaf2fb;
+      --bg2:#f6f9ff;
 
-.zone{
-  position:absolute; border-radius:var(--r);
-  padding:18px 20px; min-width:260px;
-  background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,255,255,.78));
-  box-shadow:inset 1px 1px 0 rgba(255,255,255,.85),
-             inset 0 0 0 1px rgba(255,255,255,.40);
-  transition:transform var(--dur) var(--ease), filter var(--dur) var(--ease);
-}
-.zone::after{
-  content:""; position:absolute; inset:0; border-radius:inherit;
-  pointer-events:none;
-  box-shadow:10px 18px 40px var(--shadow-1),
-             16px 26px 60px rgba(15,23,42,.08);
-}
-.zone.focused{transform:translateY(-6px); z-index:50}
-.zone.blurred{filter:blur(var(--blur)); pointer-events:none}
-.zone.dragging{transition:none!important; cursor:grabbing; z-index:80}
+      --ink:#0f172a;
+      --muted:#475569;
 
-.zone.locked{
-  outline:2px solid rgba(249,115,22,.35);
-  pointer-events:auto;
-}
-.zone.locked .header{cursor:default}
+      --accent:#f97316;
+      --accent2:#ff8a3d;
 
-.header{
-  display:flex; justify-content:space-between;
-  cursor:grab; user-select:none;
-}
-.title{margin:0;font-size:1rem}
-.subtitle{margin:4px 0 0;color:var(--muted)}
+      --shadow-1: rgba(15,23,42,.10);
+      --shadow-2: rgba(15,23,42,.16);
+      --shadow-3: rgba(15,23,42,.22);
 
-.controls{display:flex;gap:8px}
-.iconBtn{
-  width:34px;height:34px;border-radius:999px;
-  display:grid;place-items:center;
-  background:#fff;border:none;cursor:pointer;
-  box-shadow:6px 10px 22px rgba(15,23,42,.10);
-}
+      --r: 22px;
+      --ease: cubic-bezier(.22,.61,.36,1);
+      --dur: 180ms;
+      --dur2: 260ms;
 
-.content{margin-top:14px}
-.status{
-  font-size:.85rem; margin-top:10px;
-  color:rgba(15,23,42,.75)
-}
-.lockState{
-  margin-top:6px;
-  font-weight:600;
-  color:var(--accent);
-}
-</style>
-</head>
-
-<body>
-<div class="frame">
-  <div class="watermark"></div>
-  <div class="veil" id="veil"></div>
-  <div class="stage" id="stage"></div>
-</div>
-
-<script>
-const stage=document.getElementById('stage');
-const veil=document.getElementById('veil');
-const GRID=24,PADDING=24;
-
-const ZONES=[
- {id:'parent',title:'PARENT',subtitle:'Authority · Contract · Lock',w:380,h:180,home:{x:36,y:28}},
- {id:'core',title:'CORE',subtitle:'Primary action surface',w:420,h:160,home:{x:460,y:28}},
- {id:'andy',title:'ANDY',subtitle:'Execution agent (OFF)',w:420,h:240,home:{x:910,y:28}},
- {id:'status',title:'STATUS',subtitle:'Install · Constraints · Visibility',w:820,h:300,home:{x:170,y:220}}
-];
-
-const zoneEls=[];
-let parentLocked=true;
-
-function snap(n){return Math.round(n/GRID)*GRID}
-function clamp(x,y,el){
- const r=stage.getBoundingClientRect();
- return {
-  x:Math.max(PADDING,Math.min(r.width-el.offsetWidth-PADDING,x)),
-  y:Math.max(PADDING,Math.min(r.height-el.offsetHeight-PADDING,y))
- }
-}
-
-function buildZone(z){
- const el=document.createElement('section');
- el.className='zone'; el.id=z.id;
- el.style.width=z.w+'px'; el.style.height=z.h+'px';
- el.style.left=z.home.x+'px'; el.style.top=z.home.y+'px';
-
- const h=document.createElement('div');h.className='header';
- const l=document.createElement('div');
- l.innerHTML=`<h2 class="title">${z.title}</h2><p class="subtitle">${z.subtitle}</p>`;
- const c=document.createElement('div');c.className='controls';
-
- if(z.id==='parent'){
-   const lockBtn=document.createElement('button');
-   lockBtn.className='iconBtn'; lockBtn.textContent='🔒';
-   lockBtn.onclick=(e)=>{
-     e.stopPropagation();
-     parentLocked=!parentLocked;
-     el.classList.toggle('locked',parentLocked);
-     lockState.textContent=parentLocked?'LOCKED':'UNLOCKED';
-   };
-   c.appendChild(lockBtn);
- }
-
- h.appendChild(l);h.appendChild(c);
- el.appendChild(h);
-
- const body=document.createElement('div');body.className='content';
-
- if(z.id==='parent'){
-   body.innerHTML=`
-     <div class="status">Root authority surface.</div>
-     <div class="lockState" id="lockState">LOCKED</div>
-   `;
- }
-
- el.appendChild(body);
-
- el.addEventListener('click',()=>setFocus(el));
-
- if(z.id!=='parent') enableDrag(el,h);
-
- if(z.id==='parent'){ el.classList.add('locked','focused'); }
-
- return el;
-}
-
-function setFocus(t){
- zoneEls.forEach(z=>{
-  if(z.id==='parent'){ z.classList.add('focused'); return }
-  z.classList.toggle('focused',z===t);
-  z.classList.toggle('blurred',z!==t && parentLocked);
- });
- veil.classList.add('on');
-}
-
-function clearFocus(){
- zoneEls.forEach(z=>z.classList.remove('focused','blurred'));
- if(parentLocked) document.getElementById('parent').classList.add('focused');
- veil.classList.remove('on');
-}
-
-veil.onclick=clearFocus;
-
-function enableDrag(el,handle){
- let d=false,sx=0,sy=0,ox=0,oy=0;
- handle.onmousedown=e=>{
-  if(e.button!==0)return;
-  d=true; el.classList.add('dragging');
-  const r=el.getBoundingClientRect(), sr=stage.getBoundingClientRect();
-  ox=r.left-sr.left; oy=r.top-sr.top;
-  sx=e.clientX; sy=e.clientY;
- };
- window.onmousemove=e=>{
-  if(!d)return;
-  const p=clamp(ox+e.clientX-sx,oy+e.clientY-sy,el);
-  el.style.left=p.x+'px'; el.style.top=p.y+'px';
- };
- window.onmouseup=()=>{
-  if(!d)return;
-  d=false; el.classList.remove('dragging');
-  const p=clamp(snap(parseFloat(el.style.left)),snap(parseFloat(el.style.top)),el);
-  el.style.left=p.x+'px'; el.style.top=p.y+'px';
- };
-}
-
-ZONES.forEach(z=>{
- const el=buildZone(z);
- zoneEls.push(el);
- stage.appendChild(el);
-});
-
-clearFocus();
-</script>
-</body>
-</html>
+      --grid: 24px;
       --blur: 10px;
+      --pad: 24px;
     }
 
     *{ box-sizing:border-box; }
@@ -262,14 +67,12 @@ clearFocus();
       overflow:hidden;
     }
 
-    /* Watermark / unifier */
     .watermark{
       position:absolute;
       inset:-40px;
       pointer-events:none;
       opacity:.14;
-      background:
-        repeating-linear-gradient(135deg, rgba(15,23,42,.06) 0 2px, transparent 2px 22px);
+      background: repeating-linear-gradient(135deg, rgba(15,23,42,.06) 0 2px, transparent 2px 22px);
       mix-blend-mode:multiply;
     }
     .watermark::after{
@@ -285,7 +88,7 @@ clearFocus();
       user-select:none;
     }
 
-    /* Click-to-clear focus veil */
+    /* Click-to-clear focus veil (only dims; DOES NOT “go home”) */
     .veil{
       position:absolute;
       inset:0;
@@ -301,14 +104,13 @@ clearFocus();
       pointer-events:auto;
     }
 
-    /* Stage is the coordinate system for draggable zones */
     .stage{
       position:absolute;
       inset:0;
       z-index:3;
     }
 
-    /* Zone surface: attached top/left, depth bottom/right (not a “tile border”) */
+    /* Zone surface */
     .zone{
       position:absolute;
       border-radius: var(--r);
@@ -321,7 +123,7 @@ clearFocus();
         inset 0 0 0 1px rgba(255,255,255,.40);
 
       transform: translate3d(0,0,0);
-      will-change: transform, filter;
+      will-change: transform, filter, left, top;
 
       transition:
         transform var(--dur) var(--ease),
@@ -329,7 +131,6 @@ clearFocus();
       z-index:3;
     }
 
-    /* Depth via pseudo-element so it stays “attached” */
     .zone::after{
       content:"";
       position:absolute;
@@ -369,7 +170,6 @@ clearFocus();
       pointer-events:none;
     }
 
-    /* While dragging: kill transitions to remove “jolt” */
     .zone.dragging{
       transition:none !important;
       cursor:grabbing;
@@ -383,18 +183,28 @@ clearFocus();
         22px 44px 110px rgba(15,23,42,.12);
     }
 
-    /* Collapsed: content hides, zone shrinks, but stays anchored where it lives */
+    /* Collapsed (self tidy, but anchored) */
     .zone.collapsed{
       padding:14px 16px;
+      height:auto !important;
     }
-    .zone.collapsed .content{
-      display:none;
-    }
+    .zone.collapsed .content,
     .zone.collapsed .subtitle{
       display:none;
     }
 
-    /* Header (drag handle) */
+    /* Parent lock: never blurred, never draggable, always above dimming */
+    .zone.parent-locked{
+      z-index:70;
+    }
+    .zone.parent-locked.blurred{
+      filter:none !important;
+      pointer-events:auto !important;
+    }
+    .zone.parent-locked .header{
+      cursor:default;
+    }
+
     .header{
       display:flex;
       align-items:flex-start;
@@ -403,6 +213,13 @@ clearFocus();
       user-select:none;
       cursor:grab;
     }
+
+    .titleRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
     .title{
       margin:0;
       font-size:1.0rem;
@@ -414,7 +231,22 @@ clearFocus();
       font-size:.98rem;
     }
 
-    /* Controls */
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:750;
+      letter-spacing:.04em;
+      color:#fff;
+      background: linear-gradient(180deg, var(--accent2), var(--accent));
+      box-shadow: 0 8px 18px rgba(15,23,42,.16);
+      transform: translateY(-1px);
+      user-select:none;
+    }
+
     .controls{
       display:flex;
       gap:10px;
@@ -444,12 +276,8 @@ clearFocus();
         inset 1px 1px 0 rgba(255,255,255,.88);
     }
 
-    /* Content body */
-    .content{
-      margin-top:14px;
-    }
+    .content{ margin-top:14px; }
 
-    /* Inputs */
     .panel{
       display:flex;
       flex-direction:column;
@@ -509,7 +337,6 @@ clearFocus();
         inset 1px 1px 0 rgba(255,255,255,.85);
     }
 
-    /* Status JSON panel */
     .statusBox{
       width:100%;
       border-radius:16px;
@@ -527,7 +354,6 @@ clearFocus();
       max-height: 220px;
     }
 
-    /* Responsive safeguard */
     @media (max-width: 980px){
       body{ overflow:auto; }
       .frame{ position:relative; inset:auto; margin:12px; height:auto; min-height: calc(100vh - 24px); }
@@ -546,25 +372,24 @@ clearFocus();
 
   <script>
     // =========================
-    // LAYER 3: UI BEHAVIOUR ONLY
-    // - Drag / snap / clamp
-    // - Focus / blur
-    // - Collapse -> go-home (self-tidy)
-    // No persistence, no agents, no background processes.
+    // LAYER 3.1: UI BEHAVIOUR ONLY
+    // FIXES:
+    //  - CSS leak hard fix (clean DOM, no injected CSS text)
+    //  - Parent is LOCKED: never blurred, never draggable, never moved by focus
+    //  - Click background/veil => clear focus (NO go-home)
     // =========================
 
     const stage = document.getElementById('stage');
     const veil  = document.getElementById('veil');
 
     const GRID = 24;
-    const PADDING = 24; // soft clamp padding from edges
+    const PAD  = 24;
 
-    // Create zones as DOM nodes (absolute positioned)
     const ZONES = [
-      { id:'parent', title:'PARENT', subtitle:'Authority · Contract · Lock', w: 380, h: 160, home:{ x: 36,  y: 28 } },
-      { id:'core',   title:'CORE',   subtitle:'Primary action surface',     w: 420, h: 160, home:{ x: 460, y: 28 } },
-      { id:'andy',   title:'ANDY',   subtitle:'Execution agent (OFF)',      w: 420, h: 240, home:{ x: 910, y: 28 } },
-      { id:'status', title:'STATUS', subtitle:'Install · Constraints · Visibility', w: 820, h: 300, home:{ x: 170, y: 220 } },
+      { id:'parent', title:'PARENT', subtitle:'Authority · Contract · Lock', w: 380, h: 170, home:{ x: 36,  y: 28 },  locked:true },
+      { id:'core',   title:'CORE',   subtitle:'Primary action surface',     w: 420, h: 170, home:{ x: 460, y: 28 },  locked:false },
+      { id:'andy',   title:'ANDY',   subtitle:'Execution agent (OFF)',      w: 420, h: 250, home:{ x: 910, y: 28 },  locked:false },
+      { id:'status', title:'STATUS', subtitle:'Install · Constraints · Visibility', w: 820, h: 320, home:{ x: 170, y: 220 }, locked:false },
     ];
 
     function snap(n){ return Math.round(n / GRID) * GRID; }
@@ -574,10 +399,10 @@ clearFocus();
       const w = el.offsetWidth;
       const h = el.offsetHeight;
 
-      const minX = PADDING;
-      const minY = PADDING;
-      const maxX = (r.width  - w - PADDING);
-      const maxY = (r.height - h - PADDING);
+      const minX = PAD;
+      const minY = PAD;
+      const maxX = (r.width  - w - PAD);
+      const maxY = (r.height - h - PAD);
 
       return {
         x: Math.max(minX, Math.min(maxX, x)),
@@ -590,8 +415,8 @@ clearFocus();
       el.className = 'zone';
       el.id = z.id;
       el.dataset.zone = z.id;
+      el.dataset.locked = z.locked ? '1' : '0';
 
-      // home anchor stored (for collapse->go-home)
       el.dataset.homeX = String(z.home.x);
       el.dataset.homeY = String(z.home.y);
 
@@ -600,33 +425,52 @@ clearFocus();
       el.style.left   = z.home.x + 'px';
       el.style.top    = z.home.y + 'px';
 
-      // Header (drag handle)
+      if (z.locked) el.classList.add('parent-locked');
+
       const header = document.createElement('div');
       header.className = 'header';
 
       const left = document.createElement('div');
+
+      const titleRow = document.createElement('div');
+      titleRow.className = 'titleRow';
+
       const h2 = document.createElement('h2');
       h2.className = 'title';
       h2.textContent = z.title;
+
+      titleRow.appendChild(h2);
+
+      if (z.locked){
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        badge.textContent = 'LOCKED';
+        titleRow.appendChild(badge);
+      }
 
       const p = document.createElement('p');
       p.className = 'subtitle';
       p.textContent = z.subtitle;
 
-      left.appendChild(h2);
+      left.appendChild(titleRow);
       left.appendChild(p);
 
       const controls = document.createElement('div');
       controls.className = 'controls';
 
-      // Collapse button (go home + collapse)
+      // Collapse (returns home + collapse) — disabled for Parent
       const collapseBtn = document.createElement('button');
       collapseBtn.className = 'iconBtn';
       collapseBtn.type = 'button';
-      collapseBtn.title = 'Collapse (returns home)';
+      collapseBtn.title = z.locked ? 'Parent is locked' : 'Collapse (returns home)';
       collapseBtn.textContent = '–';
+      if (z.locked){
+        collapseBtn.disabled = true;
+        collapseBtn.style.opacity = '.45';
+        collapseBtn.style.cursor = 'not-allowed';
+      }
 
-      // Expand button (uncollapse)
+      // Expand (uncollapse) — allowed for all
       const expandBtn = document.createElement('button');
       expandBtn.className = 'iconBtn';
       expandBtn.type = 'button';
@@ -642,7 +486,6 @@ clearFocus();
       const content = document.createElement('div');
       content.className = 'content';
 
-      // Zone-specific content
       if (z.id === 'andy'){
         content.innerHTML = `
           <div class="panel">
@@ -656,24 +499,22 @@ clearFocus();
         `;
       } else if (z.id === 'status'){
         const status = {
-          constraints: {
-            persistentAgent: false,
-            liveRAG: false,
-            backgroundProcess: false
-          },
+          constraints: { persistentAgent:false, liveRAG:false, backgroundProcess:false },
           memoryLayers: {
             windowLog: "DEFINED (not running)",
             notion: "DEFINED (not running)",
             archive: "DEFINED (not running)"
           },
-          cockpit: {
-            layer: "3 (UI behaviour only)",
-            persistence: "OFF (by design)",
-            goControl: "manual GO only"
-          }
+          cockpit: { layer: "3.1", persistence: "OFF (by design)", goControl: "manual GO only" }
         };
+        content.innerHTML = `<div class="statusBox">${JSON.stringify(status, null, 2)}</div>`;
+      } else if (z.id === 'parent'){
         content.innerHTML = `
-          <div class="statusBox" id="statusBox">${JSON.stringify(status, null, 2)}</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="color:var(--muted);font-size:.98rem;">
+              Root authority surface. (UI lock active)
+            </div>
+          </div>
         `;
       } else {
         content.innerHTML = `<div style="height:86px"></div>`;
@@ -682,9 +523,8 @@ clearFocus();
       el.appendChild(header);
       el.appendChild(content);
 
-      // Focus behaviour
+      // Focus on click (buttons won't hijack focus)
       el.addEventListener('click', (e) => {
-        // clicking buttons shouldn't start focus-change weirdness
         if (e.target.closest('button')) return;
         setFocus(el);
       });
@@ -692,59 +532,81 @@ clearFocus();
       // Collapse/Expand actions
       collapseBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (z.locked) return;
         goHomeAndCollapse(el);
       });
+
       expandBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         el.classList.remove('collapsed');
-        clearFocus(); // optional: keep it calm
+        clearFocus(); // calm reset
       });
 
-      // Drag (header only)
-      enableDrag(el, header);
+      // Drag (header only) — disabled for Parent
+      if (!z.locked){
+        enableDrag(el, header);
+      }
 
       return el;
     }
 
-    // Build + mount zones
     const zoneEls = ZONES.map(buildZone);
     zoneEls.forEach(el => stage.appendChild(el));
 
-    // Ensure stage has height enough for clamp if viewport is tall
     function sizeStage(){
       const fr = document.getElementById('frame').getBoundingClientRect();
       stage.style.width = fr.width + 'px';
       stage.style.height = fr.height + 'px';
     }
     sizeStage();
+
     window.addEventListener('resize', () => {
       sizeStage();
-      // clamp everything after resize
       zoneEls.forEach(el => {
         const x = parseFloat(el.style.left || '0');
-        const y = parseFloat(el.style.top || '0');
+        const y = parseFloat(el.style.top  || '0');
         const c = clampToStage(x, y, el);
         el.style.left = c.x + 'px';
         el.style.top  = c.y + 'px';
       });
     });
 
-    // Focus system
+    // Focus system (Parent NEVER blurred)
     function clearFocus(){
       zoneEls.forEach(z => z.classList.remove('focused','blurred'));
       veil.classList.remove('on');
     }
+
     function setFocus(target){
+      const targetId = target.dataset.zone;
       zoneEls.forEach(z => {
+        const locked = z.dataset.locked === '1';
+        if (locked){
+          z.classList.remove('blurred');      // parent stays sharp
+          z.classList.remove('focused');      // parent doesn’t “jump forward”
+          return;
+        }
         z.classList.toggle('focused', z === target);
         z.classList.toggle('blurred', z !== target);
       });
+      // Veil only indicates “focus mode”, but does not force go-home
       veil.classList.add('on');
     }
-    veil.addEventListener('click', clearFocus);
-    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') clearFocus(); });
 
-    // Drag system (no persistence)
+    // Clicking veil => clear focus (full cockpit back)
+    veil.addEventListener('click', clearFocus);
+
+    // Clicking empty stage area => clear focus (full cockpit back)
+    stage.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.zone')) return;
+      clearFocus();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') clearFocus();
+    });
+
+    // Drag system
     function enableDrag(el, handle){
       let dragging = false;
       let startX = 0, startY = 0;
@@ -758,7 +620,6 @@ clearFocus();
         const nx = origX + dx;
         const ny = origY + dy;
 
-        // schedule paint for smoothness
         pending = { x: nx, y: ny };
         if (!raf){
           raf = requestAnimationFrame(() => {
@@ -773,7 +634,6 @@ clearFocus();
 
       handle.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
-        // allow button clicks through
         if (e.target.closest('button')) return;
 
         dragging = true;
@@ -782,8 +642,6 @@ clearFocus();
 
         const rect = el.getBoundingClientRect();
         const srect = stage.getBoundingClientRect();
-
-        // translate absolute left/top within stage coords
         origX = rect.left - srect.left;
         origY = rect.top  - srect.top;
 
@@ -803,7 +661,6 @@ clearFocus();
         dragging = false;
         el.classList.remove('dragging');
 
-        // snap on drop
         const x = snap(parseFloat(el.style.left || '0'));
         const y = snap(parseFloat(el.style.top  || '0'));
         const c = clampToStage(x, y, el);
@@ -812,25 +669,28 @@ clearFocus();
       });
     }
 
-    // Collapse -> go-home (self-tidy)
+    // Collapse -> go-home (non-parent only)
     function goHomeAndCollapse(el){
       const hx = parseFloat(el.dataset.homeX || '0');
       const hy = parseFloat(el.dataset.homeY || '0');
 
-      // animate to home, then collapse
-      el.style.transition = `transform var(--dur) var(--ease), filter var(--dur) var(--ease), left var(--dur2) var(--ease), top var(--dur2) var(--ease)`;
+      el.style.transition =
+        `transform var(--dur) var(--ease),
+         filter var(--dur) var(--ease),
+         left var(--dur2) var(--ease),
+         top var(--dur2) var(--ease)`;
+
       el.style.left = hx + 'px';
       el.style.top  = hy + 'px';
 
-      // after motion, collapse
       window.setTimeout(() => {
         el.classList.add('collapsed');
-        el.style.transition = ''; // return to CSS transitions
+        el.style.transition = '';
         clearFocus();
       }, 280);
     }
 
-    // Initial calm (no forced focus)
+    // Initial calm
     clearFocus();
   </script>
 </body>
