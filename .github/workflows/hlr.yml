@@ -1,0 +1,26 @@
+name: HLR Register
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "HLR action label"
+        required: true
+        default: "MANUAL_HARD_LOG"
+
+jobs:
+  write-hlr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install node-fetch
+      - run: |
+          node scripts/hlr_smoketest.js
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          HARD_LOG_REGISTER_DB: ${{ secrets.HARD_LOG_REGISTER_DB }}
