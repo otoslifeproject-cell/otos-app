@@ -1,67 +1,114 @@
+<!-- FILE: docs/index.html
+     PURPOSE: Parent input → Notion (Parent Commands + HLR)
+     MODE: Manual, visible, non-executing
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Cockpit · Parent Lock</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8" />
+<title>Cockpit • Parent Control</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #eef5ff;
-      overflow: hidden;
-    }
-
-    .frame {
-      position: fixed;
-      inset: 12px;
-      border-radius: 28px;
-      background: linear-gradient(180deg, #ffffffdd, #ffffffaa);
-      box-shadow: 0 20px 60px rgba(0,0,0,.15);
-    }
-
-    .zone {
-      position: absolute;
-      top: 32px;
-      left: 32px;
-      width: 380px;
-      padding: 20px;
-      border-radius: 22px;
-      background: white;
-      box-shadow:
-        inset 1px 1px 0 rgba(255,255,255,.8),
-        12px 18px 40px rgba(0,0,0,.18);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 1rem;
-      letter-spacing: .04em;
-    }
-
-    p {
-      margin: 6px 0 0;
-      color: #475569;
-      font-size: .95rem;
-    }
-
-    .lock {
-      margin-top: 14px;
-      font-weight: 700;
-      color: #f97316;
-    }
-  </style>
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:#eef5ff;
+}
+.cockpit{
+  display:grid;
+  grid-template-columns:1fr 1.5fr 1fr;
+  gap:24px;
+  padding:32px;
+}
+.zone{
+  background:white;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.15);
+}
+h2{margin:0 0 8px}
+input, textarea, button{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+}
+textarea{min-height:90px}
+button{
+  background:#f97316;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+pre{
+  background:#f1f5f9;
+  border-radius:12px;
+  padding:14px;
+  font-size:13px;
+  max-height:240px;
+  overflow:auto;
+}
+</style>
 </head>
 
 <body>
-  <div class="frame">
-    <div class="zone">
-      <h1>PARENT</h1>
-      <p>Authority · Contract · Lock</p>
-      <div class="lock">LOCKED</div>
-    </div>
+
+<div class="cockpit">
+
+  <!-- PARENT -->
+  <div class="zone" id="parent">
+    <h2>PARENT</h2>
+    <p>Authority · Contract · Manual Command</p>
+
+    <textarea id="parentInput" placeholder="Type Parent command here…"></textarea>
+    <button onclick="submitParent()">Submit Parent Command</button>
   </div>
+
+  <!-- CORE (placeholder) -->
+  <div class="zone">
+    <h2>CORE</h2>
+    <p>Execution surface (inactive)</p>
+  </div>
+
+  <!-- STATUS -->
+  <div class="zone">
+    <h2>STATUS</h2>
+    <pre id="statusLog">Ready.</pre>
+  </div>
+
+</div>
+
+<script>
+async function submitParent(){
+  const text = document.getElementById("parentInput").value.trim();
+  if(!text) return;
+
+  logStatus("Submitting Parent command…");
+
+  try{
+    const res = await fetch("/api/parent",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({ command:text })
+    });
+
+    const out = await res.json();
+    logStatus("✔ Parent command logged\n" + JSON.stringify(out,null,2));
+    document.getElementById("parentInput").value = "";
+  }catch(err){
+    logStatus("❌ Error\n" + err.message);
+  }
+}
+
+function logStatus(msg){
+  const box = document.getElementById("statusLog");
+  box.textContent += "\n\n" + new Date().toISOString() + "\n" + msg;
+  box.scrollTop = box.scrollHeight;
+}
+</script>
+
 </body>
 </html>
