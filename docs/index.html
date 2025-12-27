@@ -8,52 +8,67 @@
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="top-bar glass">
-    <h1>OTOS Cockpit</h1>
-    <span class="sub">CEO Context · Render Layer</span>
-  </header>
+<header class="top-bar glass">
+  <h1>OTOS Cockpit</h1>
+  <span class="sub">CEO · Render Layer</span>
+</header>
 
-  <!-- MAIN CANVAS -->
-  <main class="canvas">
+<main class="canvas" id="canvas">
 
-    <!-- CENTRAL ACTION TOWER -->
-    <section class="action-tower">
-      <div class="card card-back card-4"></div>
-      <div class="card card-back card-3"></div>
-      <div class="card card-back card-2"></div>
-      <div class="card card-back card-1"></div>
+  <!-- ACTION TOWER -->
+  <section class="action-tower" id="tower">
+    <div class="card card-back card-4" data-idx="4"></div>
+    <div class="card card-back card-3" data-idx="3"></div>
+    <div class="card card-back card-2" data-idx="2"></div>
+    <div class="card card-back card-1" data-idx="1"></div>
 
-      <div class="card card-primary">
-        <h2>Define next cockpit layer</h2>
-        <p>This is the one thing that matters now.</p>
-        <span class="hint">Click to focus</span>
-      </div>
-    </section>
+    <div class="card card-primary" id="primary">
+      <h2>Define next cockpit layer</h2>
+      <p>The single most important thought right now.</p>
+      <span class="hint">Click · Focus</span>
+    </div>
+  </section>
 
-    <!-- ZONE: PA -->
-    <aside class="zone zone-pa glass">
-      <h3>PA Zone</h3>
-      <p class="zone-sub">Personal assistant · regulation · capture</p>
+  <!-- PA ZONE -->
+  <aside class="zone zone-pa glass">
+    <h3>PA Zone</h3>
+    <p class="zone-sub">Regulation · capture · support</p>
+    <button>📝 Capture thought</button>
+    <button>🧠 Reality check</button>
+    <button class="ghost">↺ Reset</button>
+  </aside>
 
-      <button>📝 Capture thought</button>
-      <button>🧠 Reality check</button>
-      <button class="ghost">↺ Reset</button>
-    </aside>
+  <!-- SPINE ZONE -->
+  <aside class="zone zone-spine glass">
+    <h3>Spine</h3>
+    <p class="zone-sub">Authority · truth · read-only</p>
+    <div class="pill">Locked</div>
+  </aside>
 
-    <!-- ZONE: SPINE (VISUAL PLACEHOLDER) -->
-    <aside class="zone zone-spine glass">
-      <h3>Spine</h3>
-      <p class="zone-sub">Authoritative truth · system memory</p>
-      <div class="pill">Read-only</div>
-    </aside>
+</main>
 
-  </main>
+<footer class="footer">
+  Render-only · Single Task Truth · ND-safe motion
+</footer>
 
-  <footer class="footer">
-    Render-only · Single Task Truth · Spine-authoritative
-  </footer>
+<script>
+  const canvas = document.getElementById('canvas');
+  const primary = document.getElementById('primary');
+  let focused = false;
+
+  primary.addEventListener('click', () => {
+    focused = !focused;
+    canvas.classList.toggle('focus-mode', focused);
+  });
+
+  // Quick-look on underlying cards
+  document.querySelectorAll('.card-back').forEach(card => {
+    card.addEventListener('click', (e) => {
+      e.stopPropagation();
+      card.classList.toggle('peek');
+    });
+  });
+</script>
 
 </body>
 </html>
-
