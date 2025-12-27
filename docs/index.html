@@ -1,228 +1,58 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OTOS Cockpit</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <title>OTOS Cockpit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
 
-  <body>
-    <!-- Ambient background layers -->
-    <div class="bg">
-      <div class="bg__grid"></div>
-      <div class="bg__wash"></div>
-      <div class="bg__vignette"></div>
-      <div class="bg__noise"></div>
-    </div>
+  <!-- HEADER -->
+  <header class="top-bar glass">
+    <h1>OTOS Cockpit</h1>
+    <span class="sub">CEO Context · Render Layer</span>
+  </header>
 
-    <main class="canvas" aria-label="OTOS Cockpit canvas">
-      <!-- Top header / system bar -->
-      <header class="topbar glass glass--system">
-        <div class="topbar__left">
-          <div class="brand">
-            <div class="brand__dot"></div>
-            <div class="brand__text">
-              <div class="brand__title">OTOS Cockpit</div>
-              <div class="brand__sub">CEO Context · Render Layer</div>
-            </div>
-          </div>
-        </div>
+  <!-- MAIN CANVAS -->
+  <main class="canvas">
 
-        <div class="topbar__right">
-          <span class="pill">Render-only</span>
-          <span class="pill pill--focus">Single Task Truth</span>
-          <span class="pill">Spine-authoritative</span>
-        </div>
-      </header>
+    <!-- CENTRAL ACTION TOWER -->
+    <section class="action-tower">
+      <div class="card card-back card-4"></div>
+      <div class="card card-back card-3"></div>
+      <div class="card card-back card-2"></div>
+      <div class="card card-back card-1"></div>
 
-      <!-- Zones layout -->
-      <section class="zones">
-        <!-- Parent Node Zone (home for chat window) -->
-        <aside class="zone zone--parent glass glass--parent">
-          <div class="zone__chrome">
-            <div class="zone__title">
-              <span class="zone__icon">👁️</span>
-              <span>Parent Node</span>
-            </div>
-            <div class="zone__meta">Reasoning · Decisions · Memory</div>
-            <div class="zone__handle" title="Drag handle (visual only)">
-              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
-            </div>
-          </div>
+      <div class="card card-primary">
+        <h2>Define next cockpit layer</h2>
+        <p>This is the one thing that matters now.</p>
+        <span class="hint">Click to focus</span>
+      </div>
+    </section>
 
-          <div class="zone__body">
-            <div class="chatShell">
-              <div class="chatShell__row">
-                <div class="chatBubble chatBubble--system">
-                  <div class="chatBubble__title">System</div>
-                  <div class="chatBubble__text">
-                    This is the <b>home</b> for the Parent Node chat zone.
-                    (Visual shell only — behaviour later.)
-                  </div>
-                </div>
-              </div>
-              <div class="chatShell__row">
-                <div class="chatBubble">
-                  <div class="chatBubble__title">You</div>
-                  <div class="chatBubble__text">
-                    “Show me what matters now — hold everything else behind me.”
-                  </div>
-                </div>
-              </div>
-              <div class="chatShell__row">
-                <div class="chatBubble chatBubble--system">
-                  <div class="chatBubble__title">Parent Node</div>
-                  <div class="chatBubble__text">
-                    Understood. The cockpit will keep a single primary thought centred,
-                    with everything else gently held behind it.
-                  </div>
-                </div>
-              </div>
-            </div>
+    <!-- ZONE: PA -->
+    <aside class="zone zone-pa glass">
+      <h3>PA Zone</h3>
+      <p class="zone-sub">Personal assistant · regulation · capture</p>
 
-            <div class="zone__footerHint">Dockable zone · movable later · stays “always-on”</div>
-          </div>
-        </aside>
+      <button>📝 Capture thought</button>
+      <button>🧠 Reality check</button>
+      <button class="ghost">↺ Reset</button>
+    </aside>
 
-        <!-- Centre Spine Zone -->
-        <section class="zone zone--spine glass glass--spine">
-          <div class="zone__chrome">
-            <div class="zone__title">
-              <span class="zone__icon">🧠</span>
-              <span>Spine</span>
-            </div>
-            <div class="zone__meta">Primary Action · ND-safe · centred</div>
-            <div class="zone__handle" title="Drag handle (visual only)">
-              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
-            </div>
-          </div>
+    <!-- ZONE: SPINE (VISUAL PLACEHOLDER) -->
+    <aside class="zone zone-spine glass">
+      <h3>Spine</h3>
+      <p class="zone-sub">Authoritative truth · system memory</p>
+      <div class="pill">Read-only</div>
+    </aside>
 
-          <div class="zone__body zone__body--center">
-            <div class="primaryCard">
-              <div class="primaryCard__kicker">Primary Single Action</div>
-              <div class="primaryCard__title">Define next cockpit layer</div>
-              <div class="primaryCard__sub">This is the one thing that matters now.</div>
-              <div class="primaryCard__hint">
-                (Behaviour comes next: stack fan, click-to-promote, focus punch)
-              </div>
-            </div>
+  </main>
 
-            <!-- “Depth” stack hint — visual only -->
-            <div class="shadowStack" aria-hidden="true">
-              <div class="shadowStack__card shadowStack__card--a"></div>
-              <div class="shadowStack__card shadowStack__card--b"></div>
-              <div class="shadowStack__card shadowStack__card--c"></div>
-            </div>
-          </div>
-        </section>
+  <footer class="footer">
+    Render-only · Single Task Truth · Spine-authoritative
+  </footer>
 
-        <!-- Actions Stack Zone (visual placeholder, coloured, thick) -->
-        <section class="zone zone--actions glass glass--actions">
-          <div class="zone__chrome">
-            <div class="zone__title">
-              <span class="zone__icon">🀄</span>
-              <span>Action Tiles</span>
-            </div>
-            <div class="zone__meta">Stacked · fanned · gravity (next layer)</div>
-            <div class="zone__handle" title="Drag handle (visual only)">
-              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
-            </div>
-          </div>
-
-          <div class="zone__body">
-            <div class="actionList">
-              <div class="actionRow">
-                <span class="tag tag--ceo">CEO</span>
-                <span class="actionText">Define CEO focus switching rules for cockpit v0.1</span>
-              </div>
-              <div class="actionRow">
-                <span class="tag tag--md">MD</span>
-                <span class="actionText">Draft MD cockpit default modules for OTOS Life</span>
-              </div>
-              <div class="actionRow">
-                <span class="tag tag--sys">SYS</span>
-                <span class="actionText">Validate Spine → Cockpit authority boundaries</span>
-              </div>
-              <div class="actionRow">
-                <span class="tag tag--proj">PROJ</span>
-                <span class="actionText">Confirm demo routes for focus switching</span>
-              </div>
-            </div>
-
-            <div class="zone__footerHint">
-              Visual-only: next we build the fanned mahjong-tower stack at centre.
-            </div>
-          </div>
-        </section>
-
-        <!-- PA Zone -->
-        <aside class="zone zone--pa glass glass--pa">
-          <div class="zone__chrome">
-            <div class="zone__title">
-              <span class="zone__icon">🫧</span>
-              <span>PA Zone</span>
-            </div>
-            <div class="zone__meta">Personal assistant · regulation · capture</div>
-            <div class="zone__handle" title="Drag handle (visual only)">
-              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
-            </div>
-          </div>
-
-          <div class="zone__body">
-            <div class="paGrid">
-              <button class="paBtn" type="button">
-                <span class="paBtn__icon">🗒️</span>
-                <span class="paBtn__txt">Capture thought</span>
-              </button>
-              <button class="paBtn" type="button">
-                <span class="paBtn__icon">🧭</span>
-                <span class="paBtn__txt">Reality check</span>
-              </button>
-              <button class="paBtn" type="button">
-                <span class="paBtn__icon">🌬️</span>
-                <span class="paBtn__txt">3-min breathe</span>
-              </button>
-              <button class="paBtn" type="button">
-                <span class="paBtn__icon">↩︎</span>
-                <span class="paBtn__txt">Reset</span>
-              </button>
-            </div>
-
-            <div class="paNote">
-              <div class="paNote__title">Voice notes → Actions</div>
-              <div class="paNote__text">
-                This zone will ingest voice notes and push time-critical repeatables into the primary stack.
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        <!-- Ghost / future zones (framed placeholders) -->
-        <section class="zone zone--ghost glass glass--ghost" aria-hidden="true">
-          <div class="zone__chrome">
-            <div class="zone__title">
-              <span class="zone__icon">🧩</span>
-              <span>Future Zone</span>
-            </div>
-            <div class="zone__meta">Dock point · module placeholder</div>
-            <div class="zone__handle">
-              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
-            </div>
-          </div>
-          <div class="zone__body">
-            <div class="ghostHint">
-              Framed placeholder for: Reports · Radar · Dev · Networks · etc.
-            </div>
-          </div>
-        </section>
-      </section>
-
-      <!-- Footer status -->
-      <footer class="footer">
-        <div class="footer__left">Focus: <b>Primary Action</b></div>
-        <div class="footer__right">Glass / Liquid / ND-safe shell · behaviour next</div>
-      </footer>
-    </main>
-  </body>
+</body>
 </html>
