@@ -3,72 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <title>OTOS Cockpit</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<header class="top-bar glass">
-  <h1>OTOS Cockpit</h1>
-  <span class="sub">CEO · Render Layer</span>
-</header>
+  <header class="top-bar">
+    <h1>OTOS Cockpit</h1>
+    <span>CEO · Render Layer</span>
+  </header>
 
-<main class="canvas" id="canvas">
+  <main class="canvas">
 
-  <!-- ACTION TOWER -->
-  <section class="action-tower" id="tower">
-    <div class="card card-back card-4" data-idx="4"></div>
-    <div class="card card-back card-3" data-idx="3"></div>
-    <div class="card card-back card-2" data-idx="2"></div>
-    <div class="card card-back card-1" data-idx="1"></div>
+    <section class="action-stack" id="actionStack">
 
-    <div class="card card-primary" id="primary">
-      <h2>Define next cockpit layer</h2>
-      <p>The single most important thought right now.</p>
-      <span class="hint">Click · Focus</span>
-    </div>
-  </section>
+      <!-- Primary Action -->
+      <div class="action-card primary" data-index="0">
+        <h2>Define next cockpit layer</h2>
+        <p>This is the one thing that matters now.</p>
+      </div>
 
-  <!-- PA ZONE -->
-  <aside class="zone zone-pa glass">
-    <h3>PA Zone</h3>
-    <p class="zone-sub">Regulation · capture · support</p>
-    <button>📝 Capture thought</button>
-    <button>🧠 Reality check</button>
-    <button class="ghost">↺ Reset</button>
-  </aside>
+      <!-- Next Best Actions -->
+      <div class="action-card secondary" data-index="1">
+        Validate Spine → Cockpit authority boundaries
+      </div>
 
-  <!-- SPINE ZONE -->
-  <aside class="zone zone-spine glass">
-    <h3>Spine</h3>
-    <p class="zone-sub">Authority · truth · read-only</p>
-    <div class="pill">Locked</div>
-  </aside>
+      <div class="action-card secondary" data-index="2">
+        Draft MD cockpit defaults for OTOS Life
+      </div>
 
-</main>
+      <div class="action-card secondary" data-index="3">
+        Prepare sales animation route list
+      </div>
 
-<footer class="footer">
-  Render-only · Single Task Truth · ND-safe motion
-</footer>
+      <div class="action-card secondary" data-index="4">
+        Confirm demo routes for focus switching
+      </div>
 
-<script>
-  const canvas = document.getElementById('canvas');
-  const primary = document.getElementById('primary');
-  let focused = false;
+    </section>
 
-  primary.addEventListener('click', () => {
-    focused = !focused;
-    canvas.classList.toggle('focus-mode', focused);
-  });
+  </main>
 
-  // Quick-look on underlying cards
-  document.querySelectorAll('.card-back').forEach(card => {
-    card.addEventListener('click', (e) => {
-      e.stopPropagation();
-      card.classList.toggle('peek');
-    });
-  });
-</script>
-
+  <script src="stack.js"></script>
 </body>
 </html>
