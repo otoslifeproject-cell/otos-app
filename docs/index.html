@@ -1,88 +1,270 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>OTOS Cockpit</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="./styles.css" />
+  <meta name="color-scheme" content="light dark" />
 </head>
 
 <body>
+  <div class="app" id="app">
+    <header class="topbar glass">
+      <div class="brand">
+        <div class="brand-title">OTOS Cockpit</div>
+        <div class="brand-sub">CEO Context · Render Layer</div>
+      </div>
+      <div class="status">
+        <span class="pill">Render-only</span>
+        <span class="pill">Single Task Truth</span>
+        <span class="pill">Spine-authoritative</span>
+      </div>
+    </header>
 
-<div class="cockpit-shell">
+    <!-- Center stage: gravitational stack -->
+    <main class="stage" aria-label="Cockpit stage">
+      <section class="stack-shell" aria-label="Primary Action Stack">
+        <div class="stack-title">
+          <div class="stack-title__kicker">Primary Single Action</div>
+          <div class="stack-title__hint">Click a tile behind to bring it forward · Click centre again for Focus Mode · Esc to exit</div>
+        </div>
 
-  <header class="cockpit-header glass">
-    <h1>OTOS Cockpit</h1>
-    <div class="meta">CEO Context · Render Layer</div>
-  </header>
+        <div class="stack" id="stack" role="list" aria-label="Action stack"></div>
+      </section>
 
-  <!-- ACTION STACK -->
-  <section class="action-stack" id="actionStack">
+      <!-- PA Zone (peripheral) -->
+      <aside class="pa-zone glass" id="paZone" aria-label="PA Zone">
+        <div class="pa-head">
+          <div class="pa-title">PA Zone</div>
+          <div class="pa-sub">Personal assistant · regulation · capture</div>
+        </div>
 
-    <div class="action-card glass" data-index="0" onclick="bringToFront(0)">
-      <h2>Define next cockpit layer</h2>
-      <p>This is the one thing that matters now.</p>
-    </div>
+        <div class="pa-actions">
+          <button class="pa-btn" id="captureBtn" type="button">
+            <span class="pa-ico">🗒️</span>
+            <span class="pa-txt">Capture thought</span>
+          </button>
 
-    <div class="action-card glass" data-index="1" onclick="bringToFront(1)">
-      Prepare screenshot route list for sales animation
-    </div>
+          <button class="pa-btn" id="realityBtn" type="button">
+            <span class="pa-ico">🧠</span>
+            <span class="pa-txt">Reality check</span>
+          </button>
 
-    <div class="action-card glass" data-index="2" onclick="bringToFront(2)">
-      Draft MD cockpit default modules for OTOS Life
-    </div>
+          <button class="pa-btn ghost" id="resetBtn" type="button">
+            <span class="pa-ico">⏎</span>
+            <span class="pa-txt">Reset</span>
+          </button>
+        </div>
 
-    <div class="action-card glass" data-index="3" onclick="bringToFront(3)">
-      Validate Spine → Cockpit authority boundaries
-    </div>
+        <div class="pa-note">
+          <div class="pa-note__title">Voice notes → Actions</div>
+          <div class="pa-note__body">
+            This zone will ingest voice notes and push time-critical items into the primary stack (repeatable).
+          </div>
+        </div>
+      </aside>
 
-    <div class="action-card glass" data-index="4" onclick="bringToFront(4)">
-      Confirm demo routes for focus switching
-    </div>
+      <!-- Focus overlay -->
+      <div class="focus-scrim" id="focusScrim" aria-hidden="true"></div>
+    </main>
 
-  </section>
-
-  <!-- PA ZONE -->
-  <aside class="pa-zone glass">
-    <div class="pa-title">PA Zone</div>
-    <div class="pa-sub">Personal assistant · regulation · capture</div>
-    <button class="pa-action">🎙 Capture thought</button>
-    <button class="pa-action">🧠 Reality check</button>
-    <button class="pa-action">🌬 Reset</button>
-  </aside>
-
-  <footer class="cockpit-footer">
-    Render-only · Single Task Truth · Spine-authoritative
-  </footer>
-
-</div>
+    <footer class="footer">
+      <div class="footer-left">Focus: <strong id="focusLabel">Primary Action</strong></div>
+      <div class="footer-right">Cmd+Click centre = deep focus · Esc = exit</div>
+    </footer>
+  </div>
 
 <script>
-let order = [0,1,2,3,4];
+/**
+ * OTOS Cockpit – Central Stack Engine v1 (Render-only)
+ * - Single gravitational centre
+ * - Overlapping deck (40–55% overlap)
+ * - Click underlying → glide to front (re-prioritisation shuffle)
+ * - Second click centre → Focus punch-through (blur + desaturate)
+ * - Esc / click outside → graceful return
+ */
 
-function renderStack(){
-  const cards = document.querySelectorAll('.action-card');
+// Demo data (replace later with Notion / Spine feed)
+const seed = [
+  { id: "A1", title: "Define next cockpit layer", sub: "This is the one thing that matters now.", role: "CEO", score: 65.54 },
+  { id: "A2", title: "Prepare screenshot route list for sales animation", sub: "Storyboard the cockpit narrative.", role: "MD", score: 24.00 },
+  { id: "A3", title: "Draft MD cockpit default modules for OTOS Life", sub: "Clarify which tiles appear by default.", role: "MD", score: 23.10 },
+  { id: "A4", title: "Validate Spine → Cockpit authority boundaries", sub: "Ensure PA cannot override Spine.", role: "CEO", score: 18.20 },
+  { id: "A5", title: "Confirm demo routes for focus switching", sub: "CommandTab / flip behaviours.", role: "PROJECT", score: 15.40 }
+];
 
-  order.forEach((cardIndex, stackPos) => {
-    const el = cards[cardIndex];
+const state = {
+  items: [...seed],
+  focusMode: false,       // deep focus on centre tile
+  activeId: seed[0].id,   // centre tile
+  clickArmed: false       // detects second click on centre
+};
 
-    el.style.zIndex = 100 - stackPos;
-    el.style.transform = `
-      translate(-50%, ${stackPos * 22}px)
-      scale(${stackPos === 0 ? 1.06 : 1 - stackPos * 0.03})
+const stackEl = document.getElementById("stack");
+const appEl = document.getElementById("app");
+const scrimEl = document.getElementById("focusScrim");
+const focusLabelEl = document.getElementById("focusLabel");
+
+function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+function render(){
+  stackEl.innerHTML = "";
+  const activeIndex = state.items.findIndex(x => x.id === state.activeId);
+  if (activeIndex > 0) {
+    // Ensure active item is at index 0 (front) for render ordering
+    const [active] = state.items.splice(activeIndex, 1);
+    state.items.unshift(active);
+  }
+
+  // Label
+  focusLabelEl.textContent = state.focusMode ? "Deep Focus" : "Primary Action";
+
+  // Update global focus class
+  appEl.classList.toggle("is-focus", state.focusMode);
+
+  // Render cards
+  state.items.forEach((item, i) => {
+    const card = document.createElement("article");
+    card.className = "card glass";
+    card.setAttribute("role", "listitem");
+    card.dataset.id = item.id;
+    card.dataset.index = String(i);
+
+    const isFront = i === 0;
+    const isPeek  = i > 0;
+
+    // Depth + overlap model:
+    // - front sits centred
+    // - behind stack sits directly under with partial overlap
+    // - visible edges remain clickable
+    const baseY = 0;
+    const overlap = 58;               // px: visible band
+    const y = baseY + (i * overlap);  // stack grows downward
+    const scale = isFront ? 1.00 : clamp(1 - (i * 0.035), 0.86, 0.98);
+    const blur = i === 0 ? 0 : clamp(i * 0.4, 0.4, 1.6); // subtle, not "fog"
+    const opacity = i === 0 ? 1 : clamp(1 - (i * 0.10), 0.55, 0.92);
+
+    // Transform origin must stay centre to feel gravitational
+    card.style.setProperty("--y", y + "px");
+    card.style.setProperty("--s", scale);
+    card.style.setProperty("--z", String(100 - i));
+    card.style.setProperty("--o", String(opacity));
+    card.style.setProperty("--b", blur + "px");
+
+    // Make underlying cards clickable via visible band
+    card.classList.toggle("front", isFront);
+    card.classList.toggle("peek", isPeek);
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-kicker">${isFront ? "Primary Action" : "Next"}</div>
+        <div class="card-meta">
+          <span class="tag">${escapeHtml(item.role)}</span>
+          <span class="dot">•</span>
+          <span class="score">${escapeHtml(item.score.toFixed(2))}</span>
+        </div>
+      </div>
+      <div class="card-title">${escapeHtml(item.title)}</div>
+      <div class="card-sub">${escapeHtml(item.sub)}</div>
+      <div class="card-hint">${isFront ? "Click again for Focus Mode" : "Click to bring forward"}</div>
     `;
-    el.style.opacity = stackPos > 5 ? 0 : 1;
+
+    // Click behaviour
+    card.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (state.focusMode) return;
+
+      const clickedId = item.id;
+
+      if (isFront && clickedId === state.activeId) {
+        // second click becomes deep focus (punch-through)
+        enterFocus();
+        return;
+      }
+
+      // Re-prioritise: glide clicked to front
+      // Reset click armed state
+      state.clickArmed = false;
+      state.activeId = clickedId;
+
+      // Trigger a graceful shuffle by re-rendering (CSS handles motion)
+      render();
+    });
+
+    stackEl.appendChild(card);
   });
+
+  // Scrim behaviour
+  scrimEl.classList.toggle("on", state.focusMode);
 }
 
-function bringToFront(index){
-  order = order.filter(i => i !== index);
-  order.unshift(index);
-  renderStack();
+function enterFocus(){
+  state.focusMode = true;
+  render();
 }
 
-renderStack();
+function exitFocus(){
+  state.focusMode = false;
+  render();
+}
+
+// Outside click exits focus
+document.addEventListener("click", () => {
+  if (state.focusMode) exitFocus();
+});
+
+// Esc exits focus
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && state.focusMode) exitFocus();
+});
+
+// Cmd/Ctrl + click centre = focus too (optional)
+document.addEventListener("keydown", (e) => {
+  // no-op; kept for future command grammar
+});
+
+// PA zone buttons (demo stubs)
+document.getElementById("captureBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  // demo: create a new action and push to front
+  const id = "PA_" + Math.random().toString(16).slice(2, 8).toUpperCase();
+  const newItem = {
+    id,
+    title: "Captured thought (PA)",
+    sub: "Converted to an actionable next-step (demo).",
+    role: "PA",
+    score: 99.99
+  };
+  state.items.unshift(newItem);
+  state.activeId = id;
+  render();
+});
+
+document.getElementById("realityBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  alert("Reality check (demo): breathe 3 slow breaths. Name the next single action.");
+});
+
+document.getElementById("resetBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  state.items = [...seed];
+  state.activeId = seed[0].id;
+  state.focusMode = false;
+  render();
+});
+
+function escapeHtml(str){
+  return String(str)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+// INIT
+render();
 </script>
-
 </body>
 </html>
