@@ -1,48 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>OTOS Cockpit</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
+const stack = document.getElementById("actionStack");
+const cards = Array.from(stack.children);
 
-  <header class="top-bar">
-    <h1>OTOS Cockpit</h1>
-    <span>CEO · Render Layer</span>
-  </header>
+cards.forEach(card => {
+  card.addEventListener("click", () => {
+    // First click: bring to front
+    cards.forEach(c => c.classList.remove("active"));
+    card.classList.add("active");
 
-  <main class="canvas">
+    // Reorder stack
+    stack.prepend(card);
 
-    <section class="action-stack" id="actionStack">
+    // Second click: focus mode
+    if (stack.classList.contains("focused")) {
+      stack.classList.remove("focused");
+    } else {
+      stack.classList.add("focused");
+    }
+  });
+});
 
-      <!-- Primary Action -->
-      <div class="action-card primary" data-index="0">
-        <h2>Define next cockpit layer</h2>
-        <p>This is the one thing that matters now.</p>
-      </div>
-
-      <!-- Next Best Actions -->
-      <div class="action-card secondary" data-index="1">
-        Validate Spine → Cockpit authority boundaries
-      </div>
-
-      <div class="action-card secondary" data-index="2">
-        Draft MD cockpit defaults for OTOS Life
-      </div>
-
-      <div class="action-card secondary" data-index="3">
-        Prepare sales animation route list
-      </div>
-
-      <div class="action-card secondary" data-index="4">
-        Confirm demo routes for focus switching
-      </div>
-
-    </section>
-
-  </main>
-
-  <script src="stack.js"></script>
-</body>
-</html>
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    stack.classList.remove("focused");
+    cards.forEach(c => c.classList.remove("active"));
+  }
+});
