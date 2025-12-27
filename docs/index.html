@@ -4,567 +4,225 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OTOS Cockpit</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
   </head>
 
   <body>
-    <!-- Ambient background -->
+    <!-- Ambient background layers -->
     <div class="bg">
-      <div class="bg__blob bg__blob--a"></div>
-      <div class="bg__blob bg__blob--b"></div>
-      <div class="bg__blob bg__blob--c"></div>
-      <div class="bg__noise" aria-hidden="true"></div>
+      <div class="bg__grid"></div>
+      <div class="bg__wash"></div>
+      <div class="bg__vignette"></div>
+      <div class="bg__noise"></div>
     </div>
 
-    <!-- Focus overlay -->
-    <div id="focusOverlay" class="focusOverlay" hidden></div>
-
-    <!-- Shell -->
-    <div class="shell">
-      <!-- Header -->
-      <header class="header zone" data-zone="header" data-default-x="64" data-default-y="32">
-        <div class="zone__handle" title="Drag · double-click to FloatBack">
-          <span class="chip">OTOS</span>
-          <span class="muted">CEO Context · Render Layer</span>
-          <span class="spacer"></span>
-          <span class="chip chip--soft">Focus: <b id="focusLabel">Primary Action</b></span>
+    <main class="canvas" aria-label="OTOS Cockpit canvas">
+      <!-- Top header / system bar -->
+      <header class="topbar glass glass--system">
+        <div class="topbar__left">
+          <div class="brand">
+            <div class="brand__dot"></div>
+            <div class="brand__text">
+              <div class="brand__title">OTOS Cockpit</div>
+              <div class="brand__sub">CEO Context · Render Layer</div>
+            </div>
+          </div>
         </div>
 
-        <div class="header__title">
-          <h1>OTOS Cockpit</h1>
-          <p class="muted">Glassmorphism · Neuro-calm motion · Snap-to-grid Zones</p>
+        <div class="topbar__right">
+          <span class="pill">Render-only</span>
+          <span class="pill pill--focus">Single Task Truth</span>
+          <span class="pill">Spine-authoritative</span>
         </div>
       </header>
 
-      <!-- Parent Node Home (placeholder “home” for Parent Chat window) -->
-      <section class="parentHome zone" data-zone="parentHome" data-default-x="64" data-default-y="148">
-        <div class="zone__handle" title="Drag · double-click to FloatBack">
-          <span class="emoji">👁️</span>
-          <b>Parent Node · Home</b>
-          <span class="muted">Reasoning · Decisions · Memory</span>
-          <span class="spacer"></span>
-          <span class="chip chip--soft">Dock</span>
-        </div>
-
-        <div class="parentHome__body">
-          <div class="parentHome__line">
-            <span class="dot dot--green"></span>
-            <span class="muted">This zone is the “home slot” for your Parent Node chat window.</span>
+      <!-- Zones layout -->
+      <section class="zones">
+        <!-- Parent Node Zone (home for chat window) -->
+        <aside class="zone zone--parent glass glass--parent">
+          <div class="zone__chrome">
+            <div class="zone__title">
+              <span class="zone__icon">👁️</span>
+              <span>Parent Node</span>
+            </div>
+            <div class="zone__meta">Reasoning · Decisions · Memory</div>
+            <div class="zone__handle" title="Drag handle (visual only)">
+              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
+            </div>
           </div>
-          <div class="parentHome__line">
-            <span class="dot dot--blue"></span>
-            <span class="muted">In the product, this becomes a live docked panel (Chat / Memory / Commands).</span>
-          </div>
-          <div class="parentHome__line">
-            <span class="dot dot--amber"></span>
-            <span class="muted">Double-click handle to FloatBack. Drag anywhere. Snaps to grid.</span>
-          </div>
-        </div>
-      </section>
 
-      <!-- Central Action Deck (Primary Single Action + fanned next actions) -->
-      <main class="centre zone" data-zone="centre" data-default-x="520" data-default-y="220">
-        <div class="zone__handle" title="Drag · double-click to FloatBack">
-          <span class="emoji">🧠</span>
-          <b>Primary Single Action</b>
-          <span class="muted">Deck · Reward · Re-order</span>
-          <span class="spacer"></span>
-          <span class="chip chip--soft">Click #1 for Focus</span>
-        </div>
-
-        <div class="centre__body">
-          <div class="deckHeader">
-            <div>
-              <div class="deckHeader__kicker">CENTRE TILE</div>
-              <div class="deckHeader__title">Action Deck</div>
-              <div class="deckHeader__sub muted">
-                #1 is always front-and-centre. Next actions fan underneath. Click to promote.
+          <div class="zone__body">
+            <div class="chatShell">
+              <div class="chatShell__row">
+                <div class="chatBubble chatBubble--system">
+                  <div class="chatBubble__title">System</div>
+                  <div class="chatBubble__text">
+                    This is the <b>home</b> for the Parent Node chat zone.
+                    (Visual shell only — behaviour later.)
+                  </div>
+                </div>
+              </div>
+              <div class="chatShell__row">
+                <div class="chatBubble">
+                  <div class="chatBubble__title">You</div>
+                  <div class="chatBubble__text">
+                    “Show me what matters now — hold everything else behind me.”
+                  </div>
+                </div>
+              </div>
+              <div class="chatShell__row">
+                <div class="chatBubble chatBubble--system">
+                  <div class="chatBubble__title">Parent Node</div>
+                  <div class="chatBubble__text">
+                    Understood. The cockpit will keep a single primary thought centred,
+                    with everything else gently held behind it.
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="deckHeader__controls">
-              <button class="btn btn--ghost" id="shuffleBtn" type="button" title="Demo shuffle">
-                Shuffle
+
+            <div class="zone__footerHint">Dockable zone · movable later · stays “always-on”</div>
+          </div>
+        </aside>
+
+        <!-- Centre Spine Zone -->
+        <section class="zone zone--spine glass glass--spine">
+          <div class="zone__chrome">
+            <div class="zone__title">
+              <span class="zone__icon">🧠</span>
+              <span>Spine</span>
+            </div>
+            <div class="zone__meta">Primary Action · ND-safe · centred</div>
+            <div class="zone__handle" title="Drag handle (visual only)">
+              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
+            </div>
+          </div>
+
+          <div class="zone__body zone__body--center">
+            <div class="primaryCard">
+              <div class="primaryCard__kicker">Primary Single Action</div>
+              <div class="primaryCard__title">Define next cockpit layer</div>
+              <div class="primaryCard__sub">This is the one thing that matters now.</div>
+              <div class="primaryCard__hint">
+                (Behaviour comes next: stack fan, click-to-promote, focus punch)
+              </div>
+            </div>
+
+            <!-- “Depth” stack hint — visual only -->
+            <div class="shadowStack" aria-hidden="true">
+              <div class="shadowStack__card shadowStack__card--a"></div>
+              <div class="shadowStack__card shadowStack__card--b"></div>
+              <div class="shadowStack__card shadowStack__card--c"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Actions Stack Zone (visual placeholder, coloured, thick) -->
+        <section class="zone zone--actions glass glass--actions">
+          <div class="zone__chrome">
+            <div class="zone__title">
+              <span class="zone__icon">🀄</span>
+              <span>Action Tiles</span>
+            </div>
+            <div class="zone__meta">Stacked · fanned · gravity (next layer)</div>
+            <div class="zone__handle" title="Drag handle (visual only)">
+              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
+            </div>
+          </div>
+
+          <div class="zone__body">
+            <div class="actionList">
+              <div class="actionRow">
+                <span class="tag tag--ceo">CEO</span>
+                <span class="actionText">Define CEO focus switching rules for cockpit v0.1</span>
+              </div>
+              <div class="actionRow">
+                <span class="tag tag--md">MD</span>
+                <span class="actionText">Draft MD cockpit default modules for OTOS Life</span>
+              </div>
+              <div class="actionRow">
+                <span class="tag tag--sys">SYS</span>
+                <span class="actionText">Validate Spine → Cockpit authority boundaries</span>
+              </div>
+              <div class="actionRow">
+                <span class="tag tag--proj">PROJ</span>
+                <span class="actionText">Confirm demo routes for focus switching</span>
+              </div>
+            </div>
+
+            <div class="zone__footerHint">
+              Visual-only: next we build the fanned mahjong-tower stack at centre.
+            </div>
+          </div>
+        </section>
+
+        <!-- PA Zone -->
+        <aside class="zone zone--pa glass glass--pa">
+          <div class="zone__chrome">
+            <div class="zone__title">
+              <span class="zone__icon">🫧</span>
+              <span>PA Zone</span>
+            </div>
+            <div class="zone__meta">Personal assistant · regulation · capture</div>
+            <div class="zone__handle" title="Drag handle (visual only)">
+              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
+            </div>
+          </div>
+
+          <div class="zone__body">
+            <div class="paGrid">
+              <button class="paBtn" type="button">
+                <span class="paBtn__icon">🗒️</span>
+                <span class="paBtn__txt">Capture thought</span>
               </button>
-              <button class="btn" id="resetDeckBtn" type="button" title="Reset demo deck">
-                Reset Deck
+              <button class="paBtn" type="button">
+                <span class="paBtn__icon">🧭</span>
+                <span class="paBtn__txt">Reality check</span>
+              </button>
+              <button class="paBtn" type="button">
+                <span class="paBtn__icon">🌬️</span>
+                <span class="paBtn__txt">3-min breathe</span>
+              </button>
+              <button class="paBtn" type="button">
+                <span class="paBtn__icon">↩︎</span>
+                <span class="paBtn__txt">Reset</span>
               </button>
             </div>
-          </div>
 
-          <div id="deckStage" class="deckStage" aria-label="Action deck stage"></div>
-
-          <div class="hintRow muted">
-            Tip: hover a lower card for “quick look”. Click a lower card to bring it to #1. Click #1 again to
-            enter Focus Mode. ESC exits.
-          </div>
-        </div>
-      </main>
-
-      <!-- PA Zone (Personal Cognitive Companion) -->
-      <aside class="pa zone" data-zone="pa" data-default-x="1220" data-default-y="420">
-        <div class="zone__handle" title="Drag · double-click to FloatBack">
-          <span class="emoji">🫧</span>
-          <b>PA Zone</b>
-          <span class="muted">Personal assistant · regulation · capture</span>
-          <span class="spacer"></span>
-          <span class="chip chip--pink">10/10 dial (soon)</span>
-        </div>
-
-        <div class="pa__body">
-          <div class="pa__grid">
-            <button class="pill" type="button" id="capThought">🗒️ Capture thought</button>
-            <button class="pill" type="button" id="realityCheck">🧭 Reality check</button>
-            <button class="pill pill--soft" type="button" id="reset">🔁 Reset</button>
-            <button class="pill pill--soft" type="button" id="voiceNote">🎙️ Voice note → Action</button>
-          </div>
-
-          <div class="pa__log" id="paLog" aria-live="polite">
-            <div class="pa__logTitle">PA Feed</div>
-            <div class="pa__logItem muted">Ready. Capture pushes into the Action Deck (demo).</div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Signals / Status (tiny skeleton for “more depth”) -->
-      <section class="signals zone" data-zone="signals" data-default-x="64" data-default-y="392">
-        <div class="zone__handle" title="Drag · double-click to FloatBack">
-          <span class="emoji">📡</span>
-          <b>Signals</b>
-          <span class="muted">quiet alerts</span>
-          <span class="spacer"></span>
-          <span class="chip chip--soft">Skeleton</span>
-        </div>
-
-        <div class="signals__body">
-          <div class="sig">
-            <span class="sig__icon">⏳</span>
-            <div>
-              <div class="sig__title">Repeating personal task due</div>
-              <div class="sig__sub muted">PA will escalate to #1 when time-critical.</div>
+            <div class="paNote">
+              <div class="paNote__title">Voice notes → Actions</div>
+              <div class="paNote__text">
+                This zone will ingest voice notes and push time-critical repeatables into the primary stack.
+              </div>
             </div>
           </div>
+        </aside>
 
-          <div class="sig">
-            <span class="sig__icon">⚑</span>
-            <div>
-              <div class="sig__title">Opportunity flagged</div>
-              <div class="sig__sub muted">Routes to MD zones or CEO focus (later).</div>
+        <!-- Ghost / future zones (framed placeholders) -->
+        <section class="zone zone--ghost glass glass--ghost" aria-hidden="true">
+          <div class="zone__chrome">
+            <div class="zone__title">
+              <span class="zone__icon">🧩</span>
+              <span>Future Zone</span>
+            </div>
+            <div class="zone__meta">Dock point · module placeholder</div>
+            <div class="zone__handle">
+              <span class="handle__dot"></span><span class="handle__dot"></span><span class="handle__dot"></span>
             </div>
           </div>
-        </div>
+          <div class="zone__body">
+            <div class="ghostHint">
+              Framed placeholder for: Reports · Radar · Dev · Networks · etc.
+            </div>
+          </div>
+        </section>
       </section>
 
+      <!-- Footer status -->
       <footer class="footer">
-        <div class="footer__line muted">
-          Render-only · Single Task Truth · Spine-authoritative · Zones movable · Glass UI
-        </div>
+        <div class="footer__left">Focus: <b>Primary Action</b></div>
+        <div class="footer__right">Glass / Liquid / ND-safe shell · behaviour next</div>
       </footer>
-    </div>
-
-    <script>
-      /***********************
-       * Demo Data (Actions)
-       ***********************/
-      const DEFAULT_ACTIONS = [
-        {
-          id: "a1",
-          title: "Define next cockpit layer",
-          meta: "CEO · Primary · Score 65.54",
-          body: "This is the one thing that matters now.",
-          tone: "primary",
-        },
-        {
-          id: "a2",
-          title: "Prepare screenshot route list for sales animation storyboard",
-          meta: "MD · Next · Score 24",
-          body: "Build the visual route for the story (calm, ND-safe, reward-driven).",
-          tone: "md",
-        },
-        {
-          id: "a3",
-          title: "Draft MD cockpit default modules for OTOS Life",
-          meta: "MD · Next · Score 23.1",
-          body: "Define the default module layout and task routing boundaries.",
-          tone: "md",
-        },
-        {
-          id: "a4",
-          title: "Validate Spine → Cockpit authority boundaries",
-          meta: "CEO · Next · Score 18.2",
-          body: "Confirm what the cockpit can suggest vs what the spine can authorise.",
-          tone: "ceo",
-        },
-        {
-          id: "a5",
-          title: "Confirm demo routes for focus switching",
-          meta: "PROJECT · Next · Score 15.4",
-          body: "Confirm the routes and the transitions between zones.",
-          tone: "project",
-        },
-        {
-          id: "a6",
-          title: "Add ‘Flip to Backside’ dev view (Reason-style)",
-          meta: "DEV · Could · Spec",
-          body: "Instant 180° flip to wiring/config view with gentle slack motion.",
-          tone: "dev",
-        },
-      ];
-
-      let actions = loadDeck() ?? structuredClone(DEFAULT_ACTIONS);
-
-      const deckStage = document.getElementById("deckStage");
-      const focusOverlay = document.getElementById("focusOverlay");
-      const focusLabel = document.getElementById("focusLabel");
-
-      let focusMode = false;
-
-      function saveDeck() {
-        localStorage.setItem("otos_deck_actions_v1", JSON.stringify(actions));
-      }
-      function loadDeck() {
-        try {
-          const raw = localStorage.getItem("otos_deck_actions_v1");
-          if (!raw) return null;
-          const parsed = JSON.parse(raw);
-          return Array.isArray(parsed) ? parsed : null;
-        } catch (e) {
-          return null;
-        }
-      }
-
-      /***********************
-       * Deck Rendering
-       ***********************/
-      function renderDeck() {
-        deckStage.innerHTML = "";
-
-        // Top card is index 0. Next visible fan cards are 1..4
-        const top = actions[0];
-        const fan = actions.slice(1, 5);
-
-        const wrap = document.createElement("div");
-        wrap.className = "deckWrap";
-        deckStage.appendChild(wrap);
-
-        // Fan cards first (so top card sits above them)
-        fan.forEach((item, idx) => {
-          const card = createCard(item, { role: "fan", index: idx + 1 });
-          // position: show half overlap edges, spreading from centre
-          card.style.setProperty("--fan-i", idx + 1);
-          wrap.appendChild(card);
-        });
-
-        // Top card
-        const topCard = createCard(top, { role: "top", index: 0 });
-        wrap.appendChild(topCard);
-
-        // Update focus label
-        focusLabel.textContent = "Primary Action";
-      }
-
-      function createCard(item, opts) {
-        const card = document.createElement("article");
-        card.className = `card card--${opts.role} tone--${item.tone}`;
-        card.setAttribute("data-id", item.id);
-        card.setAttribute("tabindex", "0");
-
-        card.innerHTML = `
-          <div class="card__inner">
-            <div class="card__top">
-              <div class="card__title">${escapeHTML(item.title)}</div>
-              <div class="card__meta">${escapeHTML(item.meta)}</div>
-            </div>
-            <div class="card__body">${escapeHTML(item.body)}</div>
-            <div class="card__hint">${opts.role === "top" ? "Click to Focus · ESC to exit" : "Click to promote"}</div>
-          </div>
-        `;
-
-        // Interactions
-        if (opts.role === "fan") {
-          // quick-look on hover
-          card.addEventListener("mouseenter", () => {
-            if (focusMode) return;
-            card.classList.add("is-peek");
-          });
-          card.addEventListener("mouseleave", () => {
-            card.classList.remove("is-peek");
-          });
-
-          // click to promote to top
-          card.addEventListener("click", (e) => {
-            e.stopPropagation();
-            if (focusMode) return;
-            promoteToTop(item.id);
-          });
-          card.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              if (focusMode) return;
-              promoteToTop(item.id);
-            }
-          });
-        }
-
-        if (opts.role === "top") {
-          card.addEventListener("click", (e) => {
-            e.stopPropagation();
-            toggleFocusMode(true);
-          });
-          card.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              toggleFocusMode(true);
-            }
-          });
-        }
-
-        return card;
-      }
-
-      function promoteToTop(id) {
-        const idx = actions.findIndex((a) => a.id === id);
-        if (idx <= 0) return;
-
-        const selected = actions[idx];
-        actions.splice(idx, 1);
-        actions.unshift(selected);
-
-        saveDeck();
-        animateDeckReorder();
-      }
-
-      function animateDeckReorder() {
-        // small “reward” motion – fade/slide
-        deckStage.classList.add("deckStage--pulse");
-        renderDeck();
-        requestAnimationFrame(() => {
-          setTimeout(() => deckStage.classList.remove("deckStage--pulse"), 380);
-        });
-      }
-
-      /***********************
-       * Focus Mode (2nd click feel)
-       ***********************/
-      function toggleFocusMode(forceOn) {
-        const next = forceOn === true ? true : !focusMode;
-        focusMode = next;
-
-        document.body.classList.toggle("is-focus", focusMode);
-        focusOverlay.hidden = !focusMode;
-
-        if (focusMode) {
-          focusOverlay.classList.remove("focusOverlay--out");
-          focusOverlay.classList.add("focusOverlay--in");
-        } else {
-          focusOverlay.classList.remove("focusOverlay--in");
-          focusOverlay.classList.add("focusOverlay--out");
-        }
-      }
-
-      focusOverlay.addEventListener("click", () => toggleFocusMode(false));
-      window.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && focusMode) toggleFocusMode(false);
-      });
-
-      /***********************
-       * PA actions (demo)
-       * - pushes into deck
-       ***********************/
-      const paLog = document.getElementById("paLog");
-
-      function logPA(text) {
-        const row = document.createElement("div");
-        row.className = "pa__logItem";
-        row.textContent = text;
-        paLog.appendChild(row);
-        paLog.scrollTop = paLog.scrollHeight;
-      }
-
-      document.getElementById("capThought").addEventListener("click", () => {
-        const id = "pa_" + Math.random().toString(16).slice(2);
-        actions.splice(1, 0, {
-          id,
-          title: "Captured thought (PA)",
-          meta: "PA · Personal · Routed to Next",
-          body: "Captured into your pathway. Click to promote when ready.",
-          tone: "pa",
-        });
-        actions = actions.slice(0, 16);
-        saveDeck();
-        animateDeckReorder();
-        logPA("🗒️ Captured thought → inserted into Action Deck.");
-      });
-
-      document.getElementById("realityCheck").addEventListener("click", () => {
-        logPA("🧭 Reality check: breathe 3 mins · pick the *one* next action.");
-        // gentle nudge: bring #1 into focus softly
-        toggleFocusMode(true);
-      });
-
-      document.getElementById("reset").addEventListener("click", () => {
-        actions = structuredClone(DEFAULT_ACTIONS);
-        saveDeck();
-        renderDeck();
-        logPA("🔁 Reset: deck restored to demo defaults.");
-      });
-
-      document.getElementById("voiceNote").addEventListener("click", () => {
-        logPA("🎙️ Voice note received (demo). In product: Whisper → Extract → Action + Notes.");
-        const id = "vn_" + Math.random().toString(16).slice(2);
-        actions.splice(1, 0, {
-          id,
-          title: "Voice note → Action (PA)",
-          meta: "PA · Personal · Time-critical",
-          body: "Voice note transcribed + extracted into actions & notes (demo placeholder).",
-          tone: "pa",
-        });
-        actions = actions.slice(0, 16);
-        saveDeck();
-        animateDeckReorder();
-      });
-
-      /***********************
-       * Controls
-       ***********************/
-      document.getElementById("resetDeckBtn").addEventListener("click", () => {
-        actions = structuredClone(DEFAULT_ACTIONS);
-        saveDeck();
-        renderDeck();
-      });
-
-      document.getElementById("shuffleBtn").addEventListener("click", () => {
-        if (focusMode) toggleFocusMode(false);
-        // shuffle everything except keep one random as top
-        actions = actions
-          .map((a) => ({ a, r: Math.random() }))
-          .sort((x, y) => x.r - y.r)
-          .map((x) => x.a);
-        saveDeck();
-        animateDeckReorder();
-      });
-
-      /***********************
-       * Zones: drag + snap + FloatBack
-       ***********************/
-      const GRID = 24;
-
-      const zones = Array.from(document.querySelectorAll(".zone"));
-      const defaults = new Map();
-
-      zones.forEach((zone) => {
-        const z = zone.getAttribute("data-zone");
-        const dx = parseInt(zone.getAttribute("data-default-x") || "0", 10);
-        const dy = parseInt(zone.getAttribute("data-default-y") || "0", 10);
-        defaults.set(z, { x: dx, y: dy });
-
-        // restore saved position
-        const saved = loadZonePos(z);
-        const pos = saved ?? { x: dx, y: dy };
-        setZonePos(zone, pos.x, pos.y, false);
-
-        const handle = zone.querySelector(".zone__handle");
-        if (!handle) return;
-
-        // floatback on double-click
-        handle.addEventListener("dblclick", (e) => {
-          e.preventDefault();
-          const d = defaults.get(z);
-          setZonePos(zone, d.x, d.y, true);
-          saveZonePos(z, d.x, d.y);
-        });
-
-        // drag
-        makeDraggable(zone, handle, z);
-      });
-
-      function makeDraggable(el, handle, key) {
-        let startX = 0,
-          startY = 0,
-          originX = 0,
-          originY = 0,
-          dragging = false;
-
-        handle.addEventListener("mousedown", (e) => {
-          dragging = true;
-          el.classList.add("is-dragging");
-          startX = e.clientX;
-          startY = e.clientY;
-          const cur = getZonePos(el);
-          originX = cur.x;
-          originY = cur.y;
-
-          window.addEventListener("mousemove", onMove);
-          window.addEventListener("mouseup", onUp);
-        });
-
-        function onMove(e) {
-          if (!dragging) return;
-          const dx = e.clientX - startX;
-          const dy = e.clientY - startY;
-          setZonePos(el, originX + dx, originY + dy, false);
-        }
-
-        function onUp() {
-          if (!dragging) return;
-          dragging = false;
-          el.classList.remove("is-dragging");
-          window.removeEventListener("mousemove", onMove);
-          window.removeEventListener("mouseup", onUp);
-
-          // snap to grid
-          const cur = getZonePos(el);
-          const sx = Math.round(cur.x / GRID) * GRID;
-          const sy = Math.round(cur.y / GRID) * GRID;
-          setZonePos(el, sx, sy, true);
-          saveZonePos(key, sx, sy);
-        }
-      }
-
-      function setZonePos(el, x, y, animate) {
-        if (animate) el.classList.add("is-animating");
-        el.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-        el.dataset.x = String(x);
-        el.dataset.y = String(y);
-        if (animate) {
-          setTimeout(() => el.classList.remove("is-animating"), 260);
-        }
-      }
-
-      function getZonePos(el) {
-        return {
-          x: parseFloat(el.dataset.x || "0"),
-          y: parseFloat(el.dataset.y || "0"),
-        };
-      }
-
-      function saveZonePos(key, x, y) {
-        localStorage.setItem("otos_zonepos_" + key, JSON.stringify({ x, y }));
-      }
-      function loadZonePos(key) {
-        try {
-          const raw = localStorage.getItem("otos_zonepos_" + key);
-          if (!raw) return null;
-          const p = JSON.parse(raw);
-          if (typeof p?.x !== "number" || typeof p?.y !== "number") return null;
-          return p;
-        } catch (e) {
-          return null;
-        }
-      }
-
-      function escapeHTML(s) {
-        return String(s)
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
-
-      /***********************
-       * Boot
-       ***********************/
-      renderDeck();
-    </script>
+    </main>
   </body>
 </html>
