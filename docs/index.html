@@ -9,57 +9,100 @@
 
 <body>
 
-  <!-- OUTER SHELL (CEO CONTEXT) -->
-  <div class="cockpit-shell">
+<div class="cockpit-shell">
 
-    <header class="cockpit-header glass">
-      <h1>OTOS Cockpit</h1>
-      <div class="meta">CEO Context · Render Layer</div>
-    </header>
+  <!-- HEADER -->
+  <header class="cockpit-header glass">
+    <h1>OTOS Cockpit</h1>
+    <div class="meta">CEO Context · Render Layer</div>
+  </header>
 
-    <!-- PRIMARY SINGLE ACTION -->
-    <section class="psa-zone glass active" id="psa">
-      <div class="psa-label">Primary Single Action</div>
-      <h2>Define next cockpit layer</h2>
-      <p>This is the one thing that matters now.</p>
-    </section>
+  <!-- PRIMARY SINGLE ACTION -->
+  <section class="psa-zone glass" id="psa" onclick="focusPSA()">
+    <div class="psa-label">Primary Single Action</div>
+    <h2>Define next cockpit layer</h2>
+    <p>This is the one thing that matters now.</p>
+  </section>
 
-    <!-- STACKED CONTEXT CARDS -->
-    <section class="stack-zone">
-      <div class="stack-card glass" onclick="bringForward(this)">
-        Prepare screenshot route list for sales animation
-      </div>
-      <div class="stack-card glass" onclick="bringForward(this)">
-        Draft MD cockpit default modules for OTOS Life
-      </div>
-      <div class="stack-card glass" onclick="bringForward(this)">
-        Validate Spine → Cockpit authority boundaries
-      </div>
-      <div class="stack-card glass" onclick="bringForward(this)">
-        Confirm demo routes for focus switching
-      </div>
-    </section>
+  <!-- STACK -->
+  <section class="stack-zone" id="stack">
+    <div class="stack-card glass" onclick="focusCard(this,0)">
+      Prepare screenshot route list for sales animation
+    </div>
+    <div class="stack-card glass" onclick="focusCard(this,1)">
+      Draft MD cockpit default modules for OTOS Life
+    </div>
+    <div class="stack-card glass" onclick="focusCard(this,2)">
+      Validate Spine → Cockpit authority boundaries
+    </div>
+    <div class="stack-card glass" onclick="focusCard(this,3)">
+      Confirm demo routes for focus switching
+    </div>
+  </section>
 
-    <!-- PA ZONE (PERSONAL ASSISTANT SHELL) -->
-    <aside class="pa-zone glass" id="pa">
-      <div class="pa-title">PA Zone</div>
-      <div class="pa-sub">Personal support · Notes · Regulation</div>
-      <button class="pa-action">🎙 Record thought</button>
-      <button class="pa-action">🧠 Reality check</button>
-      <button class="pa-action">🌬 3-minute reset</button>
-    </aside>
+  <!-- PA ZONE -->
+  <aside class="pa-zone glass draggable" id="pa">
+    <div class="pa-title">PA Zone</div>
+    <div class="pa-sub">Personal assistant · regulation · capture</div>
+    <button class="pa-action">🎙 Capture thought</button>
+    <button class="pa-action">🧠 Reality check</button>
+    <button class="pa-action">🌬 Reset</button>
+  </aside>
 
-    <footer class="cockpit-footer">
-      Render-only · Single Task Truth · Spine-authoritative
-    </footer>
+  <footer class="cockpit-footer">
+    Render-only · Single Task Truth · Spine-authoritative
+  </footer>
 
-  </div>
+</div>
+
+<div class="blur-layer" id="blur"></div>
 
 <script>
-  function bringForward(el) {
-    document.querySelectorAll('.stack-card').forEach(c => c.classList.remove('focused'));
-    el.classList.add('focused');
-  }
+/* ---------- FOCUS LOGIC ---------- */
+
+function resetFocus() {
+  document.body.classList.remove('blurred');
+  document.querySelectorAll('.stack-card').forEach(c=>{
+    c.classList.remove('focused','offset');
+  });
+  document.getElementById('psa').classList.remove('focused');
+}
+
+function focusPSA() {
+  resetFocus();
+  document.body.classList.add('blurred');
+  document.getElementById('psa').classList.add('focused');
+}
+
+function focusCard(el,index) {
+  resetFocus();
+  document.body.classList.add('blurred');
+  el.classList.add('focused');
+
+  document.querySelectorAll('.stack-card').forEach((c,i)=>{
+    if(c!==el){
+      c.classList.add('offset');
+      c.style.transform = `translate(${(i-index)*40}px, ${(i-index)*12}px) scale(0.96)`;
+    }
+  });
+}
+
+/* ---------- DRAG ZONE (TEMP) ---------- */
+
+const drag = document.querySelector('.draggable');
+let isDown=false, offset=[0,0];
+
+drag.addEventListener('mousedown',e=>{
+  isDown=true;
+  offset=[drag.offsetLeft-e.clientX, drag.offsetTop-e.clientY];
+});
+
+document.addEventListener('mouseup',()=>isDown=false);
+document.addEventListener('mousemove',e=>{
+  if(!isDown) return;
+  drag.style.left = (e.clientX+offset[0])+'px';
+  drag.style.top  = (e.clientY+offset[1])+'px';
+});
 </script>
 
 </body>
