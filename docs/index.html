@@ -2,67 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>OTOS Cockpit — CEO Shell</title>
+  <title>OTOS Cockpit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- OUTER CEO SHELL -->
-  <div id="cockpit-shell">
 
-    <!-- TOP BAR -->
-    <header id="cockpit-header">
-      <div class="brand">
-        <div class="logo-dot"></div>
-        <div class="brand-text">
-          <div class="title">OTOS Cockpit</div>
-          <div class="subtitle">CEO Context · Render Layer</div>
-        </div>
-      </div>
+  <!-- OUTER SHELL (CEO CONTEXT) -->
+  <div class="cockpit-shell">
 
-      <div class="focus-indicator">
-        Focus: <strong>Primary Action</strong>
-      </div>
+    <header class="cockpit-header glass">
+      <h1>OTOS Cockpit</h1>
+      <div class="meta">CEO Context · Render Layer</div>
     </header>
 
-    <!-- MAIN STAGE -->
-    <main id="cockpit-stage">
+    <!-- PRIMARY SINGLE ACTION -->
+    <section class="psa-zone glass active" id="psa">
+      <div class="psa-label">Primary Single Action</div>
+      <h2>Define next cockpit layer</h2>
+      <p>This is the one thing that matters now.</p>
+    </section>
 
-      <!-- PARENT NODE CHAT ZONE (HOME) -->
-      <section class="zone parent-zone">
-        <div class="zone-header">👁 Parent Node</div>
-        <div class="zone-body">
-          <p>Reasoning · Decisions · Memory</p>
-        </div>
-      </section>
+    <!-- STACKED CONTEXT CARDS -->
+    <section class="stack-zone">
+      <div class="stack-card glass" onclick="bringForward(this)">
+        Prepare screenshot route list for sales animation
+      </div>
+      <div class="stack-card glass" onclick="bringForward(this)">
+        Draft MD cockpit default modules for OTOS Life
+      </div>
+      <div class="stack-card glass" onclick="bringForward(this)">
+        Validate Spine → Cockpit authority boundaries
+      </div>
+      <div class="stack-card glass" onclick="bringForward(this)">
+        Confirm demo routes for focus switching
+      </div>
+    </section>
 
-      <!-- PSA / ACTION ZONE -->
-      <section class="zone psa-zone">
-        <div class="zone-header">Primary Single Action</div>
-        <div class="psa-card">
-          <h2>Define next cockpit layer</h2>
-          <p>This is the one thing that matters now.</p>
-        </div>
-      </section>
+    <!-- PA ZONE (PERSONAL ASSISTANT SHELL) -->
+    <aside class="pa-zone glass" id="pa">
+      <div class="pa-title">PA Zone</div>
+      <div class="pa-sub">Personal support · Notes · Regulation</div>
+      <button class="pa-action">🎙 Record thought</button>
+      <button class="pa-action">🧠 Reality check</button>
+      <button class="pa-action">🌬 3-minute reset</button>
+    </aside>
 
-      <!-- SIGNALS ZONE -->
-      <section class="zone signals-zone">
-        <div class="zone-header">Signals</div>
-        <ul>
-          <li>⏳ Repeating personal task due</li>
-          <li>⚠ Opportunity flagged</li>
-        </ul>
-      </section>
-
-    </main>
-
-    <!-- FOOTER / STATUS -->
-    <footer id="cockpit-footer">
+    <footer class="cockpit-footer">
       Render-only · Single Task Truth · Spine-authoritative
     </footer>
 
   </div>
+
+<script>
+  function bringForward(el) {
+    document.querySelectorAll('.stack-card').forEach(c => c.classList.remove('focused'));
+    el.classList.add('focused');
+  }
+</script>
+
 </body>
 </html>
