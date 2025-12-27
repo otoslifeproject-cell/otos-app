@@ -11,37 +11,39 @@
 
 <div class="cockpit-shell">
 
-  <!-- HEADER -->
   <header class="cockpit-header glass">
     <h1>OTOS Cockpit</h1>
     <div class="meta">CEO Context · Render Layer</div>
   </header>
 
-  <!-- PRIMARY SINGLE ACTION -->
-  <section class="psa-zone glass" id="psa" onclick="focusPSA()">
-    <div class="psa-label">Primary Single Action</div>
-    <h2>Define next cockpit layer</h2>
-    <p>This is the one thing that matters now.</p>
-  </section>
+  <!-- ACTION STACK -->
+  <section class="action-stack" id="actionStack">
 
-  <!-- STACK -->
-  <section class="stack-zone" id="stack">
-    <div class="stack-card glass" onclick="focusCard(this,0)">
+    <div class="action-card glass" data-index="0" onclick="bringToFront(0)">
+      <h2>Define next cockpit layer</h2>
+      <p>This is the one thing that matters now.</p>
+    </div>
+
+    <div class="action-card glass" data-index="1" onclick="bringToFront(1)">
       Prepare screenshot route list for sales animation
     </div>
-    <div class="stack-card glass" onclick="focusCard(this,1)">
+
+    <div class="action-card glass" data-index="2" onclick="bringToFront(2)">
       Draft MD cockpit default modules for OTOS Life
     </div>
-    <div class="stack-card glass" onclick="focusCard(this,2)">
+
+    <div class="action-card glass" data-index="3" onclick="bringToFront(3)">
       Validate Spine → Cockpit authority boundaries
     </div>
-    <div class="stack-card glass" onclick="focusCard(this,3)">
+
+    <div class="action-card glass" data-index="4" onclick="bringToFront(4)">
       Confirm demo routes for focus switching
     </div>
+
   </section>
 
   <!-- PA ZONE -->
-  <aside class="pa-zone glass draggable" id="pa">
+  <aside class="pa-zone glass">
     <div class="pa-title">PA Zone</div>
     <div class="pa-sub">Personal assistant · regulation · capture</div>
     <button class="pa-action">🎙 Capture thought</button>
@@ -55,54 +57,31 @@
 
 </div>
 
-<div class="blur-layer" id="blur"></div>
-
 <script>
-/* ---------- FOCUS LOGIC ---------- */
+let order = [0,1,2,3,4];
 
-function resetFocus() {
-  document.body.classList.remove('blurred');
-  document.querySelectorAll('.stack-card').forEach(c=>{
-    c.classList.remove('focused','offset');
-  });
-  document.getElementById('psa').classList.remove('focused');
-}
+function renderStack(){
+  const cards = document.querySelectorAll('.action-card');
 
-function focusPSA() {
-  resetFocus();
-  document.body.classList.add('blurred');
-  document.getElementById('psa').classList.add('focused');
-}
+  order.forEach((cardIndex, stackPos) => {
+    const el = cards[cardIndex];
 
-function focusCard(el,index) {
-  resetFocus();
-  document.body.classList.add('blurred');
-  el.classList.add('focused');
-
-  document.querySelectorAll('.stack-card').forEach((c,i)=>{
-    if(c!==el){
-      c.classList.add('offset');
-      c.style.transform = `translate(${(i-index)*40}px, ${(i-index)*12}px) scale(0.96)`;
-    }
+    el.style.zIndex = 100 - stackPos;
+    el.style.transform = `
+      translate(-50%, ${stackPos * 22}px)
+      scale(${stackPos === 0 ? 1.06 : 1 - stackPos * 0.03})
+    `;
+    el.style.opacity = stackPos > 5 ? 0 : 1;
   });
 }
 
-/* ---------- DRAG ZONE (TEMP) ---------- */
+function bringToFront(index){
+  order = order.filter(i => i !== index);
+  order.unshift(index);
+  renderStack();
+}
 
-const drag = document.querySelector('.draggable');
-let isDown=false, offset=[0,0];
-
-drag.addEventListener('mousedown',e=>{
-  isDown=true;
-  offset=[drag.offsetLeft-e.clientX, drag.offsetTop-e.clientY];
-});
-
-document.addEventListener('mouseup',()=>isDown=false);
-document.addEventListener('mousemove',e=>{
-  if(!isDown) return;
-  drag.style.left = (e.clientX+offset[0])+'px';
-  drag.style.top  = (e.clientY+offset[1])+'px';
-});
+renderStack();
 </script>
 
 </body>
