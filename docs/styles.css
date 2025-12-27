@@ -1,27 +1,110 @@
-const stack = document.getElementById("actionStack");
-const cards = Array.from(stack.children);
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --shadow-deep: 0 40px 80px rgba(0,0,0,0.25);
+  --shadow-soft: 0 20px 40px rgba(0,0,0,0.15);
+}
 
-cards.forEach(card => {
-  card.addEventListener("click", () => {
-    // First click: bring to front
-    cards.forEach(c => c.classList.remove("active"));
-    card.classList.add("active");
+* {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont;
+}
 
-    // Reorder stack
-    stack.prepend(card);
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(
+    circle at center,
+    #eef4ff 0%,
+    #dfe7f1 40%,
+    #cfd8e6 100%
+  );
+  overflow: hidden;
+}
 
-    // Second click: focus mode
-    if (stack.classList.contains("focused")) {
-      stack.classList.remove("focused");
-    } else {
-      stack.classList.add("focused");
-    }
-  });
-});
+.top-bar {
+  padding: 24px 32px;
+}
 
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    stack.classList.remove("focused");
-    cards.forEach(c => c.classList.remove("active"));
-  }
-});
+.top-bar h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.top-bar span {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.canvas {
+  position: relative;
+  height: calc(100vh - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-stack {
+  position: relative;
+  width: 520px;
+  height: 360px;
+  perspective: 1200px;
+}
+
+.action-card {
+  position: absolute;
+  width: 100%;
+  min-height: 160px;
+  padding: 28px;
+  border-radius: 28px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s ease,
+    box-shadow 0.4s ease,
+    filter 0.4s ease;
+  cursor: pointer;
+}
+
+/* PRIMARY CARD */
+.action-card.primary {
+  z-index: 10;
+  transform: translateY(0) scale(1);
+  box-shadow: var(--shadow-deep);
+}
+
+/* STACKED CARDS */
+.action-card.secondary:nth-child(2) {
+  transform: translateY(40px) scale(0.96);
+  opacity: 0.9;
+}
+
+.action-card.secondary:nth-child(3) {
+  transform: translateY(80px) scale(0.92);
+  opacity: 0.8;
+}
+
+.action-card.secondary:nth-child(4) {
+  transform: translateY(120px) scale(0.88);
+  opacity: 0.7;
+}
+
+.action-card.secondary:nth-child(5) {
+  transform: translateY(160px) scale(0.84);
+  opacity: 0.6;
+}
+
+/* FOCUS MODE */
+.action-stack.focused .action-card:not(.active) {
+  filter: blur(14px);
+  opacity: 0.35;
+}
+
+.action-card.active {
+  transform: translateY(-20px) scale(1.05);
+  box-shadow: 0 60px 120px rgba(0,0,0,0.35);
+  z-index: 20;
+}
